@@ -24,6 +24,8 @@ public final class IpFilterConstants {
      * Config parameter for setting the realm for the basic http authentication
      */
     public static final String REALM_PARAM = "realm";
+    public static final int CACHE_SITE = 100;
+    public static final int CACHE_EXPIRE_IN_MINUTES = 30;
     static final String DEFAULT_REPOSITORY_ADDRESS = "vm://";
 
     private IpFilterConstants() {

@@ -46,9 +46,19 @@ import static org.onehippo.forge.ipfilter.IpFilterUtils.*;
 public class IpFilter implements Filter, PersistedHippoEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
+
+    /**
+     * Object contains *raw* data: multiple hosts can be matched based on regexp.
+     * *Processed* data is stored into cache object
+     */
     private Map<String, AuthObject> rawData = new ConcurrentHashMap<>();
+
+    private LoadingCache<String, AuthObject> cache;
+    private boolean initialized;
+    private String repositoryAddress;
+    
     private final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
+            .maximumSize(CACHE_SITE)
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Boolean>() {
                 @Override
@@ -57,10 +67,17 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                     return false;
                 }
             });
+   private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
+            .maximumSize(CACHE_SITE)
+            .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
+            .build(new CacheLoader<IpHostPair, Boolean>() {
+                @Override
+                public Boolean load(final IpHostPair key) throws Exception {
+                    // we manage cache ourselves
+                    return false;
+                }
+            });
 
-    private LoadingCache<String, AuthObject> cache;
-    private boolean initialized;
-    private String repositoryAddress;
 
     private String realm;
 
@@ -156,19 +173,21 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             return Status.OK;
         }
         final String ip = getIp(request);
-
         if (Strings.isNullOrEmpty(ip)) {
             return Status.UNAUTHORIZED;
         }
-        log.debug("IP found for '{}': {}", request.getPathInfo(), ip);
-        // check if on whitelist
+        final IpHostPair pair = new IpHostPair(host, ip);
+        boolean matched  = ipCache.getUnchecked(pair);
         final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
-        boolean matched = false;
-        for (IpMatcher matcher : ipMatchers) {
-            if (matcher.matches(ip)) {
-                log.debug("Found match for ip: {}", matcher);
-                matched = true;
-                break;
+        if (!matched) {
+            log.debug("IP found for '{}': {}", request.getPathInfo(), ip);
+            // check if on whitelist
+            for (IpMatcher matcher : ipMatchers) {
+                if (matcher.matches(ip)) {
+                    log.debug("Found match for ip: {}", matcher);
+                    matched = true;
+                    break;
+                }
             }
         }
         final boolean mustMatchAll = authObject.isMustMatchAll();

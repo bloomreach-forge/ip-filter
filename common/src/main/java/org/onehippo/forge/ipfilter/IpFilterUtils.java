@@ -100,6 +100,6 @@ public final class IpFilterUtils {
     }
 
     public static String getHost(final HttpServletRequest request) {
-        return "localhost";
+        return request.getRemoteHost();
     }
 }
