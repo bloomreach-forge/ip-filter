@@ -1,6 +1,8 @@
 package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,6 +12,8 @@ import java.util.regex.Pattern;
 
 public class AuthObject {
 
+    @JsonIgnore
+    private static final Logger log = LoggerFactory.getLogger(AuthObject.class);
     private boolean active = true;
     private boolean mustMatchAll;
     private boolean allowCmsUsers;
@@ -82,7 +86,12 @@ public class AuthObject {
             }
             hostPatterns = new ArrayList<>();
             for (String host : hosts) {
-                hostPatterns.add(Pattern.compile(host));
+                try {
+                    hostPatterns.add(Pattern.compile(host));
+                } catch (Exception e) {
+                    log.error("Invalid value {}", host);
+                    log.error("Error compiling pattern: ", e);
+                }
             }
         }
         return hostPatterns;
