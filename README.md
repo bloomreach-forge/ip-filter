@@ -1,11 +1,11 @@
 Configuration options:
 
-* enabled: config is enabled or not ( boolean, default true)
-* allow-cms-users allow login with CMS credentials ( boolean, default false)
-* match-all user must match IP address and login with CMS credentials ( boolean, default false)
-* hostnames list of hostnames (multivalue string, mandatory)
-* allowed-ip-ranges list of ip address ranges (multivalue string, not mandatory in case allow-cms-users is active)
-
+* **enabled** : config is enabled or not ( boolean, default true)
+* **allow-cms-users** : allow login with CMS credentials ( boolean, default false)
+* **match-all** : both, user IP address must be whitelisted and login with CMS credentials ( boolean, default false)
+* **hostnames** : list of hostnames, NOTE: must be regexp escaped like  ***.onehippo\.org** (multivalue string, mandatory)
+* **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, not mandatory in case allow-cms-users is active)
+                                
 
 Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.
 
