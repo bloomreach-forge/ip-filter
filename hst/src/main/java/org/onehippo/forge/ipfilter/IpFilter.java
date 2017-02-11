@@ -224,8 +224,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             log.debug("invalidating cache for: {}", event);
             final String data = (String) event.get(DATA);
             populateIpRanges(data);
-            cache.invalidateAll();
-            userCache.invalidateAll();
+            invalidateCaches();
         }
     }
 
@@ -234,9 +233,15 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     @Override
     public void destroy() {
+        invalidateCaches();
+        HippoServiceRegistry.unregisterService(this, PersistedHippoEventsService.class);
+    }
+
+    private void invalidateCaches() {
+        log.debug("Invalidating all cache");
         cache.invalidateAll();
         userCache.invalidateAll();
-        HippoServiceRegistry.unregisterService(this, PersistedHippoEventsService.class);
+        ipCache.invalidateAll();
     }
 
     /**
