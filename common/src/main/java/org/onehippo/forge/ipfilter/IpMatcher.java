@@ -47,25 +47,17 @@ public final class IpMatcher {
         this.ipRange = ipRange;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean equals(Object o) {
         return this == o || o instanceof IpMatcher && Objects.equal(getIpRange(), ((IpMatcher) o).getIpRange());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hashCode(getIpRange());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getIpRange();
@@ -91,4 +83,6 @@ public final class IpMatcher {
         String ipAddressTrimmed = StringUtils.trimToNull(ipAddress);
         return ipAddressTrimmed != null && ipMatcher.matches(ipAddressTrimmed);
     }
+
+
 }

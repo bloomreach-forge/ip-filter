@@ -3,8 +3,14 @@
  */
 package org.onehippo.forge.ipfilter;
 
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
+import org.hippoecm.repository.HippoRepository;
+import org.hippoecm.repository.HippoRepositoryFactory;
 import org.onehippo.cms7.event.HippoEvent;
 import org.onehippo.cms7.event.HippoEventConstants;
 import org.onehippo.cms7.services.HippoServiceRegistry;
@@ -14,111 +20,229 @@ import org.onehippo.repository.events.PersistedHippoEventsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.onehippo.forge.ipfilter.IpFilterConstants.*;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.*;
 
 /**
- * Filter allowing only access for IP ranges that are configured  by init-parameter 'allowed-ip-ranges'.
+ * Filter allowing only access for IP ranges that are configured
  */
 public class IpFilter implements Filter, PersistedHippoEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
-    private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
-    private Collection<IpMatcher> staticConfiguration;
+    private Map<String, AuthObject> rawData = new ConcurrentHashMap<>();
+    private final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .build(new CacheLoader<String, Boolean>() {
+                @Override
+                public Boolean load(final String key) throws Exception {
+                    // we manage cache ourselves
+                    return false;
+                }
+            });
 
+    private LoadingCache<String, AuthObject> cache;
+    private boolean initialized;
+    private String repositoryAddress;
+
+    private String realm;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
+        realm = getParameter(filterConfig, REALM_PARAM, realm);
+        repositoryAddress = getParameter(filterConfig, REPOSITORY_ADDRESS_PARAM, DEFAULT_REPOSITORY_ADDRESS);
+        cache = CacheBuilder.newBuilder()
+                .maximumSize(1)
+                .expireAfterWrite(10, TimeUnit.DAYS)
+                .build(new CacheLoader<String, AuthObject>() {
+                    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-        staticConfiguration = new CopyOnWriteArrayList<>();
-        final String parameter = filterConfig.getInitParameter(IpFilterEvent.ALLOWED_IP_RANGES);
-        if (!Strings.isNullOrEmpty(parameter)) {
-            populateIpRanges(parameter);
-        }
+                    public AuthObject load(String key) {
+                        return loadIpRules(key);
+                    }
+
+                    @Override
+                    public ListenableFuture<AuthObject> reload(final String key, final AuthObject oldValue) throws Exception {
+                        final ListenableFutureTask<AuthObject> task = ListenableFutureTask.create(() -> load(key));
+                        executor.execute(task);
+                        return task;
+                    }
+                });
+
+
         HippoServiceRegistry.registerService(this, PersistedHippoEventsService.class);
-        HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
+        requestData();
+
+    }
+
+    private void requestData() {
+        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
         if (eventBus == null) {
             log.warn("No event bus service found by class {}", HippoEventBus.class.getName());
         } else {
+            // request data to be sent back to us
             eventBus.post(new IpRequestEvent());
         }
-
     }
 
-    private void populateIpRanges(final String parameter) {
-        staticConfiguration.clear();
-        final Iterable<String> ranges = COMMA_SPLITTER.split(parameter);
-        for (String range : ranges) {
-            staticConfiguration.add(IpMatcher.valueOf(range));
+    private void populateIpRanges(final String data) {
+        rawData.clear();
+        if (Strings.isNullOrEmpty(data)) {
+            log.warn("Data was null or empty");
+            return;
         }
+        final Map<String, AuthObject> newObjects = fromJsonAsMap(data);
+        if (newObjects == null) {
+            log.warn("Data couldn't be de-serialized, data:{}", data);
+            return;
+        }
+        rawData.putAll(newObjects);
     }
 
-    private Collection<IpMatcher> loadIpRules() {
 
-        return staticConfiguration;
+    /**
+     * Load auth object for matched host name:
+     */
+    private AuthObject loadIpRules(final String host) {
+        for (Map.Entry<String, AuthObject> entry : rawData.entrySet()) {
+            final AuthObject value = entry.getValue();
+            final List<Pattern> hostPatterns = value.getHostPatterns();
+            for (Pattern pattern : hostPatterns) {
+                final Matcher matcher = pattern.matcher(host);
+                if (matcher.matches()) {
+                    return value;
+                }
+            }
+        }
+        // just return inactive object
+        return INVALID_AUTH_OBJECT;
     }
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
-        if (allowed((HttpServletRequest) request)) {
+        if (!initialized) {
+            requestData();
+        }
+        final Status status = allowed((HttpServletRequest) request);
+        if (status == Status.OK) {
             chain.doFilter(request, response);
             return;
         }
-        final HttpServletResponse resp = (HttpServletResponse) response;
-        resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-
+        handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, status);
     }
 
-    private boolean allowed(final HttpServletRequest request) {
+    @SuppressWarnings("unchecked")
+    private Status allowed(final HttpServletRequest request) {
+        final String host = getHost(request);
+        final AuthObject authObject = cache.getUnchecked(host);
+        if (authObject == null || !authObject.isActive()) {
+            return Status.OK;
+        }
         final String ip = getIp(request);
+
         if (Strings.isNullOrEmpty(ip)) {
-            return false;
+            return Status.UNAUTHORIZED;
         }
         log.debug("IP found for '{}': {}", request.getPathInfo(), ip);
-        final Iterator<IpMatcher> i = staticConfiguration.iterator();
+        // check if on whitelist
+        final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
+        boolean matched = false;
+        for (IpMatcher matcher : ipMatchers) {
+            if (matcher.matches(ip)) {
+                log.debug("Found match for ip: {}", matcher);
+                matched = true;
+                break;
+            }
+        }
+        // if no match is found and we have IP configured, exit
+        if (!matched && ipMatchers.size() > 0) {
+            log.debug("No match for ip: {}", ip);
+            return Status.FORBIDDEN;
+        }
+
+        final boolean mustMatchAll = authObject.isMustMatchAll();
+        if (matched && !mustMatchAll) {
+            // no need to match username / password
+            return Status.OK;
+        }
+        // must match basic authorization
+        return authenticate(request);
+    }
+
+    private Status authenticate(final HttpServletRequest request) {
+        final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
+        if (!credentials.valid()) {
+            return Status.UNAUTHORIZED;
+        }
+        final Boolean cached = userCache.getUnchecked(credentials.getUsername());
+        if (cached != null && cached) {
+            return Status.OK;
+        }
+        Session session = null;
         try {
-            while (i.hasNext()) {
-                final IpMatcher ipMatcher = i.next();
-                boolean match = ipMatcher.matches(ip);
-                if (match) {
-                    log.debug("IP {} matching rule {}", ip, ipMatcher);
-                    return true;
-                } else {
-                    log.trace("IP {} NOT matching rule {}", ip, ipMatcher);
-                }
+            // try to authenticate:
+            session = getSession(credentials);
+            if (session == null) {
+                return Status.UNAUTHORIZED;
             }
-        } catch (IllegalArgumentException e) {
-            log.warn("Invalid IP address: {}", ip);
+            userCache.put(credentials.getUsername(), Boolean.TRUE);
+            return Status.OK;
+        } finally {
+            closeSession(session);
         }
-
-        return false;
     }
 
-    @Override
-    public void destroy() {
-        HippoServiceRegistry.unregisterService(this, PersistedHippoEventsService.class);
+    protected HippoRepository getHippoRepository(String address) {
+        if (address == null || address.length() == 0) {
+            log.error("Repository address (parameter " + REPOSITORY_ADDRESS_PARAM
+                    + " not set. Unable to perform authorization. Return unauthorized.");
+            return null;
+        }
+        try {
+            return HippoRepositoryFactory.getHippoRepository(address);
+        } catch (RepositoryException e) {
+            log.error("Error while obtaining repository: ", e);
+            return null;
+        }
     }
 
-
-    private static String getIp(HttpServletRequest request) {
-        if (request != null) {
-            final String header = request.getHeader("X-Forwarded-For");
-            if (Strings.isNullOrEmpty(header)) {
-                return request.getRemoteAddr();
-            }
-            final Iterable<String> ipAddresses = COMMA_SPLITTER.split(header);
-            final Iterator<String> iterator = ipAddresses.iterator();
-            if (iterator.hasNext()) {
-                return iterator.next();
-            }
-            return request.getRemoteAddr();
+    private Session getSession(final UserCredentials credentials) {
+        HippoRepository hippoRepository = getHippoRepository(repositoryAddress);
+        if (hippoRepository == null) {
+            return null;
         }
-        return null;
+        try {
+            return hippoRepository.login(credentials.getUsername(), credentials.getPassword().toCharArray());
+        } catch (LoginException e) {
+            log.debug("Invalid credentials for username '{}'", credentials.getUsername());
+            return null;
+        } catch (RepositoryException e) {
+            log.error("Error during authentication", e);
+            return null;
+        }
+    }
+
+    private void closeSession(Session session) {
+        if (session != null && session.isLive()) {
+            session.logout();
+        }
     }
 
     @Override
@@ -128,23 +252,82 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     @Override
     public String getChannelName() {
-        return "ip-filter-listener";
+        return IP_FILTER_LISTENER_CHANNEL;
     }
 
     @Override
     public boolean onlyNewEvents() {
-        return true;
+        return false;
     }
 
     @Override
     public void onHippoEvent(final HippoEvent event) {
         final String application = event.application();
-        if (!Strings.isNullOrEmpty(application) && application.equals(IpFilterEvent.APPLICATION)) {
+        if (!Strings.isNullOrEmpty(application) && application.equals(APPLICATION)) {
+            initialized = true;
             log.debug("invalidating cache for: {}", event);
-            final String ranges = (String) event.get(IpFilterEvent.RANGES);
-            populateIpRanges(ranges);
-
+            final String data = (String) event.get(DATA);
+            populateIpRanges(data);
+            cache.invalidateAll();
+            userCache.invalidateAll();
         }
     }
+
+
+
+
+    @Override
+    public void destroy() {
+        cache.invalidateAll();
+        userCache.invalidateAll();
+        HippoServiceRegistry.unregisterService(this, PersistedHippoEventsService.class);
+    }
+
+    /**
+     * Handle the case of an authenticated user trying to view a page without the appropriate privileges.
+     *
+     * @param response the HttpServletResponse
+     * @throws IOException Thrown if working with the response goes wrong
+     */
+    protected void handleForbidden(final HttpServletResponse response)
+            throws IOException {
+        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permissions to view this page.");
+        response.flushBuffer();
+    }
+
+    /**
+     * Handle the case of an authenticated user.
+     *
+     * @param response the HttpServletResponse
+     * @throws IOException Thrown if working with the response goes wrong
+     */
+    protected void handleUnauthorized(final HttpServletResponse response) throws IOException {
+        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized.");
+        response.flushBuffer();
+    }
+
+    private void handleAuthorizationIssue(final HttpServletRequest req, final HttpServletResponse res, Status status) {
+        try {
+            switch (status) {
+                case FORBIDDEN:
+                    log.info("Request forbidden from: {}", req.getRemoteHost());
+                    handleForbidden(res);
+                    break;
+                case UNAUTHORIZED:
+                    log.info("Request unauthorized from: {}", req.getRemoteHost());
+                    handleUnauthorized(res);
+                    break;
+                default:
+                    log.warn("Unknown status found. Request unauthorized from: {}", req.getRemoteHost());
+                    handleUnauthorized(res);
+                    break;
+            }
+        } catch (IOException e) {
+            log.error("IOException raised in AuthenticationFilter", e);
+        }
+    }
+
 
 }

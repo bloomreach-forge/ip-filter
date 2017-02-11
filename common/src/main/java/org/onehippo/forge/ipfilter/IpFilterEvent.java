@@ -1,28 +1,33 @@
 package org.onehippo.forge.ipfilter;
 
 import org.onehippo.cms7.event.HippoEvent;
+import org.onehippo.cms7.event.HippoEventConstants;
 
+/**
+ * Persistent event used to transfer data from hippo module to IpFilter, persistent event
+ */
 public class IpFilterEvent<T extends IpFilterEvent<T>> extends HippoEvent<T> {
-
-    static final String ALLOWED_IP_RANGES = "allowed-ip-ranges";
-    public static final String RANGES = "ip-ranges";
-    public static final String APPLICATION = "ip-filter-app";
 
     public IpFilterEvent(final String application) {
         super(application);
+        user(IpFilterConstants.APPLICATION);
+        category(HippoEventConstants.CATEGORY_SECURITY);
+
     }
 
     public IpFilterEvent(final HippoEvent<?> event) {
         super(event);
+        user(IpFilterConstants.APPLICATION);
+        category(HippoEventConstants.CATEGORY_SECURITY);
     }
 
 
-    public T ipRanges(final String ranges) {
-        return put(RANGES, ranges);
+    public T data(final String data) {
+        return put(IpFilterConstants.DATA, data);
     }
 
-    public String ipRanges() {
-        return get(RANGES);
+    public String data() {
+        return get(IpFilterConstants.DATA);
     }
 
 }
