@@ -109,48 +109,8 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     }
 
-    private void requestData() {
-        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
-        if (eventBus == null) {
-            log.warn("No event bus service found by class {}", HippoEventBus.class.getName());
-        } else {
-            // request data to be sent back to us
-            eventBus.post(new IpRequestEvent());
-        }
-    }
-
-    private void populateIpRanges(final String data) {
-        rawData.clear();
-        if (Strings.isNullOrEmpty(data)) {
-            log.warn("Data was null or empty");
-            return;
-        }
-        final Map<String, AuthObject> newObjects = fromJsonAsMap(data);
-        if (newObjects == null) {
-            log.warn("Data couldn't be de-serialized, data:{}", data);
-            return;
-        }
-        rawData.putAll(newObjects);
-    }
 
 
-    /**
-     * Load auth object for matched host name:
-     */
-    private AuthObject loadIpRules(final String host) {
-        for (Map.Entry<String, AuthObject> entry : rawData.entrySet()) {
-            final AuthObject value = entry.getValue();
-            final List<Pattern> hostPatterns = value.getHostPatterns();
-            for (Pattern pattern : hostPatterns) {
-                final Matcher matcher = pattern.matcher(host);
-                if (matcher.matches()) {
-                    return value;
-                }
-            }
-        }
-        // just return inactive object
-        return INVALID_AUTH_OBJECT;
-    }
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
@@ -186,6 +146,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                 if (matcher.matches(ip)) {
                     log.debug("Found match for ip: {}", matcher);
                     matched = true;
+                    ipCache.put(pair, Boolean.TRUE);
                     break;
                 }
             }
@@ -238,41 +199,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
     }
 
-    protected HippoRepository getHippoRepository(String address) {
-        if (address == null || address.length() == 0) {
-            log.error("Repository address (parameter " + REPOSITORY_ADDRESS_PARAM
-                    + " not set. Unable to perform authorization. Return unauthorized.");
-            return null;
-        }
-        try {
-            return HippoRepositoryFactory.getHippoRepository(address);
-        } catch (RepositoryException e) {
-            log.error("Error while obtaining repository: ", e);
-            return null;
-        }
-    }
 
-    private Session getSession(final UserCredentials credentials) {
-        HippoRepository hippoRepository = getHippoRepository(repositoryAddress);
-        if (hippoRepository == null) {
-            return null;
-        }
-        try {
-            return hippoRepository.login(credentials.getUsername(), credentials.getPassword().toCharArray());
-        } catch (LoginException e) {
-            log.debug("Invalid credentials for username '{}'", credentials.getUsername());
-            return null;
-        } catch (RepositoryException e) {
-            log.error("Error during authentication", e);
-            return null;
-        }
-    }
-
-    private void closeSession(Session session) {
-        if (session != null && session.isLive()) {
-            session.logout();
-        }
-    }
 
     @Override
     public String getEventCategory() {
@@ -318,8 +245,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
      * @param response the HttpServletResponse
      * @throws IOException Thrown if working with the response goes wrong
      */
-    protected void handleForbidden(final HttpServletResponse response)
-            throws IOException {
+    private void handleForbidden(final HttpServletResponse response) throws IOException {
         response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permissions to view this page.");
         response.flushBuffer();
@@ -331,7 +257,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
      * @param response the HttpServletResponse
      * @throws IOException Thrown if working with the response goes wrong
      */
-    protected void handleUnauthorized(final HttpServletResponse response) throws IOException {
+    private void handleUnauthorized(final HttpServletResponse response) throws IOException {
         response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized.");
         response.flushBuffer();
@@ -358,5 +284,87 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
     }
 
+    //############################################
+    //
+    //############################################
+
+
+    /**
+     * Load auth object for matched host name:
+     */
+    private AuthObject loadIpRules(final String host) {
+        for (Map.Entry<String, AuthObject> entry : rawData.entrySet()) {
+            final AuthObject value = entry.getValue();
+            final List<Pattern> hostPatterns = value.getHostPatterns();
+            for (Pattern pattern : hostPatterns) {
+                final Matcher matcher = pattern.matcher(host);
+                if (matcher.matches()) {
+                    return value;
+                }
+            }
+        }
+        // just return inactive object
+        return INVALID_AUTH_OBJECT;
+    }
+
+    private HippoRepository getHippoRepository(String address) {
+        if (address == null || address.length() == 0) {
+            log.error("Repository address (parameter " + REPOSITORY_ADDRESS_PARAM
+                    + " not set. Unable to perform authorization. Return unauthorized.");
+            return null;
+        }
+        try {
+            return HippoRepositoryFactory.getHippoRepository(address);
+        } catch (RepositoryException e) {
+            log.error("Error while obtaining repository: ", e);
+            return null;
+        }
+    }
+
+    private Session getSession(final UserCredentials credentials) {
+        HippoRepository hippoRepository = getHippoRepository(repositoryAddress);
+        if (hippoRepository == null) {
+            return null;
+        }
+        try {
+            return hippoRepository.login(credentials.getUsername(), credentials.getPassword().toCharArray());
+        } catch (LoginException e) {
+            log.debug("Invalid credentials for username '{}'", credentials.getUsername());
+            return null;
+        } catch (RepositoryException e) {
+            log.error("Error during authentication", e);
+            return null;
+        }
+    }
+
+    private void closeSession(Session session) {
+        if (session != null && session.isLive()) {
+            session.logout();
+        }
+    }
+
+    private void populateIpRanges(final String data) {
+        rawData.clear();
+        if (Strings.isNullOrEmpty(data)) {
+            log.warn("Data was null or empty");
+            return;
+        }
+        final Map<String, AuthObject> newObjects = fromJsonAsMap(data);
+        if (newObjects == null) {
+            log.warn("Data couldn't be de-serialized, data:{}", data);
+            return;
+        }
+        rawData.putAll(newObjects);
+    }
+
+    private void requestData() {
+        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
+        if (eventBus == null) {
+            log.warn("No event bus service found by class {}", HippoEventBus.class.getName());
+        } else {
+            // request data to be sent back to us
+            eventBus.post(new IpRequestEvent());
+        }
+    }
 
 }
