@@ -12,6 +12,7 @@ public class AuthObject {
 
     private boolean active = true;
     private boolean mustMatchAll;
+    private boolean allowCmsUsers;
     private String[] hosts;
     private Set<String> ranges;
     @JsonIgnore
@@ -40,6 +41,13 @@ public class AuthObject {
     }
 
 
+    public boolean isAllowCmsUsers() {
+        return allowCmsUsers;
+    }
+
+    public void setAllowCmsUsers(final boolean allowCmsUsers) {
+        this.allowCmsUsers = allowCmsUsers;
+    }
 
     public Set<String> getRanges() {
         return ranges;

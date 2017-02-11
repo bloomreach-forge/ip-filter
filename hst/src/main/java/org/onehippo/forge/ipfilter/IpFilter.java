@@ -171,24 +171,32 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                 break;
             }
         }
+        final boolean mustMatchAll = authObject.isMustMatchAll();
+        final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         // if no match is found and we have IP configured, exit
-        if (!matched && ipMatchers.size() > 0) {
+        if (!matched && ipMatchers.size() > 0 && mustMatchAll) {
             log.debug("No match for ip: {}", ip);
             return Status.FORBIDDEN;
         }
 
-        final boolean mustMatchAll = authObject.isMustMatchAll();
+
         if (matched && !mustMatchAll) {
+            log.debug("Matched based on IP address {}", ip);
             // no need to match username / password
             return Status.OK;
         }
-        // must match basic authorization
-        return authenticate(request);
+        if (allowCmsUsers) {
+            // must match basic authorization
+            return authenticate(request);
+        }
+        // no access
+        return Status.FORBIDDEN;
     }
 
     private Status authenticate(final HttpServletRequest request) {
         final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
         if (!credentials.valid()) {
+            log.debug("Invalid credentials, null or empty");
             return Status.UNAUTHORIZED;
         }
         final Boolean cached = userCache.getUnchecked(credentials.getUsername());
@@ -200,8 +208,10 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             // try to authenticate:
             session = getSession(credentials);
             if (session == null) {
+                log.debug("No valid session for user: {}", credentials.getUsername());
                 return Status.UNAUTHORIZED;
             }
+            log.debug("Successfully validated user: {}", credentials.getUsername());
             userCache.put(credentials.getUsername(), Boolean.TRUE);
             return Status.OK;
         } finally {

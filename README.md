@@ -1,4 +1,16 @@
-Configure module here:
+Configuration options:
+
+* enabled: config is enabled or not ( boolean, default true)
+* allow-cms-users allow login with CMS credentials ( boolean, default false)
+* match-all user must match IP address and login with CMS credentials ( boolean, default false)
+* hostnames list of hostnames (multivalue string, mandatory)
+* allowed-ip-ranges list of ip address ranges (multivalue string, not mandatory in case allow-cms-users is active)
+
+
+Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.
+
+
+Module can be configured here:
 
 http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig
 ```

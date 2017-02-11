@@ -76,6 +76,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
         }
         final AuthObject object = new AuthObject();
         object.setActive(true);
+        object.setAllowCmsUsers(allowCmsUsers);
         object.setMustMatchAll(JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false));
         object.setHosts(hosts);
         final Set<String> rangesSet = new HashSet<>();
