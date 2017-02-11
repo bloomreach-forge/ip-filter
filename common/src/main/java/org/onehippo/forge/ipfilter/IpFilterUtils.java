@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
 import java.util.Map;
 
+import static org.onehippo.forge.ipfilter.IpFilterConstants.HEADER_X_FORWARDED_HOST;
+
 public final class IpFilterUtils {
     private static final Logger log = LoggerFactory.getLogger(IpFilterUtils.class);
     private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
@@ -100,6 +102,13 @@ public final class IpFilterUtils {
     }
 
     public static String getHost(final HttpServletRequest request) {
-        return request.getRemoteHost();
+        final String hostHeader = request.getHeader(HEADER_X_FORWARDED_HOST);
+        if (Strings.isNullOrEmpty(hostHeader)) {
+            final String remoteHost = request.getRemoteHost();
+            log.debug("missing header {}, using: {}", HEADER_X_FORWARDED_HOST, remoteHost);
+            return remoteHost;
+        }
+        return hostHeader;
+
     }
 }
