@@ -3,7 +3,7 @@ Configuration options:
 * **enabled** : config is enabled or not ( boolean, default **true**)
 * **allow-cms-users** : allow login with CMS credentials, basic authentication popup( boolean, default **false**)
 * **match-all** : both: user IP address must be whitelisted and login with CMS credentials must be successful to access the site ( boolean, default **false**)
-* **hostnames** : list of hostnames. NOTE: must be regexp escaped like  ***.onehippo\.org** (multivalue string, **mandatory**)
+* **hostnames** : list of hostnames. NOTE: must be regexp escaped like  **\*.onehippo\.org** (multivalue string, **mandatory**)
 * **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, **not** mandatory in case **allow-cms-users** is true)
                                 
 
