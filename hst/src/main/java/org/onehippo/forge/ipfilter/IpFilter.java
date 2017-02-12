@@ -155,7 +155,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         // if no match is found and we have IP configured, exit
         if (!matched && ipMatchers.size() > 0 && mustMatchAll) {
-            log.debug("No match for host: {}, ip: {}", host, ip);
+            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both", host, ip);
             return Status.FORBIDDEN;
         }
 
