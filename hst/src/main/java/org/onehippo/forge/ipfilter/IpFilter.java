@@ -130,6 +130,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         final String host = getHost(request);
         final AuthObject authObject = cache.getUnchecked(host);
         if (authObject == null || !authObject.isActive()) {
+            log.debug("No configuration match for host: {}", host);
             return Status.OK;
         }
         final String ip = getIp(request);
@@ -140,11 +141,10 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         boolean matched  = ipCache.getUnchecked(pair);
         final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
         if (!matched) {
-            log.debug("IP found for '{}': {}", request.getPathInfo(), ip);
             // check if on whitelist
             for (IpMatcher matcher : ipMatchers) {
                 if (matcher.matches(ip)) {
-                    log.debug("Found match for ip: {}", matcher);
+                    log.debug("Found match for host: {}, ip: {}", host, ip);
                     matched = true;
                     ipCache.put(pair, Boolean.TRUE);
                     break;
@@ -155,7 +155,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         // if no match is found and we have IP configured, exit
         if (!matched && ipMatchers.size() > 0 && mustMatchAll) {
-            log.debug("No match for ip: {}", ip);
+            log.debug("No match for host: {}, ip: {}", host, ip);
             return Status.FORBIDDEN;
         }
 
