@@ -129,6 +129,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     private Status allowed(final HttpServletRequest request) {
         final String host = getHost(request);
         final AuthObject authObject = cache.getUnchecked(host);
+        // check if host is IP/auth protected:
         if (authObject == null || !authObject.isActive()) {
             log.debug("No configuration match for host: {}", host);
             return Status.OK;
@@ -153,18 +154,19 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
         final boolean mustMatchAll = authObject.isMustMatchAll();
         final boolean allowCmsUsers = authObject.isAllowCmsUsers();
-        // if no match is found and we have IP configured, exit
-        if (!matched && ipMatchers.size() > 0 && mustMatchAll) {
-            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both", host, ip);
-            return Status.FORBIDDEN;
-        }
-
-
+        // if ip already ok, check if basic authentication is needed:
         if (matched && !mustMatchAll) {
             log.debug("Matched based on IP address {}", ip);
             // no need to match username / password
             return Status.OK;
         }
+        // if no match is found and we have IP configured, exit
+        if (!matched && mustMatchAll && ipMatchers.size() > 0) {
+            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both", host, ip);
+            return Status.FORBIDDEN;
+        }
+
+
         if (allowCmsUsers) {
             // must match basic authorization
             return authenticate(request);
