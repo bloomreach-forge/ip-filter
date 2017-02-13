@@ -133,6 +133,11 @@
 
   </dependencyManagement>
 
+  <scm>
+    <connection>scm:git:https://code.onehippo.org/sandbox/hippo-addon-ip-filter.git</connection>
+    <developerConnection>scm:git:git@code.onehippo.org:sandbox/hippo-addon-ip-filter.git</developerConnection>
+    <url>https://code.onehippo.org/sandbox/hippo-addon-ip-filter</url>
+  </scm>
   <repositories>
     <repository>
       <id>hippo</id>
