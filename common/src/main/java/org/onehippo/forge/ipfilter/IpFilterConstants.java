@@ -17,7 +17,7 @@ public final class IpFilterConstants {
     public static final String ATTR_ALLOWED = "ip-filter-allowed";
     public static final int BASIC_AUTH_PREFIX_LENGTH = "Basic ".length();
     public static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
-    public static final String HEADER_X_FORWARDED_HOST = " X-Forwarded-Host";
+    public static final String HEADER_X_FORWARDED_HOST = "X-Forwarded-Host";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String IP_FILTER_LISTENER_CHANNEL = "ip-filter-listener";
     public static final String IP_FILTER_MODULE_CHANNEL = "ip-filter--module-listener";
