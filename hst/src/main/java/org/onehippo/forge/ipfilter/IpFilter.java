@@ -46,6 +46,12 @@ import static org.onehippo.forge.ipfilter.IpFilterUtils.*;
 public class IpFilter implements Filter, PersistedHippoEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
+    /**
+     * waiting time between data request event is sent.
+     */
+    private static final int EVENT_DELAY = 5000;
+
+    private long lastTimeSent;
 
     /**
      * Object contains *raw* data: multiple hosts can be matched based on regexp.
@@ -105,6 +111,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
 
         HippoServiceRegistry.registerService(this, PersistedHippoEventsService.class);
+        lastTimeSent = System.currentTimeMillis();
         requestData();
 
     }
@@ -112,9 +119,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
-        if (!initialized) {
-            requestData();
-        }
+        requestData();
         final Status status = allowed((HttpServletRequest) request);
         if (status == Status.OK) {
             chain.doFilter(request, response);
@@ -194,7 +199,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     @Override
     public boolean onlyNewEvents() {
-        return false;
+        return true;
     }
 
     @Override
@@ -395,11 +400,28 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     }
 
     private void requestData() {
+        if (initialized) {
+            return;
+        }
+        /*
+         prevent flood of request events:
+         ideally, data is received when filter is initialized,
+         but we can have a race condition there in case event bus is not ready yet.
+         */
+        final long current = System.currentTimeMillis();
+        final long diff = current - lastTimeSent;
+        if (diff < EVENT_DELAY) {
+            log.debug("Last event sent sent: {} ms ago, skipping this event", diff);
+            return;
+        }
+
         final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
         if (eventBus == null) {
             log.warn("No event bus service found by class {}", HippoEventBus.class.getName());
         } else {
             // request data to be sent back to us
+            lastTimeSent = current;
+            log.debug("Requesting IP filter data...");
             eventBus.post(new IpRequestEvent());
         }
     }

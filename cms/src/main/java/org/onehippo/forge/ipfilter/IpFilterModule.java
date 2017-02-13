@@ -146,7 +146,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
 
     @Override
     public boolean onlyNewEvents() {
-        return false;
+        return true;
     }
 
     @Override
