@@ -35,8 +35,14 @@
       <sv:property sv:name="enabled" sv:type="Boolean">
         <sv:value>true</sv:value>
       </sv:property>
+      <sv:property sv:name="match-all" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:property sv:name="allow-cms-users" sv:type="Boolean">
         <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
+        <sv:value>/ping/.*</sv:value>
       </sv:property>
       <sv:property sv:name="allowed-ip-ranges" sv:type="String" sv:multiple="true">
         <sv:value>127.0.0.1</sv:value>

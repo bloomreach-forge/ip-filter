@@ -81,7 +81,11 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
         object.setHosts(hosts);
         final Set<String> rangesSet = new HashSet<>();
         Collections.addAll(rangesSet, ranges);
+        final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
+        final Set<String> ignored = new HashSet<>();
+        Collections.addAll(ignored, ignoredPaths);
         object.setRanges(rangesSet);
+        object.setIgnoredPaths(ignored);
         return object;
     }
 

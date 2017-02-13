@@ -3,8 +3,9 @@ Configuration options:
 * **enabled** : config is enabled or not ( boolean, default **true**)
 * **allow-cms-users** : allow login with CMS credentials, basic authentication popup( boolean, default **false**)
 * **match-all** : both: user IP address must be whitelisted and login with CMS credentials must be successful to access the site ( boolean, default **false**)
-* **hostnames** : list of hostnames. NOTE: must be regexp escaped like  **\*.onehippo\.org** (multivalue string, **mandatory**)
+* **hostnames** : list of hostnames. NOTE: must be regular expression escaped like  **\*.onehippo\.org** (multivalue string, **mandatory**)
 * **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, **not** mandatory in case **allow-cms-users** is true)
+* **ignored-paths** : list of (**regular expression escaped!**) paths which are ignored by filter e.g. **/ping/.*** (multivalue string, optional)
                                 
 
 Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.
@@ -33,6 +34,9 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
   <sv:property sv:name="hostnames" sv:type="String" sv:multiple="true">
     <sv:value>.*onehippo\.com</sv:value>
     <sv:value>.*onehippo\.org</sv:value>
+  </sv:property> 
+  <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
+    <sv:value>/ping/.*</sv:value>
   </sv:property>
   <sv:property sv:name="match-all" sv:type="Boolean">
     <sv:value>true</sv:value>

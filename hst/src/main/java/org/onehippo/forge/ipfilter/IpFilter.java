@@ -56,7 +56,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     private LoadingCache<String, AuthObject> cache;
     private boolean initialized;
     private String repositoryAddress;
-    
+
     private final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
             .expireAfterWrite(30, TimeUnit.MINUTES)
@@ -67,7 +67,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                     return false;
                 }
             });
-   private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
+    private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
             .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<IpHostPair, Boolean>() {
@@ -110,8 +110,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     }
 
 
-
-
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         if (!initialized) {
@@ -134,12 +132,20 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             log.debug("No configuration match for host: {}", host);
             return Status.OK;
         }
+        // check if path is ignored:
+        final boolean ignored = isIgnored(request, authObject);
+        if (ignored) {
+            if (log.isDebugEnabled()) {
+                log.debug("Path is ignored: {}", getPath(request));
+            }
+            return Status.OK;
+        }
         final String ip = getIp(request);
         if (Strings.isNullOrEmpty(ip)) {
             return Status.UNAUTHORIZED;
         }
         final IpHostPair pair = new IpHostPair(host, ip);
-        boolean matched  = ipCache.getUnchecked(pair);
+        boolean matched = ipCache.getUnchecked(pair);
         final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
         if (!matched) {
             // check if on whitelist
@@ -175,33 +181,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         return Status.FORBIDDEN;
     }
 
-    private Status authenticate(final HttpServletRequest request) {
-        final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
-        if (!credentials.valid()) {
-            log.debug("Invalid credentials, null or empty");
-            return Status.UNAUTHORIZED;
-        }
-        final Boolean cached = userCache.getUnchecked(credentials.getUsername());
-        if (cached != null && cached) {
-            return Status.OK;
-        }
-        Session session = null;
-        try {
-            // try to authenticate:
-            session = getSession(credentials);
-            if (session == null) {
-                log.debug("No valid session for user: {}", credentials.getUsername());
-                return Status.UNAUTHORIZED;
-            }
-            log.debug("Successfully validated user: {}", credentials.getUsername());
-            userCache.put(credentials.getUsername(), Boolean.TRUE);
-            return Status.OK;
-        } finally {
-            closeSession(session);
-        }
-    }
-
-
 
     @Override
     public String getEventCategory() {
@@ -231,8 +210,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     }
 
 
-
-
     @Override
     public void destroy() {
         invalidateCaches();
@@ -244,6 +221,59 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         cache.invalidateAll();
         userCache.invalidateAll();
         ipCache.invalidateAll();
+    }
+
+    /**
+     * Check if path is ignored
+     */
+    private boolean isIgnored(final HttpServletRequest request, final AuthObject authObject) {
+        final String path = getPath(request);
+        if (path == null) {
+            return true;
+        }
+        final List<Pattern> ignoredPaths = authObject.getIgnoredPathPatterns();
+        for (final Pattern ignoredPath : ignoredPaths) {
+            final Matcher matcher = ignoredPath.matcher(path);
+            if (matcher.matches()) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    private String getPath(final HttpServletRequest request) {
+        final String path = request.getPathInfo();
+        if (!Strings.isNullOrEmpty(path)) {
+            return path;
+        }
+        return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
+    private Status authenticate(final HttpServletRequest request) {
+        final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
+        if (!credentials.valid()) {
+            log.debug("Invalid credentials, null or empty");
+            return Status.UNAUTHORIZED;
+        }
+        final Boolean cached = userCache.getUnchecked(credentials.getUsername());
+        if (cached != null && cached) {
+            return Status.OK;
+        }
+        Session session = null;
+        try {
+            // try to authenticate:
+            session = getSession(credentials);
+            if (session == null) {
+                log.debug("No valid session for user: {}", credentials.getUsername());
+                return Status.UNAUTHORIZED;
+            }
+            log.debug("Successfully validated user: {}", credentials.getUsername());
+            userCache.put(credentials.getUsername(), Boolean.TRUE);
+            return Status.OK;
+        } finally {
+            closeSession(session);
+        }
     }
 
     /**

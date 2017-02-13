@@ -1,6 +1,7 @@
 package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +20,27 @@ public class AuthObject {
     private boolean allowCmsUsers;
     private String[] hosts;
     private Set<String> ranges;
+    private Set<String> ignoredPaths;
     @JsonIgnore
     private Set<IpMatcher> ipMatchers;
 
     @JsonIgnore
     private List<Pattern> hostPatterns;
+    @JsonIgnore
+    private List<Pattern> ignoredPathPatterns;
 
     public AuthObject() {
+    }
+
+    public Set<String> getIgnoredPaths() {
+        if (ignoredPaths == null) {
+            ignoredPaths = new HashSet<>();
+        }
+        return ignoredPaths;
+    }
+
+    public void setIgnoredPaths(final Set<String> ignoredPaths) {
+        this.ignoredPaths = ignoredPaths;
     }
 
     public AuthObject(final String[] hosts) {
@@ -89,12 +104,30 @@ public class AuthObject {
                 try {
                     hostPatterns.add(Pattern.compile(host));
                 } catch (Exception e) {
-                    log.error("Invalid value {}", host);
-                    log.error("Error compiling pattern: ", e);
+                    log.error("Invalid host value {}", host);
+                    log.error("Error compiling host pattern: ", e);
                 }
             }
         }
         return hostPatterns;
+    }
+
+    public List<Pattern> getIgnoredPathPatterns() {
+        if (ignoredPathPatterns == null) {
+            ignoredPathPatterns = new ArrayList<>();
+            final Set<String> ignoredPaths = getIgnoredPaths();
+            for (String ignored : ignoredPaths) {
+                try {
+                    ignoredPathPatterns.add(Pattern.compile(ignored));
+                } catch (Exception e) {
+                    log.error("Invalid path value {}", ignored);
+                    log.error("Error compiling path pattern: ", e);
+                }
+            }
+
+        }
+
+        return ignoredPathPatterns;
     }
 
     public void setHostPatterns(final List<Pattern> hostPatterns) {
@@ -121,4 +154,11 @@ public class AuthObject {
         this.ipMatchers = ipMatchers;
     }
 
+    public void addIgnoredPath(final String path) {
+        if (!Strings.isNullOrEmpty(path)) {
+            // initialize
+            getIgnoredPaths();
+            ignoredPaths.add(path);
+        }
+    }
 }

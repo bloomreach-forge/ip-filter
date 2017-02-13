@@ -8,6 +8,7 @@ public final class IpFilterConstants {
     public static final String CONFIG_ALLOW_CMS_USERS = "allow-cms-users";
     public static final String CONFIG_ENABLED = "enabled";
     public static final String CONFIG_HOSTNAME = "hostnames";
+    public static final String CONFIG_IGNORED_PATHS = "ignored-paths";
     public static final String CONFIG_MATCH_ALL = "match-all";
     public static final String DATA = "ip-data";
     public static final String APPLICATION = "ip-filter-app";
