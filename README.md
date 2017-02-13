@@ -15,34 +15,43 @@ Module can be configured here:
 
 http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig
 ```
-<sv:node sv:name="onehippo" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>nt:unstructured</sv:value>
-  </sv:property>
-  <sv:property sv:name="allow-cms-users" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
-  <sv:property sv:multiple="true" sv:name="allowed-ip-ranges" sv:type="String">
-    <sv:value>127.0.0.1</sv:value>
-    <sv:value>81.21.138.121</sv:value>
-    <sv:value>2001:4cb8:29d:1::/64</sv:value>
-    <sv:value>80.100.160.251</sv:value>
-  </sv:property>
-  <sv:property sv:name="enabled" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
-  <sv:property sv:name="hostnames" sv:type="String" sv:multiple="true">
-    <sv:value>.*onehippo\.com</sv:value>
-    <sv:value>.*onehippo\.org</sv:value>
-  </sv:property> 
-  <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
-    <sv:value>/ping/.*</sv:value>
-  </sv:property>
-  <sv:property sv:name="match-all" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
-</sv:node>
-
+  <sv:node sv:name="hippo:moduleconfig">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="onehippo" sv:type="Name">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="match-all" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="allow-cms-users" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
+        <sv:value>/ping/.*</sv:value>
+        <sv:value>.*\.css</sv:value>
+        <sv:value>.*\.js</sv:value>
+        <sv:value>.*\.ico</sv:value>
+      </sv:property>
+      <sv:property sv:name="allowed-ip-ranges" sv:type="String" sv:multiple="true">
+        <sv:value>127.0.0.1</sv:value>
+        <sv:value>81.21.138.121</sv:value>
+        <sv:value>2001:4cb8:29d:1::/64</sv:value>
+        <sv:value>80.100.160.250</sv:value>
+      </sv:property>
+      <sv:property sv:name="hostnames" sv:type="String" sv:multiple="true">
+        <sv:value>localhost</sv:value>
+        <sv:value>127\.0\.0\.1</sv:value>
+        <sv:value>.*onehippo\.com</sv:value>
+        <sv:value>.*onehippo\.org</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
 ```
 Static config: (overridden by dynamic one above)
 ```
