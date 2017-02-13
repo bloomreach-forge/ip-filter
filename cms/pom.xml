@@ -19,13 +19,13 @@
   <parent>
     <groupId>org.onehippo.forge</groupId>
     <artifactId>hippo-cms-ip-filter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <name>Hippo addon IP filter CMS</name>
   <groupId>org.onehippo.forge</groupId>
   <artifactId>hippo-cms-ip-filter-cms</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <dependencies>
