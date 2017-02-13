@@ -8,6 +8,5 @@ public class IpFilterTest {
 
     @Test
     public void test() throws Exception {
-        Pattern.compile("");
     }
 }
