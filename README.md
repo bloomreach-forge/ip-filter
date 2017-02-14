@@ -53,7 +53,9 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
     </sv:node>
   </sv:node>
 ```
-Static config: (overridden by dynamic one above)
+
+Filter configuration (**web.xml**)
+
 ```
   <filter>
     <filter-name>IpFilter</filter-name>
@@ -70,7 +72,9 @@ Static config: (overridden by dynamic one above)
 
 
 ```
+
 Make filter mapping
+
 ```
   <filter-mapping>
     <filter-name>IpFilter</filter-name>
