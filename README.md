@@ -56,6 +56,7 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
 
 Filter configuration (**web.xml**)
 
+
 ```
   <filter>
     <filter-name>IpFilter</filter-name>
@@ -74,7 +75,7 @@ Filter configuration (**web.xml**)
 ```
 
 Make filter mapping
-
+NOTE:  filter mapping should be defined just after **CharacterEncodingFilter** so as a **second** filter in chain
 ```
   <filter-mapping>
     <filter-name>IpFilter</filter-name>
