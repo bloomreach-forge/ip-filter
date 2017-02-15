@@ -33,6 +33,9 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
       <sv:property sv:name="allow-cms-users" sv:type="Boolean">
         <sv:value>true</sv:value>
       </sv:property>
+      <sv:property sv:name="forwarded-for-header" sv:type="String">
+        <sv:value>X-Forwarded-For</sv:value>
+      </sv:property>
       <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
         <sv:value>/ping/.*</sv:value>
         <sv:value>.*\.css</sv:value>
