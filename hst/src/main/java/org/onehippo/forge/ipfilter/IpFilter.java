@@ -49,9 +49,20 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     /**
      * waiting time between data request event is sent.
      */
-    private static final int EVENT_DELAY = 5000;
+    private static final int EVENT_REQUEST_DELAY = 5000;
+    /**
+     * Limit number of event requests 
+     */
+    private static final int EVENT_REQUEST_LIMIT_COUNT = 25;
 
+    /**
+     * keep time of last data request event
+     */
     private long lastTimeSent;
+    /**
+     * increment each time data request event is sent
+     */
+    private int eventRequestCount;
 
     /**
      * Object contains *raw* data: multiple hosts can be matched based on regexp.
@@ -145,7 +156,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             }
             return Status.OK;
         }
-        final String ip = getIp(request);
+        final String ip = getIp(request, authObject.getForwardedForHeader());
         if (Strings.isNullOrEmpty(ip)) {
             return Status.UNAUTHORIZED;
         }
@@ -164,7 +175,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             }
         }
         final boolean mustMatchAll = authObject.isMustMatchAll();
-        final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         // if ip already ok, check if basic authentication is needed:
         if (matched && !mustMatchAll) {
             log.debug("Matched based on IP address {}", ip);
@@ -173,14 +183,18 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
         // if no match is found and we have IP configured, exit
         if (!matched && mustMatchAll && ipMatchers.size() > 0) {
-            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both", host, ip);
+            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both but ip set was empty", host, ip);
             return Status.FORBIDDEN;
         }
-
-
+        final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         if (allowCmsUsers) {
             // must match basic authorization
             return authenticate(request);
+        }
+        if (mustMatchAll) {
+            if (log.isInfoEnabled()) {
+                log.error("Misconfiguration: match-all property is enabled but allow-cms-users is set to false");
+            }
         }
         // no access
         return Status.FORBIDDEN;
@@ -206,7 +220,12 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     public void onHippoEvent(final HippoEvent event) {
         final String application = event.application();
         if (!Strings.isNullOrEmpty(application) && application.equals(APPLICATION)) {
-            initialized = true;
+            if (!initialized) {
+                log.info("Initializing ip filter");
+                initialized = true;
+            } else {
+                log.info("Reconfiguring ip filter");
+            }
             log.debug("invalidating cache for: {}", event);
             final String data = (String) event.get(DATA);
             populateIpRanges(data);
@@ -403,6 +422,10 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         if (initialized) {
             return;
         }
+        if (eventRequestCount > EVENT_REQUEST_LIMIT_COUNT) {
+            log.debug("Reached max number of event data requests {}", EVENT_REQUEST_LIMIT_COUNT);
+            return;
+        }
         /*
          prevent flood of request events:
          ideally, data is received when filter is initialized,
@@ -410,7 +433,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
          */
         final long current = System.currentTimeMillis();
         final long diff = current - lastTimeSent;
-        if (diff < EVENT_DELAY) {
+        if (diff < EVENT_REQUEST_DELAY) {
             log.debug("Last event sent sent: {} ms ago, skipping this event", diff);
             return;
         }
@@ -421,6 +444,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         } else {
             // request data to be sent back to us
             lastTimeSent = current;
+            eventRequestCount++;
             log.debug("Requesting IP filter data...");
             eventBus.post(new IpRequestEvent());
         }

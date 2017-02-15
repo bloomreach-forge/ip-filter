@@ -29,12 +29,10 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
     private String data = EMPTY_DATA;
     private final Object lock = new Object();
     private boolean configured;
-    private boolean initialized;
-
 
     @Override
     protected void doConfigure(final Node node) throws RepositoryException {
-        log.debug("Reconfiguring {}", this.getClass().getName());
+        log.debug("Re(configuring) {}", this.getClass().getName());
         configured = false;
         synchronized (lock) {
             final Map<String, AuthObject> objects = new HashMap<>();
@@ -77,6 +75,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
         final AuthObject object = new AuthObject();
         object.setActive(true);
         object.setAllowCmsUsers(allowCmsUsers);
+        object.setForwardedForHeader(JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, IpFilterConstants.HEADER_X_FORWARDED_FOR));
         object.setMustMatchAll(JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false));
         object.setHosts(hosts);
         final Set<String> rangesSet = new HashSet<>();
@@ -91,8 +90,6 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
 
     @Override
     protected void doInitialize(final Session session) throws RepositoryException {
-        initialized = true;
-        this.session = session;
         HippoServiceRegistry.registerService(this, HippoEventBus.class);
     }
 
@@ -106,7 +103,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
      * all data serialized in JSON format
      */
     private void sendEvent() {
-        if (!initialized || !configured) {
+        if (!configured) {
             log.warn("Not configured or initialized yet, skipping sending of event");
         }
         final long current = System.currentTimeMillis();

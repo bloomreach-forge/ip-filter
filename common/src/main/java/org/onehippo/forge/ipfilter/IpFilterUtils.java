@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import net.sf.json.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.onehippo.forge.ipfilter.IpFilterConstants.HEADER_X_FORWARDED_HOST;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.*;
 
 public final class IpFilterUtils {
     private static final Logger log = LoggerFactory.getLogger(IpFilterUtils.class);
@@ -85,20 +84,18 @@ public final class IpFilterUtils {
     }
 
 
-    public static String getIp(HttpServletRequest request) {
-        if (request != null) {
-            final String header = request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR);
-            if (Strings.isNullOrEmpty(header)) {
-                return request.getRemoteAddr();
-            }
-            final Iterable<String> ipAddresses = COMMA_SPLITTER.split(header);
-            final Iterator<String> iterator = ipAddresses.iterator();
-            if (iterator.hasNext()) {
-                return iterator.next();
-            }
+    public static String getIp(HttpServletRequest request, final String headerName) {
+        final String header = request.getHeader(headerName);
+        if (Strings.isNullOrEmpty(header)) {
+            log.debug("Header: {} was empty", headerName);
             return request.getRemoteAddr();
         }
-        return null;
+        final Iterable<String> ipAddresses = COMMA_SPLITTER.split(header);
+        final Iterator<String> iterator = ipAddresses.iterator();
+        if (iterator.hasNext()) {
+            return iterator.next();
+        }
+        return request.getRemoteAddr();
     }
 
     public static String getHost(final HttpServletRequest request) {

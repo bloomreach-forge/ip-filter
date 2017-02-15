@@ -2,6 +2,7 @@ package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import org.apache.sanselan.formats.jpeg.iptc.IPTCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ public class AuthObject {
     private boolean active = true;
     private boolean mustMatchAll;
     private boolean allowCmsUsers;
+    private String forwardedForHeader;
     private String[] hosts;
     private Set<String> ranges;
     private Set<String> ignoredPaths;
@@ -148,6 +150,17 @@ public class AuthObject {
             }
         }
         return ipMatchers;
+    }
+
+    public String getForwardedForHeader() {
+        if (Strings.isNullOrEmpty(forwardedForHeader)) {
+            forwardedForHeader = IpFilterConstants.HEADER_X_FORWARDED_FOR;
+        }
+        return forwardedForHeader;
+    }
+
+    public void setForwardedForHeader(final String forwardedForHeader) {
+        this.forwardedForHeader = forwardedForHeader;
     }
 
     public void setIpMatchers(final Set<IpMatcher> ipMatchers) {

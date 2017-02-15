@@ -6,6 +6,7 @@ Configuration options:
 * **hostnames** : list of hostnames. NOTE: must be regular expression escaped like  **\*.onehippo\.org** (multivalue string, **mandatory**)
 * **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, **not** mandatory in case **allow-cms-users** is true)
 * **ignored-paths** : list of (**regular expression escaped!**) paths which are ignored by filter e.g. **/ping/.*** (multivalue string, optional)
+* **forwarded-for-header** : name of (**X-Forwarded-For**) header (string, optional, default: X-Forwarded-For)
                                 
 
 Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.
