@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -110,5 +112,33 @@ public final class IpFilterUtils {
         }
         return hostHeader;
 
+    }
+
+    public static String getPath(final HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
+    /**
+     * Handle the case of an authenticated user trying to view a page without the appropriate privileges.
+     *
+     * @param response the HttpServletResponse
+     * @throws IOException Thrown if working with the response goes wrong
+     */
+    public static void handleForbidden(final HttpServletResponse response, final String realm) throws IOException {
+        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permissions to view this page.");
+        response.flushBuffer();
+    }
+
+    /**
+     * Handle the case of an authenticated user.
+     *
+     * @param response the HttpServletResponse
+     * @throws IOException Thrown if working with the response goes wrong
+     */
+    public static void handleUnauthorized(final HttpServletResponse response, final String realm) throws IOException {
+        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized.");
+        response.flushBuffer();
     }
 }

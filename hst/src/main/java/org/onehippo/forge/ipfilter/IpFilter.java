@@ -252,9 +252,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
      */
     private boolean isIgnored(final HttpServletRequest request, final AuthObject authObject) {
         final String path = getPath(request);
-        if (path == null) {
-            return true;
-        }
         final List<Pattern> ignoredPaths = authObject.getIgnoredPathPatterns();
         for (final Pattern ignoredPath : ignoredPaths) {
             final Matcher matcher = ignoredPath.matcher(path);
@@ -264,14 +261,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
         return false;
 
-    }
-
-    private String getPath(final HttpServletRequest request) {
-        final String path = request.getPathInfo();
-        if (!Strings.isNullOrEmpty(path)) {
-            return path;
-        }
-        return request.getRequestURI().substring(request.getContextPath().length());
     }
 
     private Status authenticate(final HttpServletRequest request) {
@@ -300,56 +289,27 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
     }
 
-    /**
-     * Handle the case of an authenticated user trying to view a page without the appropriate privileges.
-     *
-     * @param response the HttpServletResponse
-     * @throws IOException Thrown if working with the response goes wrong
-     */
-    private void handleForbidden(final HttpServletResponse response) throws IOException {
-        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permissions to view this page.");
-        response.flushBuffer();
-    }
-
-    /**
-     * Handle the case of an authenticated user.
-     *
-     * @param response the HttpServletResponse
-     * @throws IOException Thrown if working with the response goes wrong
-     */
-    private void handleUnauthorized(final HttpServletResponse response) throws IOException {
-        response.setHeader("WWW-Authenticate", "Basic realm=\"" + realm + '"');
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized.");
-        response.flushBuffer();
-    }
-
     private void handleAuthorizationIssue(final HttpServletRequest req, final HttpServletResponse res, Status status) {
         try {
             switch (status) {
                 case FORBIDDEN:
                     log.info("Request forbidden from: {}", req.getRemoteHost());
-                    handleForbidden(res);
+                    handleForbidden(res, realm);
                     break;
                 case UNAUTHORIZED:
                     log.info("Request unauthorized from: {}", req.getRemoteHost());
-                    handleUnauthorized(res);
+                    handleUnauthorized(res, realm);
                     break;
                 default:
                     log.warn("Unknown status found. Request unauthorized from: {}", req.getRemoteHost());
-                    handleUnauthorized(res);
+                    handleUnauthorized(res, realm);
                     break;
             }
         } catch (IOException e) {
             log.error("IOException raised in AuthenticationFilter", e);
         }
     }
-
-    //############################################
-    //
-    //############################################
-
-
+    
     /**
      * Load auth object for matched host name:
      */
