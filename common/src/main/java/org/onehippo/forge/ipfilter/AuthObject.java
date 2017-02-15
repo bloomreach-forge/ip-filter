@@ -153,9 +153,6 @@ public class AuthObject {
     }
 
     public String getForwardedForHeader() {
-        if (Strings.isNullOrEmpty(forwardedForHeader)) {
-            forwardedForHeader = IpFilterConstants.HEADER_X_FORWARDED_FOR;
-        }
         return forwardedForHeader;
     }
 

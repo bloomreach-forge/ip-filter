@@ -24,11 +24,13 @@ public final class IpFilterUtils {
     private static final Logger log = LoggerFactory.getLogger(IpFilterUtils.class);
     private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
     public static final ObjectMapper JSON = new ObjectMapper();
+
     static {
         JSON.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         JSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JSON.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
+
     private IpFilterUtils() {
     }
 
@@ -57,12 +59,12 @@ public final class IpFilterUtils {
     }
 
 
-
     @Nullable
     public static Map<String, AuthObject> fromJsonAsMap(final String message) {
 
         try {
-            return JSON.readValue(message, new TypeReference<Map<String, AuthObject>>(){});
+            return JSON.readValue(message, new TypeReference<Map<String, AuthObject>>() {
+            });
         } catch (Exception e) {
 
             log.error("JSON error (see message below)", e);
@@ -70,7 +72,7 @@ public final class IpFilterUtils {
         }
         return null;
     }
-    
+
     @Nullable
     public static <T> T fromJson(final String message, Class<T> clazz) {
 
@@ -84,7 +86,8 @@ public final class IpFilterUtils {
     }
 
 
-    public static String getIp(HttpServletRequest request, final String headerName) {
+    public static String getIp(HttpServletRequest request, final String name) {
+        final String headerName = Strings.isNullOrEmpty(name) ? IpFilterConstants.HEADER_X_FORWARDED_FOR : name;
         final String header = request.getHeader(headerName);
         if (Strings.isNullOrEmpty(header)) {
             log.debug("Header: {} was empty", headerName);
