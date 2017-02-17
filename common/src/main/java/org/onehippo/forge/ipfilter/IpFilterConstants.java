@@ -16,7 +16,7 @@ public final class IpFilterConstants {
     public static final String DATA = "ip-data";
     public static final String APPLICATION = "ip-filter-app";
     public static final AuthObject INVALID_AUTH_OBJECT = new AuthObject(false);
-    
+
     public static final int BASIC_AUTH_PREFIX_LENGTH = "Basic ".length();
     public static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
     public static final String HEADER_X_FORWARDED_HOST = "X-Forwarded-Host";

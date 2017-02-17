@@ -3,7 +3,6 @@ package org.onehippo.forge.ipfilter;
 public class IpHostPair {
 
     private final String ip;
-
     private final String host;
 
     public IpHostPair(final String ip, final String host) {
@@ -27,13 +26,8 @@ public class IpHostPair {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         final IpHostPair that = (IpHostPair) o;
-
-        if (!ip.equals(that.ip)) {
-            return false;
-        }
-        return host.equals(that.host);
+        return ip.equals(that.ip) && host.equals(that.host);
     }
 
     @Override
