@@ -7,6 +7,8 @@ Configuration options:
 * **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, **not** mandatory in case **allow-cms-users** is true)
 * **ignored-paths** : list of (**regular expression escaped!**) paths which are ignored by filter e.g. **/ping/.*** (multivalue string, optional)
 * **forwarded-for-header** : name of (**X-Forwarded-For**) header (string, optional, default: X-Forwarded-For)
+* **ignored-header** : name of header to ignore (string, optional, see **ignored-header-values**)
+* **ignored-header-values** : values of *ignored-header** which must be matched to be ignored (multivalue string, optional)
                                 
 
 Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.

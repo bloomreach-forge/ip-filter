@@ -259,6 +259,20 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                 return true;
             }
         }
+        // check if we have header ignore:
+        final String ignoreHeader = authObject.getIgnoreHeader();
+        if (!Strings.isNullOrEmpty(ignoreHeader)) {
+            final String value = request.getHeader(ignoreHeader);
+            if(!Strings.isNullOrEmpty(value)){
+                final Set<String> headerValues = authObject.getHeaderValues();
+                final boolean matched = headerValues.contains(value);
+                if (matched) {
+                    log.debug("Matched header {} for value {}", ignoreHeader, value);
+                }else{
+                    log.debug("Header value mismatch, header {},  value {}", ignoreHeader, value);
+                }
+            }
+        }
         return false;
 
     }

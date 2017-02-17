@@ -83,6 +83,13 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
         final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
         final Set<String> ignored = new HashSet<>();
         Collections.addAll(ignored, ignoredPaths);
+        // headers
+        final String[] ignoredHeaderValues = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER_VALUES, ArrayUtils.EMPTY_STRING_ARRAY);
+        final Set<String> ignoredHeaderSet = new HashSet<>();
+        Collections.addAll(ignoredHeaderSet, ignoredHeaderValues);
+        String ignoredHeader  = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER, null);
+        object.setIgnoreHeader(ignoredHeader);
+        object.setHeaderValues(ignoredHeaderSet);
         object.setRanges(rangesSet);
         object.setIgnoredPaths(ignored);
         return object;

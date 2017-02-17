@@ -9,6 +9,8 @@ public final class IpFilterConstants {
     public static final String CONFIG_ENABLED = "enabled";
     public static final String CONFIG_HOSTNAME = "hostnames";
     public static final String CONFIG_IGNORED_PATHS = "ignored-paths";
+    public static final String CONFIG_IGNORED_HEADER = "ignored-header";
+    public static final String CONFIG_IGNORED_HEADER_VALUES = "ignored-header-values";
     public static final String CONFIG_MATCH_ALL = "match-all";
     public static final String CONFIG_FORWARDED_FOR_HEADER = "forwarded-for-header";
     public static final String DATA = "ip-data";

@@ -2,14 +2,10 @@ package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import org.apache.sanselan.formats.jpeg.iptc.IPTCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class AuthObject {
@@ -25,6 +21,9 @@ public class AuthObject {
     private Set<String> ignoredPaths;
     @JsonIgnore
     private Set<IpMatcher> ipMatchers;
+
+    private String ignoreHeader;
+    private Set<String> headerValues;
 
     @JsonIgnore
     private List<Pattern> hostPatterns;
@@ -170,5 +169,24 @@ public class AuthObject {
             getIgnoredPaths();
             ignoredPaths.add(path);
         }
+    }
+
+    public String getIgnoreHeader() {
+        return ignoreHeader;
+    }
+
+    public void setIgnoreHeader(final String ignoreHeader) {
+        this.ignoreHeader = ignoreHeader;
+    }
+
+    public Set<String> getHeaderValues() {
+        if (headerValues == null) {
+            headerValues = Collections.emptySet();
+        }
+        return headerValues;
+    }
+
+    public void setHeaderValues(final Set<String> headerValues) {
+        this.headerValues = headerValues;
     }
 }
