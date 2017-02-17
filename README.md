@@ -8,7 +8,7 @@ Configuration options:
 * **ignored-paths** : list of (**regular expression escaped!**) paths which are ignored by filter e.g. **/ping/.*** (multivalue string, optional)
 * **forwarded-for-header** : name of (**X-Forwarded-For**) header (string, optional, default: X-Forwarded-For)
 * **ignored-header** : name of header to ignore (string, optional, see **ignored-header-values**)
-* **ignored-header-values** : values of *ignored-header** which must be matched to be ignored (multivalue string, optional)
+* **ignored-header-values** : values of **ignored-header** which must be matched to be ignored (multivalue string, optional)
                                 
 
 Either allow-cms-users or allowed-ip-ranges must be enabled for valid configuration.
