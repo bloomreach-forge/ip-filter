@@ -30,7 +30,17 @@ public final class IpFilterConstants {
     public static final String REALM_PARAM = "realm";
     public static final int CACHE_SITE = 100;
     public static final int CACHE_EXPIRE_IN_MINUTES = 30;
-    static final String DEFAULT_REPOSITORY_ADDRESS = "vm://";
+    public static final int CACHE_EXPIRES_IN_DAYS = 30;
+    public static final String DEFAULT_REPOSITORY_ADDRESS = "vm://";
+    /**
+     * waiting time between data request event is sent.
+     */
+    public static final int EVENT_REQUEST_DELAY = 5000;
+    /**
+     * Limit number of event requests
+     */
+    public static final int EVENT_REQUEST_LIMIT_COUNT = 25;
+
 
     private IpFilterConstants() {
     }

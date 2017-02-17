@@ -47,14 +47,6 @@ import static org.onehippo.forge.ipfilter.IpFilterUtils.*;
 public class IpFilter implements Filter, PersistedHippoEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
-    /**
-     * waiting time between data request event is sent.
-     */
-    private static final int EVENT_REQUEST_DELAY = 5000;
-    /**
-     * Limit number of event requests
-     */
-    private static final int EVENT_REQUEST_LIMIT_COUNT = 25;
 
     /**
      * keep time of last data request event
@@ -77,7 +69,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     private final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
-            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Boolean>() {
                 @Override
                 public Boolean load(final String key) throws Exception {
@@ -105,7 +97,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         repositoryAddress = getParameter(filterConfig, REPOSITORY_ADDRESS_PARAM, DEFAULT_REPOSITORY_ADDRESS);
         cache = CacheBuilder.newBuilder()
                 .maximumSize(1)
-                .expireAfterWrite(10, TimeUnit.DAYS)
+                .expireAfterWrite(CACHE_EXPIRES_IN_DAYS, TimeUnit.DAYS)
                 .build(new CacheLoader<String, AuthObject>() {
                     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
