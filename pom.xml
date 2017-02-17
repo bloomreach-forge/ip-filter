@@ -25,7 +25,7 @@
   <name>Hippo addon IP filter</name>
   <groupId>org.onehippo.forge</groupId>
   <artifactId>hippo-cms-ip-filter</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -137,7 +137,7 @@
     <connection>scm:git:https://code.onehippo.org/sandbox/hippo-addon-ip-filter.git</connection>
     <developerConnection>scm:git:git@code.onehippo.org:sandbox/hippo-addon-ip-filter.git</developerConnection>
     <url>https://code.onehippo.org/sandbox/hippo-addon-ip-filter</url>
-    <tag>HEAD</tag>
+    <tag>hippo-cms-ip-filter-1.0.2</tag>
   </scm>
   <repositories>
     <repository>
