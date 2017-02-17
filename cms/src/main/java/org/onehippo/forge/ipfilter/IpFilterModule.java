@@ -84,15 +84,24 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule implement
         final Set<String> ignored = new HashSet<>();
         Collections.addAll(ignored, ignoredPaths);
         // headers
-        final String[] ignoredHeaderValues = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER_VALUES, ArrayUtils.EMPTY_STRING_ARRAY);
-        final Set<String> ignoredHeaderSet = new HashSet<>();
-        Collections.addAll(ignoredHeaderSet, ignoredHeaderValues);
-        String ignoredHeader  = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER, null);
-        object.setIgnoreHeader(ignoredHeader);
-        object.setHeaderValues(ignoredHeaderSet);
+        parseHeaders(object, node);
         object.setRanges(rangesSet);
         object.setIgnoredPaths(ignored);
         return object;
+    }
+
+    private void parseHeaders(final AuthObject object, final Node root) throws RepositoryException {
+        final NodeIterator nodes = root.getNodes();
+        while (nodes.hasNext()) {
+            final Node node = nodes.nextNode();
+            final String[] ignoredHeaderValues = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER_VALUES, ArrayUtils.EMPTY_STRING_ARRAY);
+            final Set<String> ignoredHeaderSet = new HashSet<>();
+            Collections.addAll(ignoredHeaderSet, ignoredHeaderValues);
+            String ignoredHeader = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER, null);
+            if (!Strings.isNullOrEmpty(ignoredHeader) && !ignoredHeaderSet.isEmpty()) {
+                object.addIgnoreHeader(ignoredHeader, ignoredHeaderSet);
+            }
+        }
     }
 
     @Override

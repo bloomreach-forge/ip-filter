@@ -62,6 +62,18 @@
         <sv:value>.*onehippo\.com</sv:value>
         <sv:value>.*onehippo\.org</sv:value>
       </sv:property>
+      <sv:node sv:name="fastly">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="ignore-header" sv:type="String">
+          <sv:value>X-fastly</sv:value>
+        </sv:property>
+        <sv:property sv:name="ignore-header-values" sv:type="String" sv:multiple="true">
+          <sv:value>some string</sv:value>
+          <sv:value>another string</sv:value>
+        </sv:property>
+      </sv:node>
     </sv:node>
   </sv:node>
 

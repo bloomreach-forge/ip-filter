@@ -22,8 +22,8 @@ public class AuthObject {
     @JsonIgnore
     private Set<IpMatcher> ipMatchers;
 
-    private String ignoreHeader;
-    private Set<String> headerValues;
+
+    private Map<String, Set<String>> ignoredHeaders;
 
     @JsonIgnore
     private List<Pattern> hostPatterns;
@@ -171,22 +171,34 @@ public class AuthObject {
         }
     }
 
-    public String getIgnoreHeader() {
-        return ignoreHeader;
+
+    public Map<String, Set<String>> getIgnoredHeaders() {
+        return ignoredHeaders;
     }
 
-    public void setIgnoreHeader(final String ignoreHeader) {
-        this.ignoreHeader = ignoreHeader;
+    public void setIgnoredHeaders(final Map<String, Set<String>> ignoredHeaders) {
+        this.ignoredHeaders = ignoredHeaders;
     }
 
-    public Set<String> getHeaderValues() {
-        if (headerValues == null) {
-            headerValues = Collections.emptySet();
+    public void setIgnoredPathPatterns(final List<Pattern> ignoredPathPatterns) {
+        this.ignoredPathPatterns = ignoredPathPatterns;
+    }
+
+    public void addIgnoreHeader(final String ignoredHeader, final Set<String> ignoredHeaderSet) {
+        if (ignoredHeaders == null) {
+            ignoredHeaders = new HashMap<>();
         }
-        return headerValues;
-    }
-
-    public void setHeaderValues(final Set<String> headerValues) {
-        this.headerValues = headerValues;
+        for (String value : ignoredHeaderSet) {
+            if (!Strings.isNullOrEmpty(value)) {
+                if (ignoredHeaders.get(ignoredHeader) == null) {
+                    Set<String> values = new HashSet<>();
+                    values.add(value);
+                    ignoredHeaders.put(ignoredHeader, values);
+                } else {
+                    Set<String> values = ignoredHeaders.get(ignoredHeader);
+                    values.add(value);
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
      */
     private static final int EVENT_REQUEST_DELAY = 5000;
     /**
-     * Limit number of event requests 
+     * Limit number of event requests
      */
     private static final int EVENT_REQUEST_LIMIT_COUNT = 25;
 
@@ -259,16 +260,26 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                 return true;
             }
         }
+
         // check if we have header ignore:
-        final String ignoreHeader = authObject.getIgnoreHeader();
-        if (!Strings.isNullOrEmpty(ignoreHeader)) {
+        final Map<String, Set<String>> multimap = authObject.getIgnoredHeaders();
+        if (multimap == null || multimap.isEmpty()) {
+            return false;
+        }
+        final Set<Map.Entry<String, Set<String>>> entries = multimap.entrySet();
+        for (Map.Entry<String, Set<String>> entry : entries) {
+            final String ignoreHeader = entry.getKey();
             final String value = request.getHeader(ignoreHeader);
-            if(!Strings.isNullOrEmpty(value)){
-                final Set<String> headerValues = authObject.getHeaderValues();
+            if (!Strings.isNullOrEmpty(value)) {
+                final Collection<String> headerValues = multimap.get(ignoreHeader);
+                if (headerValues == null) {
+                    continue;
+                }
                 final boolean matched = headerValues.contains(value);
                 if (matched) {
                     log.debug("Matched header {} for value {}", ignoreHeader, value);
-                }else{
+                    return true;
+                } else {
                     log.debug("Header value mismatch, header {},  value {}", ignoreHeader, value);
                 }
             }
@@ -323,7 +334,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
             log.error("IOException raised in AuthenticationFilter", e);
         }
     }
-    
+
     /**
      * Load auth object for matched host name:
      */

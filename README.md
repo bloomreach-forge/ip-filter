@@ -7,6 +7,9 @@ Configuration options:
 * **allowed-ip-ranges** : whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64** (multivalue string, **not** mandatory in case **allow-cms-users** is true)
 * **ignored-paths** : list of (**regular expression escaped!**) paths which are ignored by filter e.g. **/ping/.*** (multivalue string, optional)
 * **forwarded-for-header** : name of (**X-Forwarded-For**) header (string, optional, default: X-Forwarded-For)
+
+Multiple subnodes containing following properties:
+
 * **ignored-header** : name of header to ignore (string, optional, see **ignored-header-values**)
 * **ignored-header-values** : values of **ignored-header** which must be matched to be ignored (multivalue string, optional)
                                 
@@ -56,6 +59,17 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
         <sv:value>.*onehippo\.com</sv:value>
         <sv:value>.*onehippo\.org</sv:value>
       </sv:property>
+      <sv:node sv:name="host-header">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="ignored-header" sv:type="String">
+          <sv:value>host</sv:value>
+        </sv:property>
+        <sv:property sv:multiple="true" sv:name="ignored-header-values" sv:type="String">
+          <sv:value>localhost:8080</sv:value>
+        </sv:property>
+      </sv:node>
     </sv:node>
   </sv:node>
 ```
