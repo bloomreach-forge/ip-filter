@@ -152,9 +152,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         // check if path is ignored:
         final boolean ignored = isIgnored(request, authObject);
         if (ignored) {
-            if (log.isDebugEnabled()) {
-                log.debug("Path is ignored: {}", getPath(request));
-            }
             return Status.OK;
         }
         final String ip = getIp(request, authObject.getForwardedForHeader());
@@ -257,6 +254,9 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         for (final Pattern ignoredPath : ignoredPaths) {
             final Matcher matcher = ignoredPath.matcher(path);
             if (matcher.matches()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Path is ignored: {}", getPath(request));
+                }
                 return true;
             }
         }
