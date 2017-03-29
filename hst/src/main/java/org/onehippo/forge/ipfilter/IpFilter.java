@@ -13,6 +13,7 @@ import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
 import org.onehippo.cms7.event.HippoEvent;
 import org.onehippo.cms7.event.HippoEventConstants;
+import org.onehippo.cms7.services.HippoServiceRegistration;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.cms7.services.eventbus.HippoEventBus;
 import org.onehippo.repository.events.PersistedHippoEventListener;
@@ -124,6 +125,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         requestData();
+        checkListenerHealth(request);
         final Status status = allowed((HttpServletRequest) request);
         if (status == Status.OK) {
             chain.doFilter(request, response);
@@ -188,6 +190,23 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
         // no access
         return Status.FORBIDDEN;
+    }
+
+    private void checkListenerHealth(final ServletRequest request) {
+        final String checkListenerHealth = request.getParameter("checkListenerHealth");
+        if (!Strings.isNullOrEmpty(checkListenerHealth) && checkListenerHealth.equals("true")) {
+            log.debug("@checking if listener is active");
+            final List<HippoServiceRegistration> registrations = HippoServiceRegistry.getRegistrations(PersistedHippoEventsService.class);
+            for (HippoServiceRegistration registration : registrations) {
+                if (registration.getService().equals(this)) {
+                    log.info("@service is registered: {}", registration);
+                    return;
+                }
+            }
+            // not found, register listener:
+            HippoServiceRegistry.registerService(this, PersistedHippoEventsService.class);
+            log.info("@HippoServiceRegistry: registered IpFilter (PersistedHippoEventsService.class)");
+        }
     }
 
 
