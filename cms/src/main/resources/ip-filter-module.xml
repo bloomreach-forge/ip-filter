@@ -22,7 +22,7 @@
     <sv:value>org.onehippo.forge.ipfilter.IpFilterModule</sv:value>
   </sv:property>
   <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
-    <sv:value>true</sv:value>
+    <sv:value>false</sv:value>
   </sv:property>
   <sv:node sv:name="hippo:moduleconfig">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

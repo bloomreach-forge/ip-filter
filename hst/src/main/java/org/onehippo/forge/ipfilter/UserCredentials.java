@@ -57,5 +57,10 @@ public final class UserCredentials {
         return password;
     }
 
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }
 

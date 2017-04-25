@@ -3,71 +3,78 @@
  */
 package org.onehippo.forge.ipfilter;
 
-import com.google.common.base.Strings;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableFutureTask;
-import org.hippoecm.repository.HippoRepository;
-import org.hippoecm.repository.HippoRepositoryFactory;
-import org.onehippo.cms7.event.HippoEvent;
-import org.onehippo.cms7.event.HippoEventConstants;
-import org.onehippo.cms7.services.HippoServiceRegistration;
-import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.cms7.services.eventbus.HippoEventBus;
-import org.onehippo.repository.events.PersistedHippoEventListener;
-import org.onehippo.repository.events.PersistedHippoEventsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.LoginException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.onehippo.forge.ipfilter.IpFilterConstants.*;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.*;
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hippoecm.hst.core.container.ComponentManager;
+import org.hippoecm.hst.site.HstServices;
+import org.hippoecm.repository.HippoRepository;
+import org.hippoecm.repository.HippoRepositoryFactory;
+import org.onehippo.cms7.services.HippoServiceRegistry;
+import org.onehippo.repository.events.PersistedHippoEventsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
+
+import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_EXPIRES_IN_DAYS;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_EXPIRE_IN_MINUTES;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_SITE;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.HEADER_AUTHORIZATION;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.INVALID_AUTH_OBJECT;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.REALM_PARAM;
+import static org.onehippo.forge.ipfilter.IpFilterConstants.REPOSITORY_ADDRESS_PARAM;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.getHost;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.getIp;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.getParameter;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.getPath;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.handleForbidden;
+import static org.onehippo.forge.ipfilter.IpFilterUtils.handleUnauthorized;
 
 /**
  * Filter allowing only access for IP ranges that are configured
  */
-public class IpFilter implements Filter, PersistedHippoEventListener {
+public class IpFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
 
-    /**
-     * keep time of last data request event
-     */
-    private long lastTimeSent;
-    /**
-     * increment each time data request event is sent
-     */
-    private int eventRequestCount;
-
+    private IpFilterConfigLoader configLoader;
     /**
      * Object contains *raw* data: multiple hosts can be matched based on regexp.
      * *Processed* data is stored into cache object
      */
-    private Map<String, AuthObject> rawData = new ConcurrentHashMap<>();
+/*    private Map<String, AuthObject> rawData = new ConcurrentHashMap<>();*/
 
     private LoadingCache<String, AuthObject> cache;
-    private boolean initialized;
-    private String repositoryAddress;
 
+    private String repositoryAddress;
+    private boolean initialized;
     private final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
             .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
@@ -88,7 +95,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                     return false;
                 }
             });
-
 
     private String realm;
 
@@ -113,10 +119,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
                         return task;
                     }
                 });
-
-
-        HippoServiceRegistry.registerService(this, PersistedHippoEventsService.class);
-        lastTimeSent = System.currentTimeMillis();
         requestData();
 
     }
@@ -124,8 +126,17 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
-        requestData();
-        checkListenerHealth(request);
+
+        if (!initialized) {
+            requestData();
+            log.debug("Filter not initialized yet");
+            handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, Status.FORBIDDEN);
+            return;
+        }
+        if (configLoader.needReloading()) {
+            invalidateCaches();
+        }
+
         final Status status = allowed((HttpServletRequest) request);
         if (status == Status.OK) {
             chain.doFilter(request, response);
@@ -192,56 +203,6 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         return Status.FORBIDDEN;
     }
 
-    private void checkListenerHealth(final ServletRequest request) {
-        final String checkListenerHealth = request.getParameter("checkListenerHealth");
-        if (!Strings.isNullOrEmpty(checkListenerHealth) && checkListenerHealth.equals("true")) {
-            log.debug("@checking if listener is active");
-            final List<HippoServiceRegistration> registrations = HippoServiceRegistry.getRegistrations(PersistedHippoEventsService.class);
-            for (HippoServiceRegistration registration : registrations) {
-                if (registration.getService().equals(this)) {
-                    log.info("@service is registered: {}", registration);
-                    return;
-                }
-            }
-            // not found, register listener:
-            HippoServiceRegistry.registerService(this, PersistedHippoEventsService.class);
-            log.info("@HippoServiceRegistry: registered IpFilter (PersistedHippoEventsService.class)");
-        }
-    }
-
-
-    @Override
-    public String getEventCategory() {
-        return HippoEventConstants.CATEGORY_SECURITY;
-    }
-
-    @Override
-    public String getChannelName() {
-        return IP_FILTER_LISTENER_CHANNEL;
-    }
-
-    @Override
-    public boolean onlyNewEvents() {
-        return true;
-    }
-
-    @Override
-    public void onHippoEvent(final HippoEvent event) {
-        final String application = event.application();
-        if (!Strings.isNullOrEmpty(application) && application.equals(APPLICATION)) {
-            if (!initialized) {
-                log.info("Initializing ip filter");
-                initialized = true;
-            } else {
-                log.info("Reconfiguring ip filter");
-            }
-            log.debug("invalidating cache for: {}", event);
-            final String data = (String) event.get(DATA);
-            populateIpRanges(data);
-            invalidateCaches();
-        }
-    }
-
 
     @Override
     public void destroy() {
@@ -298,7 +259,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         return false;
 
     }
-
+    
     private Status authenticate(final HttpServletRequest request) {
         final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
         if (!credentials.valid()) {
@@ -307,6 +268,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
         final Boolean cached = userCache.getUnchecked(credentials.getUsername());
         if (cached != null && cached) {
+            log.debug("Cached user: {}", credentials);
             return Status.OK;
         }
         Session session = null;
@@ -350,6 +312,7 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
      * Load auth object for matched host name:
      */
     private AuthObject loadIpRules(final String host) {
+        final Map<String, AuthObject> rawData = configLoader.load();
         for (Map.Entry<String, AuthObject> entry : rawData.entrySet()) {
             final AuthObject value = entry.getValue();
             final List<Pattern> hostPatterns = value.getHostPatterns();
@@ -400,50 +363,32 @@ public class IpFilter implements Filter, PersistedHippoEventListener {
         }
     }
 
-    private void populateIpRanges(final String data) {
-        rawData.clear();
-        if (Strings.isNullOrEmpty(data)) {
-            log.warn("Data was null or empty");
-            return;
-        }
-        final Map<String, AuthObject> newObjects = fromJsonAsMap(data);
-        if (newObjects == null) {
-            log.warn("Data couldn't be de-serialized, data:{}", data);
-            return;
-        }
-        rawData.putAll(newObjects);
-    }
 
     private void requestData() {
-        if (initialized) {
-            return;
+        if (!initialized) {
+            initializeConfigManger();
         }
-        if (eventRequestCount > EVENT_REQUEST_LIMIT_COUNT) {
-            log.debug("Reached max number of event data requests {}", EVENT_REQUEST_LIMIT_COUNT);
-            return;
+        if (initialized && configLoader.needReloading()) {
+            configLoader.load();
+            invalidateCaches();
+            log.info("Ip filter data reloaded");
         }
-        /*
-         prevent flood of request events:
-         ideally, data is received when filter is initialized,
-         but we can have a race condition there in case event bus is not ready yet.
-         */
-        final long current = System.currentTimeMillis();
-        final long diff = current - lastTimeSent;
-        if (diff < EVENT_REQUEST_DELAY) {
-            log.debug("Last event sent sent: {} ms ago, skipping this event", diff);
-            return;
+    }
+
+    private void initializeConfigManger() {
+        if (HstServices.isAvailable()) {
+            final ComponentManager componentManager = HstServices.getComponentManager();
+            configLoader = componentManager.getComponent(IpFilterConfigLoader.class.getName(), IpFilterConfigLoader.class.getPackage().getName());
+            if (configLoader == null) {
+                log.error("Configuration loader was null");
+            } else {
+                initialized = true;
+            }
+        } else {
+            log.info("HstService not available yet...waiting..");
         }
 
-        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
-        if (eventBus == null) {
-            log.warn("No event bus service found by class {}", HippoEventBus.class.getName());
-        } else {
-            // request data to be sent back to us
-            lastTimeSent = current;
-            eventRequestCount++;
-            log.debug("Requesting IP filter data...");
-            eventBus.post(new IpRequestEvent());
-        }
+
     }
 
 }
