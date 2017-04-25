@@ -19,12 +19,12 @@
   <parent>
     <groupId>org.onehippo.forge</groupId>
     <artifactId>hippo-cms-ip-filter</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
   </parent>
 
   <name>Hippo addon IP filter HST</name>
   <artifactId>hippo-cms-ip-filter-hst</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.4</version>
   <packaging>jar</packaging>
 
 
