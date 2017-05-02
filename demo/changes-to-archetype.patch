@@ -1,0 +1,107 @@
+Index: demo/site/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- demo/site/pom.xml	(date 1493644340000)
++++ demo/site/pom.xml	(revision )
+@@ -12,6 +12,13 @@
+   <name>My Hippo Project Site</name>
+   <description>My Hippo Project Site</description>
+   <dependencies>
++
++    <!-- include the plugin's filter -->
++    <dependency>
++      <groupId>org.onehippo.forge</groupId>
++      <artifactId>hippo-cms-ip-filter-hst</artifactId>
++    </dependency>
++
+     <dependency>
+       <groupId>javax.servlet.jsp</groupId>
+       <artifactId>jsp-api</artifactId>
+Index: demo/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- demo/pom.xml	(date 1493644340000)
++++ demo/pom.xml	(revision )
+@@ -60,6 +60,8 @@
+ 
+   <properties>
+ 
++    <hippo.forge.ipfilter.version>1.0.4</hippo.forge.ipfilter.version>
++
+     <!--***START temporary override of versions*** -->
+     <!-- ***END temporary override of versions*** -->
+ 
+@@ -148,6 +150,17 @@
+         <version>${easymock.version}</version>
+         <scope>test</scope>
+       </dependency>
++
++      <dependency>
++        <groupId>org.onehippo.forge</groupId>
++        <artifactId>hippo-cms-ip-filter-cms</artifactId>
++        <version>${hippo.forge.ipfilter.version}</version>
++      </dependency>
++      <dependency>
++        <groupId>org.onehippo.forge</groupId>
++        <artifactId>hippo-cms-ip-filter-hst</artifactId>
++        <version>${hippo.forge.ipfilter.version}</version>
++      </dependency>
+ 
+     </dependencies>
+   </dependencyManagement>
+Index: demo/cms/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- demo/cms/pom.xml	(date 1493644340000)
++++ demo/cms/pom.xml	(revision )
+@@ -12,6 +12,13 @@
+   <name>My Hippo Project CMS</name>
+   <description>My Hippo Project CMS</description>
+   <dependencies>
++
++    <!-- include the plugin's configuration -->
++    <dependency>
++      <groupId>org.onehippo.forge</groupId>
++      <artifactId>hippo-cms-ip-filter-cms</artifactId>
++    </dependency>
++
+     <dependency>
+       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
+       <artifactId>hst-repository-dependencies</artifactId>
+Index: demo/site/src/main/webapp/WEB-INF/web.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- demo/site/src/main/webapp/WEB-INF/web.xml	(date 1493644340000)
++++ demo/site/src/main/webapp/WEB-INF/web.xml	(revision )
+@@ -70,6 +70,11 @@
+     </init-param>
+   </filter>
+ 
++  <filter>
++    <filter-name>HippoIpFilter</filter-name>
++    <filter-class>org.onehippo.forge.ipfilter.IpFilter</filter-class>
++  </filter>
++
+   <filter>
+     <filter-name>XSSUrlFilter</filter-name>
+     <filter-class>org.hippoecm.hst.container.XSSUrlFilter</filter-class>
+@@ -84,6 +89,11 @@
+     <filter-name>CharacterEncodingFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+   </filter-mapping>
++
++  <filter-mapping>
++    <filter-name>HippoIpFilter</filter-name>
++    <url-pattern>/*</url-pattern>
++  </filter-mapping>
+ 
+   <filter-mapping>
+     <filter-name>XSSUrlFilter</filter-name>
