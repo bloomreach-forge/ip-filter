@@ -1,3 +1,6 @@
+Change log:
+* 1.0.5: Maven groupId changed to: org.onehippo.forge.ipfilter, added CMS filter (**org.onehippo.forge.ipfilter.IpFilterCms**)
+
 Configuration options:
 
 * **enabled** : config is enabled or not (boolean, default **true**)
@@ -23,57 +26,70 @@ Module can be configured here:
 
 http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig
 ```
-  <sv:node sv:name="hippo:moduleconfig">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-    <sv:node sv:name="onehippo" sv:type="Name">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>nt:unstructured</sv:value>
-      </sv:property>
-      <sv:property sv:name="enabled" sv:type="Boolean">
-        <sv:value>true</sv:value>
-      </sv:property>
-      <sv:property sv:name="match-all" sv:type="Boolean">
-        <sv:value>true</sv:value>
-      </sv:property>
-      <sv:property sv:name="allow-cms-users" sv:type="Boolean">
-        <sv:value>true</sv:value>
-      </sv:property>
-      <sv:property sv:name="forwarded-for-header" sv:type="String">
-        <sv:value>X-Forwarded-For</sv:value>
-      </sv:property>
-      <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
-        <sv:value>/ping/.*</sv:value>
-        <sv:value>.*\.css</sv:value>
-        <sv:value>.*\.js</sv:value>
-        <sv:value>.*\.ico</sv:value>
-      </sv:property>
-      <sv:property sv:name="allowed-ip-ranges" sv:type="String" sv:multiple="true">
-        <sv:value>127.0.0.1</sv:value>
-        <sv:value>81.21.138.121</sv:value>
-        <sv:value>2001:4cb8:29d:1::/64</sv:value>
-        <sv:value>80.100.160.250</sv:value>
-      </sv:property>
-      <sv:property sv:name="hostnames" sv:type="String" sv:multiple="true">
-        <sv:value>localhost</sv:value>
-        <sv:value>127\.0\.0\.1</sv:value>
-        <sv:value>.*onehippo\.com</sv:value>
-        <sv:value>.*onehippo\.org</sv:value>
-      </sv:property>
-      <sv:node sv:name="host-header">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>nt:unstructured</sv:value>
-        </sv:property>
-        <sv:property sv:name="ignored-header" sv:type="String">
-          <sv:value>host</sv:value>
-        </sv:property>
-        <sv:property sv:multiple="true" sv:name="ignored-header-values" sv:type="String">
-          <sv:value>localhost:8080</sv:value>
-        </sv:property>
-      </sv:node>
-    </sv:node>
-  </sv:node>
+ <sv:node sv:name="ipfilter-module" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
+   <sv:property sv:name="jcr:primaryType" sv:type="Name">
+     <sv:value>hipposys:module</sv:value>
+   </sv:property>
+   <sv:property sv:name="hipposys:className" sv:type="String">
+     <sv:value>org.onehippo.forge.ipfilter.IpFilterModule</sv:value>
+   </sv:property>
+   <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
+     <sv:value>false</sv:value>
+   </sv:property>
+   <sv:node sv:name="hippo:moduleconfig">
+     <sv:property sv:name="jcr:primaryType" sv:type="Name">
+       <sv:value>hipposys:moduleconfig</sv:value>
+     </sv:property>
+     <sv:node sv:name="localhost" sv:type="Name">
+       <sv:property sv:name="jcr:primaryType" sv:type="Name">
+         <sv:value>hipposys:moduleconfig</sv:value>
+       </sv:property>
+       <sv:property sv:name="enabled" sv:type="Boolean">
+         <sv:value>true</sv:value>
+       </sv:property>
+       <sv:property sv:name="match-all" sv:type="Boolean">
+         <sv:value>true</sv:value>
+       </sv:property>
+       <sv:property sv:name="allow-cms-users" sv:type="Boolean">
+         <sv:value>true</sv:value>
+       </sv:property>
+       <sv:property sv:name="forwarded-for-header" sv:type="String">
+         <sv:value>X-Forwarded-For</sv:value>
+       </sv:property>
+       <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
+         <sv:value>/ping/.*</sv:value>
+         <sv:value>.*\.css</sv:value>
+         <sv:value>.*\.js</sv:value>
+         <sv:value>.*\.ico</sv:value>
+       </sv:property>
+       <sv:property sv:name="allowed-ip-ranges" sv:type="String" sv:multiple="true">
+         <sv:value>127.0.0.1</sv:value>
+         <sv:value>0:0:0:0:0:0:0:1</sv:value>
+         <sv:value>80.100.160.250</sv:value>
+         <sv:value>81.21.138.121</sv:value>
+         <sv:value>2001:4cb8:29d:1::/64</sv:value>
+       </sv:property>
+       <sv:property sv:name="hostnames" sv:type="String" sv:multiple="true">
+         <sv:value>localhost</sv:value>
+         <sv:value>127.0.0.1</sv:value>
+         <sv:value>0:0:0:0:0:0:0:1</sv:value>
+       </sv:property>
+       <sv:node sv:name="fastly">
+         <sv:property sv:name="jcr:primaryType" sv:type="Name">
+           <sv:value>hipposys:moduleconfig</sv:value>
+         </sv:property>
+         <sv:property sv:name="ignore-header" sv:type="String">
+           <sv:value>X-fastly</sv:value>
+         </sv:property>
+         <sv:property sv:name="ignore-header-values" sv:type="String" sv:multiple="true">
+           <sv:value>some string</sv:value>
+           <sv:value>another string</sv:value>
+         </sv:property>
+       </sv:node>
+     </sv:node>
+   </sv:node>
+ 
+ </sv:node>
 ```
 
 Filter configuration **SITE** (**web.xml**)
