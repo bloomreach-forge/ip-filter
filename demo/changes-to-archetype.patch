@@ -12,7 +12,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +
 +    <!-- include the plugin's filter -->
 +    <dependency>
-+      <groupId>org.onehippo.forge</groupId>
++      <groupId>org.onehippo.forge.ipfilter</groupId>
 +      <artifactId>hippo-cms-ip-filter-hst</artifactId>
 +    </dependency>
 +
@@ -41,12 +41,12 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
        </dependency>
 +
 +      <dependency>
-+        <groupId>org.onehippo.forge</groupId>
++        <groupId>org.onehippo.forge.ipfilter</groupId>
 +        <artifactId>hippo-cms-ip-filter-cms</artifactId>
 +        <version>${hippo.forge.ipfilter.version}</version>
 +      </dependency>
 +      <dependency>
-+        <groupId>org.onehippo.forge</groupId>
++        <groupId>org.onehippo.forge.ipfilter</groupId>
 +        <artifactId>hippo-cms-ip-filter-hst</artifactId>
 +        <version>${hippo.forge.ipfilter.version}</version>
 +      </dependency>
@@ -67,7 +67,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +
 +    <!-- include the plugin's configuration -->
 +    <dependency>
-+      <groupId>org.onehippo.forge</groupId>
++      <groupId>org.onehippo.forge.ipfilter</groupId>
 +      <artifactId>hippo-cms-ip-filter-cms</artifactId>
 +    </dependency>
 +

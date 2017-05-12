@@ -18,12 +18,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.onehippo.cms7</groupId>
-    <artifactId>hippo-cms7-release</artifactId>
-    <version>11.1.0</version>
+    <artifactId>hippo-cms7-project</artifactId>
+    <version>28.5</version>
   </parent>
 
   <name>Hippo addon IP filter</name>
-  <groupId>org.onehippo.forge</groupId>
+  <groupId>org.onehippo.forge.ipfilter</groupId>
   <artifactId>hippo-cms-ip-filter</artifactId>
   <version>1.0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -33,9 +33,12 @@
     <commons-io.version>2.2</commons-io.version>
     <spring-security-web.version>4.0.3.RELEASE</spring-security-web.version>
     <spring-version>4.0.3.RELEASE</spring-version>
-    <hippo-services.version>3.1.0</hippo-services.version>
+    <hippo-services.version>3.2.0</hippo-services.version>
     <hippo-repository-api.version>4.1.0</hippo-repository-api.version>
     <jackson.version>2.4.0</jackson.version>
+    <hippo-cms-api.version>4.2.0</hippo-cms-api.version>
+    <hippo-hst.version>4.2.0</hippo-hst.version>
+    <hippo-repository-connector.version>4.2.0</hippo-repository-connector.version>
   </properties>
   <modules>
     <module>common</module>
@@ -107,9 +110,34 @@
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-cms-api</artifactId>
-        <version>4.1.0</version>
+        <version>${hippo-cms-api.version}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-repository-connector</artifactId>
+        <version>${hippo-repository-connector.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-api</artifactId>
+        <version>${hippo-hst.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7.hst.components</groupId>
+        <artifactId>hst-core</artifactId>
+        <scope>provided</scope>
+        <version>${hippo-hst.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-commons</artifactId>
+        <scope>provided</scope>
+        <version>${hippo-hst.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-repository-api</artifactId>

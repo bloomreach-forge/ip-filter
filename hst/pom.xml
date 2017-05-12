@@ -16,8 +16,11 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <properties>
+    <hst-api.version>4.2.0</hst-api.version>
+  </properties>
   <parent>
-    <groupId>org.onehippo.forge</groupId>
+    <groupId>org.onehippo.forge.ipfilter</groupId>
     <artifactId>hippo-cms-ip-filter</artifactId>
     <version>1.0.5-SNAPSHOT</version>
   </parent>
@@ -30,15 +33,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.onehippo.forge</groupId>
+      <groupId>org.onehippo.forge.ipfilter</groupId>
       <artifactId>hippo-cms-ip-filter-common</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>spring-core</artifactId>
-          <groupId>org.springframework</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7.hst</groupId>
@@ -55,8 +52,6 @@
       <artifactId>hst-commons</artifactId>
       <scope>provided</scope>
     </dependency>
-
-
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-api</artifactId>
@@ -81,7 +76,6 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-connector</artifactId>
     </dependency>
-
     <!-- TEST DEPENDENCIES -->
     <dependency>
       <groupId>junit</groupId>

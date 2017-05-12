@@ -126,14 +126,14 @@ Dependencies CMS
 
 ```
      <dependency>
-       <groupId>org.onehippo.forge</groupId>
+       <groupId>org.onehippo.forge.ipfilter</groupId>
        <artifactId>hippo-cms-ip-filter-common</artifactId>
-       <version>1.0.0-SNAPSHOT</version>
+       <version>1.0.5</version>
      </dependency>
      <dependency>
-       <groupId>org.onehippo.forge</groupId>
+       <groupId>org.onehippo.forge.ipfilter</groupId>
        <artifactId>hippo-cms-ip-filter-cms</artifactId>
-       <version>1.0.0-SNAPSHOT</version>
+       <version>1.0.5</version>
      </dependency>
 ```
 
@@ -141,13 +141,13 @@ Dependencies HST
 
 ```
     <dependency>
-      <groupId>org.onehippo.forge</groupId>
+      <groupId>org.onehippo.forge.ipfilter</groupId>
       <artifactId>hippo-cms-ip-filter-common</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.forge</groupId>
+      <groupId>org.onehippo.forge.ipfilter</groupId>
       <artifactId>hippo-cms-ip-filter-hst</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
 ```

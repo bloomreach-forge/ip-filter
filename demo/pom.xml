@@ -60,7 +60,7 @@
 
   <properties>
 
-    <hippo.forge.ipfilter.version>1.0.4</hippo.forge.ipfilter.version>
+    <hippo.forge.ipfilter.version>1.0.5-SNAPSHOT</hippo.forge.ipfilter.version>
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
@@ -152,12 +152,12 @@
       </dependency>
 
       <dependency>
-        <groupId>org.onehippo.forge</groupId>
+        <groupId>org.onehippo.forge.ipfilter</groupId>
         <artifactId>hippo-cms-ip-filter-cms</artifactId>
         <version>${hippo.forge.ipfilter.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.onehippo.forge</groupId>
+        <groupId>org.onehippo.forge.ipfilter</groupId>
         <artifactId>hippo-cms-ip-filter-hst</artifactId>
         <version>${hippo.forge.ipfilter.version}</version>
       </dependency>
