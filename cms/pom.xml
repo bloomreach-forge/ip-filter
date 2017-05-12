@@ -23,7 +23,6 @@
   </parent>
 
   <name>Hippo addon IP filter CMS</name>
-  <groupId>org.onehippo.forge</groupId>
   <artifactId>hippo-cms-ip-filter-cms</artifactId>
   <version>1.0.5-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -33,6 +32,15 @@
       <groupId>org.onehippo.forge</groupId>
       <artifactId>hippo-cms-ip-filter-common</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <!--
+      NOTE: needed if IpFilterCms class is used for Spring  IP filter matching
+    -->
+    <dependency>
+      <artifactId>spring-core</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>${spring-version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>

@@ -1,18 +1,34 @@
 package org.onehippo.forge.ipfilter;
 
-import java.util.Map;
+import javax.jcr.Session;
 
 public class IpFilterServiceImpl implements IpFilterService {
 
-    private Map<String, AuthObject> data;
+    private final Session session;
+    /**
+     * NOTE: default must be true to load initial data
+     */
+    private boolean changed  = true;
 
-    @Override
-    public void setData(final Map<String, AuthObject> data) {
-       this.data = data;
+    public IpFilterServiceImpl(final Session session) {
+        this.session = session;
     }
 
     @Override
-    public Map<String, AuthObject> getData() {
-        return data;
+    public Session getSession() {
+        return session;
     }
+
+    @Override
+    public boolean configurationChanged() {
+        return changed;
+    }
+
+    @Override
+    public void setConfigurationChanged(final boolean configurationChanged) {
+        changed = configurationChanged;
+    }
+
 }
+
+

@@ -32,6 +32,7 @@
     <junit.version>4.12</junit.version>
     <commons-io.version>2.2</commons-io.version>
     <spring-security-web.version>4.0.3.RELEASE</spring-security-web.version>
+    <spring-version>4.0.3.RELEASE</spring-version>
     <hippo-services.version>3.1.0</hippo-services.version>
     <hippo-repository-api.version>4.1.0</hippo-repository-api.version>
     <jackson.version>2.4.0</jackson.version>
@@ -59,6 +60,12 @@
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <artifactId>spring-core</artifactId>
+        <groupId>org.springframework</groupId>
+        <version>${spring-version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>

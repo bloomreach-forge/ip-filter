@@ -76,7 +76,7 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
   </sv:node>
 ```
 
-Filter configuration (**web.xml**)
+Filter configuration **SITE** (**web.xml**)
 
 
 ```
@@ -96,8 +96,22 @@ Filter configuration (**web.xml**)
 
 ```
 
-Make filter mapping
-NOTE:  filter mapping should be defined just after **CharacterEncodingFilter** so as a **second** filter in chain
+Filter configuration **CMS** (**web.xml**)
+
+
+```
+    <filter>
+      <filter-name>IpFilter</filter-name>
+      <filter-class>org.onehippo.forge.ipfilter.IpFilterCms</filter-class>
+    </filter>
+```
+
+Make filter mapping: 
+
+NOTE: **SITE** filter mapping should be defined just after **CharacterEncodingFilter** so as a **second** filter in chain,
+**CMS** filter should be configured as **first** in the chain
+
+
 ```
   <filter-mapping>
     <filter-name>IpFilter</filter-name>
@@ -105,6 +119,9 @@ NOTE:  filter mapping should be defined just after **CharacterEncodingFilter** s
   </filter-mapping>
 
 ```
+
+
+
 Dependencies CMS
 
 ```

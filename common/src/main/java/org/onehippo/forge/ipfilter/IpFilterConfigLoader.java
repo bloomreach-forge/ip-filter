@@ -23,14 +23,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-public class IpFilterConfigLoader {
+public abstract class IpFilterConfigLoader {
     private static final Logger log = LoggerFactory.getLogger(IpFilterConfigLoader.class);
 
     private String configurationLocation;
     private Repository repository;
     private Credentials credentials;
     private Date lastLoadDate = new Date();
-    private volatile boolean needRefresh = true;
+    protected volatile boolean needRefresh = true;
     private final Map<String, AuthObject> data = new ConcurrentHashMap<>();
 
 
@@ -41,7 +41,7 @@ public class IpFilterConfigLoader {
 
     public synchronized Map<String, AuthObject> load() {
         // check if refresh is needed..if not return local copy
-        if (!needRefresh) {
+        if (!needReloading()) {
             return data;
         }
 
