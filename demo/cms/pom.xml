@@ -19,20 +19,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.example</groupId>
+    <groupId>org.onehippo.forge.ipfilter</groupId>
     <artifactId>myhippoproject</artifactId>
     <version>1.0.4</version>
   </parent>
+
   <artifactId>myhippoproject-cms</artifactId>
   <packaging>war</packaging>
   <name>My Hippo Project CMS</name>
   <description>My Hippo Project CMS</description>
+
   <dependencies>
 
-    <!-- include the plugin's configuration -->
+    <!-- include the plugin's configuration and web filter -->
     <dependency>
       <groupId>org.onehippo.forge.ipfilter</groupId>
-      <artifactId>hippo-cms-ip-filter-cms</artifactId>
+      <artifactId>hippo-ipfilter-cms</artifactId>
     </dependency>
 
     <dependency>

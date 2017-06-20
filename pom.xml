@@ -22,53 +22,117 @@
     <version>28.5</version>
   </parent>
 
-  <name>Hippo addon IP filter</name>
+  <name>Hippo Forge IP Filter Plugin</name>
   <groupId>org.onehippo.forge.ipfilter</groupId>
-  <artifactId>hippo-cms-ip-filter</artifactId>
+  <artifactId>hippo-ipfilter</artifactId>
   <version>1.0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <junit.version>4.12</junit.version>
-    <commons-io.version>2.2</commons-io.version>
+    <!-- from 11.2.1 release -->
+    <hippo.cms.version>4.2.2</hippo.cms.version>
+    <hippo.hst.version>4.2.1</hippo.hst.version>
+    <hippo.repository.version>4.2.1</hippo.repository.version>
+    <hippo.services.version>3.2.0</hippo.services.version>
+
     <spring-security-web.version>4.0.3.RELEASE</spring-security-web.version>
-    <spring-version>4.0.3.RELEASE</spring-version>
-    <hippo-services.version>3.2.0</hippo-services.version>
-    <hippo-repository-api.version>4.1.0</hippo-repository-api.version>
-    <jackson.version>2.4.0</jackson.version>
-    <hippo-cms-api.version>4.2.0</hippo-cms-api.version>
-    <hippo-hst.version>4.2.0</hippo-hst.version>
-    <hippo-repository-connector.version>4.2.0</hippo-repository-connector.version>
+
+    <commons-io.version>2.2</commons-io.version>
+    <commons-lang.version>2.6</commons-lang.version>
+
+    <junit.version>4.12</junit.version>
+    <spring-mock.version>2.0.8</spring-mock.version>
   </properties>
+
   <modules>
     <module>common</module>
     <module>hst</module>
     <module>cms</module>
   </modules>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-repository-api</artifactId>
+        <version>${hippo.repository.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-repository-connector</artifactId>
+        <version>${hippo.repository.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-services</artifactId>
+        <version>${hippo.services.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-cms-api</artifactId>
+        <version>${hippo.cms.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-api</artifactId>
+        <version>${hippo.hst.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7.hst.components</groupId>
+        <artifactId>hst-core</artifactId>
+        <scope>provided</scope>
+        <version>${hippo.hst.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-commons</artifactId>
+        <scope>provided</scope>
+        <version>${hippo.hst.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${commons-lang.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
+        <version>${jackson2.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
+        <version>${jackson2.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
+        <version>${jackson2.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <artifactId>spring-core</artifactId>
         <groupId>org.springframework</groupId>
-        <version>${spring-version}</version>
+        <version>${spring.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -108,62 +172,11 @@
       </dependency>
 
       <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-cms-api</artifactId>
-        <version>${hippo-cms-api.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-repository-connector</artifactId>
-        <version>${hippo-repository-connector.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.onehippo.cms7.hst</groupId>
-        <artifactId>hst-api</artifactId>
-        <version>${hippo-hst.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7.hst.components</groupId>
-        <artifactId>hst-core</artifactId>
-        <scope>provided</scope>
-        <version>${hippo-hst.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7.hst</groupId>
-        <artifactId>hst-commons</artifactId>
-        <scope>provided</scope>
-        <version>${hippo-hst.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-repository-api</artifactId>
-        <version>${hippo-repository-api.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-services</artifactId>
-        <version>${hippo-services.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${commons-io.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <scope>test</scope>
         <version>${junit.version}</version>
       </dependency>
-
-
     </dependencies>
 
   </dependencyManagement>
@@ -174,10 +187,11 @@
     <url>https://code.onehippo.org/sandbox/hippo-addon-ip-filter</url>
     <tag>HEAD</tag>
   </scm>
+
   <repositories>
     <repository>
-      <id>hippo</id>
-      <name>Hippo maven 2 repository.</name>
+      <id>hippo-maven2</id>
+      <name>Hippo Maven 2 Repository.</name>
       <url>https://maven.onehippo.com/maven2/</url>
     </repository>
   </repositories>

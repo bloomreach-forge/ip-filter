@@ -26,7 +26,7 @@
 
   <name>My Hippo Project</name>
   <description>My Hippo Project</description>
-  <groupId>org.example</groupId>
+  <groupId>org.onehippo.forge.ipfilter</groupId>
   <artifactId>myhippoproject</artifactId>
   <version>1.0.4</version>
   <packaging>pom</packaging>
@@ -169,12 +169,12 @@
 
       <dependency>
         <groupId>org.onehippo.forge.ipfilter</groupId>
-        <artifactId>hippo-cms-ip-filter-cms</artifactId>
+        <artifactId>hippo-ipfilter-cms</artifactId>
         <version>${hippo.forge.ipfilter.version}</version>
       </dependency>
       <dependency>
         <groupId>org.onehippo.forge.ipfilter</groupId>
-        <artifactId>hippo-cms-ip-filter-hst</artifactId>
+        <artifactId>hippo-ipfilter-hst</artifactId>
         <version>${hippo.forge.ipfilter.version}</version>
       </dependency>
 

@@ -16,8 +16,6 @@
 
 package org.onehippo.forge.ipfilter;
 
-
-import com.drew.lang.annotations.Nullable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -77,7 +75,6 @@ public final class IpFilterUtils {
     }
 
 
-    @Nullable
     public static Map<String, AuthObject> fromJsonAsMap(final String message) {
 
         try {
@@ -91,7 +88,6 @@ public final class IpFilterUtils {
         return null;
     }
 
-    @Nullable
     public static <T> T fromJson(final String message, Class<T> clazz) {
 
         try {

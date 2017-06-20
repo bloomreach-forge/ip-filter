@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2016-2017 Hippo B.V. (http://www.onehippo.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -18,36 +18,21 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-cms-ip-filter</artifactId>
+    <artifactId>hippo-ipfilter</artifactId>
     <version>1.0.5-SNAPSHOT</version>
   </parent>
 
-  <name>Hippo addon IP filter CMS</name>
-  <artifactId>hippo-cms-ip-filter-cms</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <name>Hippo Forge IP Filter Plugin CMS</name>
+  <artifactId>hippo-ipfilter-cms</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
       <groupId>org.onehippo.forge.ipfilter</groupId>
-      <artifactId>hippo-cms-ip-filter-common</artifactId>
+      <artifactId>hippo-ipfilter-common</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--
-      NOTE: needed if IpFilterCms class is used for Spring  IP filter matching
-    -->
-    <dependency>
-      <artifactId>spring-core</artifactId>
-      <groupId>org.springframework</groupId>
-      <version>${spring-version}</version>
-      <scope>compile</scope>
-    </dependency>
 
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-cms-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-api</artifactId>
@@ -58,10 +43,7 @@
       <artifactId>hippo-services</artifactId>
       <scope>provided</scope>
     </dependency>
-
-
   </dependencies>
-
 
 </project>
 

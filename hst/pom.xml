@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2016-2017 Hippo B.V. (http://www.onehippo.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,27 +16,24 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <properties>
-    <hst-api.version>4.2.0</hst-api.version>
-  </properties>
+
   <parent>
     <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-cms-ip-filter</artifactId>
+    <artifactId>hippo-ipfilter</artifactId>
     <version>1.0.5-SNAPSHOT</version>
   </parent>
 
-  <name>Hippo addon IP filter HST</name>
-  <artifactId>hippo-cms-ip-filter-hst</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <name>Hippo Forge IP Filter Plugin HST</name>
+  <artifactId>hippo-ipfilter-hst</artifactId>
   <packaging>jar</packaging>
-
 
   <dependencies>
     <dependency>
       <groupId>org.onehippo.forge.ipfilter</groupId>
-      <artifactId>hippo-cms-ip-filter-common</artifactId>
+      <artifactId>hippo-ipfilter-common</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.onehippo.cms7.hst</groupId>
       <artifactId>hst-api</artifactId>
@@ -50,11 +47,6 @@
     <dependency>
       <groupId>org.onehippo.cms7.hst</groupId>
       <artifactId>hst-commons</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-cms-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -76,6 +68,7 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-connector</artifactId>
     </dependency>
+
     <!-- TEST DEPENDENCIES -->
     <dependency>
       <groupId>junit</groupId>
@@ -100,7 +93,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>3.0.5.RELEASE</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -112,7 +104,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-mock</artifactId>
-      <version>2.0.8</version>
+      <version>${spring-mock.version}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
