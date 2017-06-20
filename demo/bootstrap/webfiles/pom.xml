@@ -2,14 +2,17 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <groupId>org.example</groupId>
+    <groupId>org.onehippo.forge.ipfilter</groupId>
     <artifactId>myhippoproject-bootstrap</artifactId>
     <version>1.0.4</version>
   </parent>
+
   <artifactId>myhippoproject-bootstrap-webfiles</artifactId>
   <name>My Hippo Project Bootstrap Web Files</name>
   <description>My Hippo Project Bootstrap Web Files</description>
+
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
