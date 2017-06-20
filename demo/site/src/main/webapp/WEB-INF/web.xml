@@ -88,7 +88,7 @@
 
   <filter>
     <filter-name>HippoIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.IpFilter</filter-class>
+    <filter-class>org.onehippo.forge.ipfilter.hst.IpFilter</filter-class>
   </filter>
 
   <filter>

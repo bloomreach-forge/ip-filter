@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--
-  ~ Copyright 2017 Hippo B.V. (http://www.onehippo.com)
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~  http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <project>
-  <projectNamespace>myhippoproject</projectNamespace>
-  <confirmParams>false</confirmParams>
-  <selectedProjectPackage>org.example</selectedProjectPackage>
-  <selectedBeansPackage>org.example.beans</selectedBeansPackage>
-  <selectedComponentsPackage>org.example.components</selectedComponentsPackage>
-  <selectedRestPackage>org.example.rest</selectedRestPackage>
-  <setupDone>false</setupDone>
-  <templateLanguage>freemarker</templateLanguage>
-  <useSamples>true</useSamples>
-  <extraTemplates>true</extraTemplates>
+    <name>project-settings</name>
+    <beansFolder>site/src/main/java</beansFolder>
+    <bootstrapModule>bootstrap</bootstrapModule>
+    <cmsModule>cms</cmsModule>
+    <confirmParams>false</confirmParams>
+    <extraTemplates>true</extraTemplates>
+    <projectNamespace>myhippoproject</projectNamespace>
+    <selectedBeansPackage>org.example.beans</selectedBeansPackage>
+    <selectedComponentsPackage>org.example.components</selectedComponentsPackage>
+    <selectedProjectPackage>org.example</selectedProjectPackage>
+    <selectedRestPackage>org.example.rest</selectedRestPackage>
+    <setupDone>true</setupDone>
+    <siteModule>site</siteModule>
+    <templateLanguage>freemarker</templateLanguage>
+    <useSamples>true</useSamples>
+    <webfilesSubModule>webfiles</webfilesSubModule>
 </project>

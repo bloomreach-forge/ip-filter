@@ -214,6 +214,11 @@
     <appender-ref ref="messages"/>
   </logger>
 
+  <logger name="org.onehippo.forge.ipfilter" additivity="false">
+    <level value="debug"/>
+    <appender-ref ref="console"/>
+  </logger>
+
   <root>
     <level value="warn"/>
     <appender-ref ref="site"/>

@@ -46,7 +46,7 @@
 
   <filter>
     <filter-name>HippoIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.IpFilterCms</filter-class>
+    <filter-class>org.onehippo.forge.ipfilter.cms.CmsIpFilter</filter-class>
   </filter>
 
   <!--No concurrent logins-->
