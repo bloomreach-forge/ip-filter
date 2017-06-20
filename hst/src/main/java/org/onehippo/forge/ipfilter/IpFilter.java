@@ -1,5 +1,17 @@
 /*
- * Copyright 2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.onehippo.forge.ipfilter;
 
@@ -25,7 +37,6 @@ public class IpFilter extends IpFilterCommon {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
 
-    
     @Override
     protected Status authenticate(final HttpServletRequest request) {
         final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
@@ -61,7 +72,7 @@ public class IpFilter extends IpFilterCommon {
     }
 
     @Override
-    protected void initializeConfigManger() {
+    protected void initializeConfigManager() {
 
         if (HstServices.isAvailable()) {
             final ComponentManager componentManager = HstServices.getComponentManager();
@@ -95,8 +106,7 @@ public class IpFilter extends IpFilterCommon {
 
     private HippoRepository getHippoRepository(String address) {
         if (address == null || address.length() == 0) {
-            log.error("Repository address (parameter " + REPOSITORY_ADDRESS_PARAM
-                    + " not set. Unable to perform authorization. Return unauthorized.");
+            log.error("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.", REPOSITORY_ADDRESS_PARAM);
             return null;
         }
         try {

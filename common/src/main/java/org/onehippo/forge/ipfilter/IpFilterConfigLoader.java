@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
 import java.util.Collections;
@@ -34,12 +33,14 @@ import javax.jcr.observation.Event;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.hippoecm.repository.util.JcrUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
 public abstract class IpFilterConfigLoader {
+
     private static final Logger log = LoggerFactory.getLogger(IpFilterConfigLoader.class);
 
     private String configurationLocation;
@@ -54,13 +55,11 @@ public abstract class IpFilterConfigLoader {
         return needRefresh;
     }
 
-
     public synchronized Map<String, AuthObject> load() {
         // check if refresh is needed..if not return local copy
         if (!needReloading()) {
             return data;
         }
-
 
         log.debug("Previously loaded: {}", lastLoadDate);
         Session session = null;
@@ -81,7 +80,6 @@ public abstract class IpFilterConfigLoader {
         lastLoadDate = new Date();
         return data;
     }
-
 
     public synchronized void invalidate(final Event event) {
         // we invalidate on any event:

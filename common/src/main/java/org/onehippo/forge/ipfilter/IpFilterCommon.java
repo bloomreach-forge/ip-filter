@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
 import java.io.IOException;
@@ -71,9 +70,9 @@ public abstract class IpFilterCommon implements Filter {
 
     private LoadingCache<String, AuthObject> cache;
 
-
     protected String repositoryAddress;
     protected boolean initialized;
+
     protected final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
             .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
@@ -84,6 +83,7 @@ public abstract class IpFilterCommon implements Filter {
                     return false;
                 }
             });
+
     private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
             .maximumSize(CACHE_SITE)
             .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
@@ -119,7 +119,6 @@ public abstract class IpFilterCommon implements Filter {
                     }
                 });
         requestData();
-
     }
 
 
@@ -160,7 +159,7 @@ public abstract class IpFilterCommon implements Filter {
         }
         final String ip = getIp(request, authObject.getForwardedForHeader());
         if (Strings.isNullOrEmpty(ip)) {
-            // shouldn't happen I guess..
+            // shouldn't happen
             log.warn("IP was null or empty");
             return Status.UNAUTHORIZED;
         }
@@ -305,7 +304,7 @@ public abstract class IpFilterCommon implements Filter {
 
     private void requestData() {
         if (!initialized) {
-            initializeConfigManger();
+            initializeConfigManager();
         }
         if (initialized && configLoader.needReloading()) {
             configLoader.load();
@@ -315,8 +314,8 @@ public abstract class IpFilterCommon implements Filter {
     }
 
 
-    protected void initializeConfigManger() {
-        // check CMS service first:
+    protected void initializeConfigManager() {
+        // check CMS service first
         final IpFilterService service = HippoServiceRegistry.getService(IpFilterService.class);
         if (service != null) {
             final Session session = service.getSession();
@@ -328,8 +327,5 @@ public abstract class IpFilterCommon implements Filter {
             log.info("Successfully configured CMS service");
             initialized = true;
         }
-
-
     }
-
 }

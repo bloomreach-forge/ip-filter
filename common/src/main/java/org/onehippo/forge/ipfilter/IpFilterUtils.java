@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,9 +33,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.onehippo.forge.ipfilter.IpFilterConstants.*;
-
 public final class IpFilterUtils {
+
     private static final Logger log = LoggerFactory.getLogger(IpFilterUtils.class);
     private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
     public static final ObjectMapper JSON = new ObjectMapper();
@@ -61,7 +59,6 @@ public final class IpFilterUtils {
         return value;
     }
 
-
     public static <T> String toJson(final T object) {
         if (object == null) {
             return null;
@@ -73,7 +70,6 @@ public final class IpFilterUtils {
         }
         return null;
     }
-
 
     public static Map<String, AuthObject> fromJsonAsMap(final String message) {
 
@@ -116,10 +112,10 @@ public final class IpFilterUtils {
     }
 
     public static String getHost(final HttpServletRequest request) {
-        final String hostHeader = request.getHeader(HEADER_X_FORWARDED_HOST);
+        final String hostHeader = request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST);
         if (Strings.isNullOrEmpty(hostHeader)) {
             final String remoteHost = request.getRemoteHost();
-            log.debug("missing header {}, using: {}", HEADER_X_FORWARDED_HOST, remoteHost);
+            log.debug("missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
             return remoteHost;
         }
         return hostHeader;

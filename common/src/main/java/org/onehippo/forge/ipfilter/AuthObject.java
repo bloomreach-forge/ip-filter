@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +20,12 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class AuthObject {
@@ -37,7 +41,6 @@ public class AuthObject {
     private Set<String> ignoredPaths;
     @JsonIgnore
     private Set<IpMatcher> ipMatchers;
-
 
     private Map<String, Set<String>> ignoredHeaders;
 

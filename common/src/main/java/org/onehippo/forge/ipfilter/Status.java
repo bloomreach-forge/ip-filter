@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
 public enum Status {
-
 
     /**
      * Equivalent of a 200 http status
@@ -31,6 +29,4 @@ public enum Status {
      * Equivalent of a 403 http status
      */
     FORBIDDEN
-
-
 }

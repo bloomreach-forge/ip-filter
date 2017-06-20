@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
-
-import java.util.Map;
 
 import javax.jcr.Session;
 
 import org.onehippo.cms7.services.SingletonService;
-import org.onehippo.cms7.services.WhiteboardService;
-
 
 @SingletonService
 public interface IpFilterService {

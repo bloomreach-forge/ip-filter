@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter;
 
-public class HstConfigLoader extends IpFilterConfigLoader{
+/**
+ * Config loader for usage in the site, needed because IpFilterConfigLoader is abstract.
+ */
+public class HstConfigLoader extends IpFilterConfigLoader {
 
 }

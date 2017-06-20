@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2011-2016 Hippo
+  Copyright 2017 Hippo
 
   Licensed under the Apache License, Version 2.0 (the  "License");
   you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@
     <constructor-arg type="java.lang.String" value="/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig"/>
   </bean>
 
-  <!-- add conig loader -->
+  <!-- add config loader -->
   <bean id="org.onehippo.forge.ipfilter.IpFilterConfigLoader" class="org.onehippo.forge.ipfilter.HstConfigLoader">
     <property name="repository" ref="javax.jcr.Repository"/>
     <property name="credentials" ref="javax.jcr.Credentials.hstconfigreader"/>
     <property name="configurationLocation" value="#{configurationLocation}"/>
   </bean>
 
-
+  <!-- add change event listener -->
   <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
     <property name="targetObject" ref="jcrObservationEventListenerItems"/>
     <property name="targetMethod" value="add"/>
