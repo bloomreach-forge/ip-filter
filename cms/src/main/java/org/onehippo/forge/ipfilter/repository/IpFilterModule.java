@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.repository;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
+import org.onehippo.forge.ipfilter.cms.IpFilterService;
+import org.onehippo.forge.ipfilter.cms.IpFilterServiceImpl;
 import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
 
@@ -35,7 +37,8 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doConfigure(final Node node) throws RepositoryException {
-        log.debug("Re(configuring) {}", this.getClass().getName());
+        log.debug("(Re)configuring {}, with service {}", this.getClass().getSimpleName(),
+                (service == null) ? "null" : service.getClass().getSimpleName());
         if (service != null) {
             service.setConfigurationChanged(true);
         }

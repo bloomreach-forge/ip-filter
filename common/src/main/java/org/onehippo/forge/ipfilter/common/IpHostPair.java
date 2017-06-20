@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.common;
 
 public class IpHostPair {
 

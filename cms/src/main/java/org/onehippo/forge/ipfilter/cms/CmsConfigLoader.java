@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.cms;
 
 import javax.jcr.Session;
 
-public class CmsConfigLoader extends IpFilterConfigLoader{
+import org.onehippo.forge.ipfilter.common.IpFilterConfigLoader;
+
+public class CmsConfigLoader extends IpFilterConfigLoader {
+
+    private static final String DEFAULT_CONFIGURATION_PATH = "/hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig";
 
     private final Session session;
     private final IpFilterService service;
@@ -25,9 +29,8 @@ public class CmsConfigLoader extends IpFilterConfigLoader{
     public CmsConfigLoader(final Session session, final IpFilterService service) {
         this.session = session;
         this.service = service;
-        setConfigurationLocation("/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig");
+        setConfigurationLocation(getDefaultConfigurationLocation());
     }
-
 
     @Override
     public boolean needReloading() {
@@ -47,5 +50,9 @@ public class CmsConfigLoader extends IpFilterConfigLoader{
     @Override
     public Session getSession() {
         return session;
+    }
+
+    protected String getDefaultConfigurationLocation() {
+        return DEFAULT_CONFIGURATION_PATH;
     }
 }

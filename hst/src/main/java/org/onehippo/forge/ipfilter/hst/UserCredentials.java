@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.hst;
 
+import org.onehippo.forge.ipfilter.common.IpFilterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

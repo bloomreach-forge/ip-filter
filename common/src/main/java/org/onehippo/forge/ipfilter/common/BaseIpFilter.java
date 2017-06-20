@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.common;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jcr.Session;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -36,8 +35,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.repository.events.PersistedHippoEventsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,23 +45,9 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 
-import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_EXPIRES_IN_DAYS;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_EXPIRE_IN_MINUTES;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.CACHE_SITE;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.INVALID_AUTH_OBJECT;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.REALM_PARAM;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.REPOSITORY_ADDRESS_PARAM;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.getHost;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.getIp;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.getParameter;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.getPath;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.handleForbidden;
-import static org.onehippo.forge.ipfilter.IpFilterUtils.handleUnauthorized;
+public abstract class BaseIpFilter implements Filter {
 
-public abstract class IpFilterCommon implements Filter {
-
-    private static final Logger log = LoggerFactory.getLogger(IpFilterCommon.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseIpFilter.class);
 
     protected IpFilterConfigLoader configLoader;
 
@@ -74,8 +57,8 @@ public abstract class IpFilterCommon implements Filter {
     protected boolean initialized;
 
     protected final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
-            .maximumSize(CACHE_SITE)
-            .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
+            .maximumSize(IpFilterConstants.CACHE_SITE)
+            .expireAfterWrite(IpFilterConstants.CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Boolean>() {
                 @Override
                 public Boolean load(final String key) throws Exception {
@@ -85,8 +68,8 @@ public abstract class IpFilterCommon implements Filter {
             });
 
     private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
-            .maximumSize(CACHE_SITE)
-            .expireAfterWrite(CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
+            .maximumSize(IpFilterConstants.CACHE_SITE)
+            .expireAfterWrite(IpFilterConstants.CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<IpHostPair, Boolean>() {
                 @Override
                 public Boolean load(final IpHostPair key) throws Exception {
@@ -99,11 +82,11 @@ public abstract class IpFilterCommon implements Filter {
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
-        realm = getParameter(filterConfig, REALM_PARAM, realm);
-        repositoryAddress = getParameter(filterConfig, REPOSITORY_ADDRESS_PARAM, DEFAULT_REPOSITORY_ADDRESS);
+        realm = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REALM_PARAM, realm);
+        repositoryAddress = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REPOSITORY_ADDRESS_PARAM, IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS);
         cache = CacheBuilder.newBuilder()
                 .maximumSize(1)
-                .expireAfterWrite(CACHE_EXPIRES_IN_DAYS, TimeUnit.DAYS)
+                .expireAfterWrite(IpFilterConstants.CACHE_EXPIRES_IN_DAYS, TimeUnit.DAYS)
                 .build(new CacheLoader<String, AuthObject>() {
                     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -145,64 +128,74 @@ public abstract class IpFilterCommon implements Filter {
 
     @SuppressWarnings("unchecked")
     private Status allowed(final HttpServletRequest request) {
-        final String host = getHost(request);
+
+        final String host = IpFilterUtils.getHost(request);
         final AuthObject authObject = cache.getUnchecked(host);
-        // check if host is IP/auth protected:
+
+        // check if host is IP/auth protected
         if (authObject == null || !authObject.isActive()) {
             log.debug("No configuration match for host: {}", host);
             return Status.OK;
         }
+
         // check if path is ignored:
         final boolean ignored = isIgnored(request, authObject);
         if (ignored) {
             return Status.OK;
         }
-        final String ip = getIp(request, authObject.getForwardedForHeader());
+
+        final String ip = IpFilterUtils.getIp(request, authObject.getForwardedForHeader());
         if (Strings.isNullOrEmpty(ip)) {
             // shouldn't happen
-            log.warn("IP was null or empty");
+            log.warn("IP was null or empty. Host is {}", host);
             return Status.UNAUTHORIZED;
         }
+
+        // check if on whitelist
         final IpHostPair pair = new IpHostPair(host, ip);
         boolean matched = ipCache.getUnchecked(pair);
         final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
         if (!matched) {
-            // check if on whitelist
             for (IpMatcher matcher : ipMatchers) {
                 if (matcher.matches(ip)) {
-                    log.debug("Found match for host: {}, ip: {}", host, ip);
+                    log.debug("Found match for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
                     matched = true;
                     ipCache.put(pair, Boolean.TRUE);
                     break;
                 }
             }
         }
+
+        // if IP already ok, check if basic authentication is needed:
         final boolean mustMatchAll = authObject.isMustMatchAll();
-        // if ip already ok, check if basic authentication is needed:
         if (matched && !mustMatchAll) {
-            log.debug("Matched based on IP address {}", ip);
+            log.debug("Matched based on IP address {}, path {}", ip, IpFilterUtils.getPath(request));
             // no need to match username / password
             return Status.OK;
         }
+
         // if no match is found and we have IP configured, exit
         if (!matched && mustMatchAll && ipMatchers.size() > 0) {
-            log.debug("No match for host: {}, ip: {}, no attempt for basic authentication, must match both but ip set was empty", host, ip);
+            log.debug("No match for host: {}, ip: {}. No attempt for basic authentication, must match both but IP set was empty", host, ip);
             return Status.FORBIDDEN;
         }
+
         final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         if (allowCmsUsers) {
             // must match basic authorization
             return authenticate(request);
         }
+
         if (mustMatchAll) {
-            if (log.isInfoEnabled()) {
-                log.error("Misconfiguration: match-all property is enabled but allow-cms-users is set to false");
-            }
+            log.error("Ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
+                    "Still authenticating against the repository now.");
+            return authenticate(request);
         }
+
         // no access
+        log.debug("Falling back to forbidden access for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
         return Status.FORBIDDEN;
     }
-
 
     @Override
     public void destroy() {
@@ -220,13 +213,13 @@ public abstract class IpFilterCommon implements Filter {
      * Check if path is ignored
      */
     private boolean isIgnored(final HttpServletRequest request, final AuthObject authObject) {
-        final String path = getPath(request);
+        final String path = IpFilterUtils.getPath(request);
         final List<Pattern> ignoredPaths = authObject.getIgnoredPathPatterns();
         for (final Pattern ignoredPath : ignoredPaths) {
             final Matcher matcher = ignoredPath.matcher(path);
             if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Path is ignored: {}", getPath(request));
+                    log.debug("Path is ignored: {}", path);
                 }
                 return true;
             }
@@ -259,6 +252,9 @@ public abstract class IpFilterCommon implements Filter {
 
     }
 
+    /**
+     * Authenticate against the repository for Hippo users.
+     */
     protected abstract Status authenticate(final HttpServletRequest request);
 
     private void handleAuthorizationIssue(final HttpServletRequest req, final HttpServletResponse res, Status status) {
@@ -266,15 +262,15 @@ public abstract class IpFilterCommon implements Filter {
             switch (status) {
                 case FORBIDDEN:
                     log.info("Request forbidden from: {}", req.getRemoteHost());
-                    handleForbidden(res, realm);
+                    IpFilterUtils.handleForbidden(res, realm);
                     break;
                 case UNAUTHORIZED:
                     log.info("Request unauthorized from: {}", req.getRemoteHost());
-                    handleUnauthorized(res, realm);
+                    IpFilterUtils.handleUnauthorized(res, realm);
                     break;
                 default:
                     log.warn("Unknown status found. Request unauthorized from: {}", req.getRemoteHost());
-                    handleUnauthorized(res, realm);
+                    IpFilterUtils.handleUnauthorized(res, realm);
                     break;
             }
         } catch (IOException e) {
@@ -298,7 +294,7 @@ public abstract class IpFilterCommon implements Filter {
             }
         }
         // just return inactive object
-        return INVALID_AUTH_OBJECT;
+        return IpFilterConstants.INVALID_AUTH_OBJECT;
     }
 
 
@@ -314,18 +310,5 @@ public abstract class IpFilterCommon implements Filter {
     }
 
 
-    protected void initializeConfigManager() {
-        // check CMS service first
-        final IpFilterService service = HippoServiceRegistry.getService(IpFilterService.class);
-        if (service != null) {
-            final Session session = service.getSession();
-            if (session == null) {
-                log.warn("IpFilterService has no session");
-                return;
-            }
-            configLoader = new CmsConfigLoader(session, service);
-            log.info("Successfully configured CMS service");
-            initialized = true;
-        }
-    }
+    protected abstract void initializeConfigManager();
 }

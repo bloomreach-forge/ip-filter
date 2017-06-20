@@ -14,12 +14,12 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<sv:node sv:name="ipfilter-module" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
+<sv:node sv:name="ipfilter" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>hipposys:module</sv:value>
   </sv:property>
   <sv:property sv:name="hipposys:className" sv:type="String">
-    <sv:value>org.onehippo.forge.ipfilter.IpFilterModule</sv:value>
+    <sv:value>org.onehippo.forge.ipfilter.repository.IpFilterModule</sv:value>
   </sv:property>
   <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
     <sv:value>false</sv:value>
@@ -36,7 +36,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="match-all" sv:type="Boolean">
-        <sv:value>true</sv:value>
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:property sv:name="allow-cms-users" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -62,18 +62,6 @@
         <sv:value>127.0.0.1</sv:value>
         <sv:value>0:0:0:0:0:0:0:1</sv:value>
       </sv:property>
-      <sv:node sv:name="fastly">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>hipposys:moduleconfig</sv:value>
-        </sv:property>
-        <sv:property sv:name="ignore-header" sv:type="String">
-          <sv:value>X-fastly</sv:value>
-        </sv:property>
-        <sv:property sv:name="ignore-header-values" sv:type="String" sv:multiple="true">
-          <sv:value>some string</sv:value>
-          <sv:value>another string</sv:value>
-        </sv:property>
-      </sv:node>
     </sv:node>
   </sv:node>
 

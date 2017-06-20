@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.hst;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -24,22 +24,23 @@ import org.hippoecm.hst.core.container.ComponentManager;
 import org.hippoecm.hst.site.HstServices;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
+import org.onehippo.forge.ipfilter.common.BaseIpFilter;
+import org.onehippo.forge.ipfilter.common.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.onehippo.forge.ipfilter.IpFilterConstants.HEADER_AUTHORIZATION;
-import static org.onehippo.forge.ipfilter.IpFilterConstants.REPOSITORY_ADDRESS_PARAM;
+import org.onehippo.forge.ipfilter.common.IpFilterConstants;
 
 /**
  * Filter allowing only access for IP ranges that are configured
  */
-public class IpFilter extends IpFilterCommon {
+public class IpFilter extends BaseIpFilter {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
 
     @Override
     protected Status authenticate(final HttpServletRequest request) {
-        final UserCredentials credentials = new UserCredentials(request.getHeader(HEADER_AUTHORIZATION));
+        final UserCredentials credentials = new UserCredentials(request.getHeader(IpFilterConstants.HEADER_AUTHORIZATION));
         if (!credentials.valid()) {
             log.debug("Invalid credentials, null or empty");
             return Status.UNAUTHORIZED;
@@ -76,7 +77,7 @@ public class IpFilter extends IpFilterCommon {
 
         if (HstServices.isAvailable()) {
             final ComponentManager componentManager = HstServices.getComponentManager();
-            configLoader = componentManager.getComponent(IpFilterConfigLoader.class.getName(), IpFilterConfigLoader.class.getPackage().getName());
+            configLoader = componentManager.getComponent(HstConfigLoader.class.getName(), HstConfigLoader.class.getPackage().getName());
             if (configLoader == null) {
                 log.error("Configuration loader was null");
             } else {
@@ -106,7 +107,8 @@ public class IpFilter extends IpFilterCommon {
 
     private HippoRepository getHippoRepository(String address) {
         if (address == null || address.length() == 0) {
-            log.error("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.", REPOSITORY_ADDRESS_PARAM);
+            log.error("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.",
+                    IpFilterConstants.REPOSITORY_ADDRESS_PARAM);
             return null;
         }
         try {

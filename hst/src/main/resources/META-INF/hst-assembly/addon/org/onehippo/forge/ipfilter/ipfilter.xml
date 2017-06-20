@@ -19,11 +19,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <bean id="configurationLocation" class="java.lang.String">
-    <constructor-arg type="java.lang.String" value="/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig"/>
+    <constructor-arg type="java.lang.String" value="/hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig"/>
   </bean>
 
   <!-- add config loader -->
-  <bean id="org.onehippo.forge.ipfilter.IpFilterConfigLoader" class="org.onehippo.forge.ipfilter.HstConfigLoader">
+  <bean id="org.onehippo.forge.ipfilter.hst.HstConfigLoader" class="org.onehippo.forge.ipfilter.hst.HstConfigLoader">
     <property name="repository" ref="javax.jcr.Repository"/>
     <property name="credentials" ref="javax.jcr.Credentials.hstconfigreader"/>
     <property name="configurationLocation" value="#{configurationLocation}"/>
@@ -43,8 +43,8 @@
         <property name="absolutePath" value="#{configurationLocation}"/>
         <property name="deep" value="true"/>
         <property name="eventListener">
-          <bean class="org.onehippo.forge.ipfilter.IpFilterEventListener">
-            <property name="configLoader" ref="org.onehippo.forge.ipfilter.IpFilterConfigLoader"/>
+          <bean class="org.onehippo.forge.ipfilter.hst.IpFilterEventListener">
+            <property name="configLoader" ref="org.onehippo.forge.ipfilter.hst.HstConfigLoader"/>
           </bean>
         </property>
       </bean>

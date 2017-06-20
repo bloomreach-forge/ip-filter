@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.hst;
 
 import javax.jcr.observation.Event;
 
 import org.hippoecm.hst.core.jcr.GenericEventListener;
+import org.onehippo.forge.ipfilter.common.IpFilterConfigLoader;
 
 public class IpFilterEventListener extends GenericEventListener {
 

@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.common;
 
-import javax.jcr.Session;
+public enum Status {
 
-import org.onehippo.cms7.services.SingletonService;
-
-@SingletonService
-public interface IpFilterService {
-
-    Session getSession();
-
-    boolean configurationChanged();
-
-    void setConfigurationChanged(boolean configurationChanged);
+    /**
+     * Equivalent of a 200 http status
+     */
+    OK,
+    /**
+     * Equivalent of a 401 http status
+     */
+    UNAUTHORIZED,
+    /**
+     * Equivalent of a 403 http status
+     */
+    FORBIDDEN
 }

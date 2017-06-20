@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -115,7 +115,7 @@ public final class IpFilterUtils {
         final String hostHeader = request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST);
         if (Strings.isNullOrEmpty(hostHeader)) {
             final String remoteHost = request.getRemoteHost();
-            log.debug("missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
+            log.debug("Missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
             return remoteHost;
         }
         return hostHeader;

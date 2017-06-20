@@ -13,20 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.cms;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.jcr.Session;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class IpFilterServiceImpl implements IpFilterService {
 
-public class IpFilterCms extends IpFilterCommon {
+    private final Session session;
 
-    private static final Logger log = LoggerFactory.getLogger(IpFilterCms.class);
-    
-    @Override
-    protected Status authenticate(final HttpServletRequest request) {
-        log.debug("Flag allowCmsUsers is set, however we are within CMS app so *skipping* cms authentication");
-        return Status.OK;
+    // NOTE: default must be true to load initial data
+    private boolean changed  = true;
+
+    public IpFilterServiceImpl(final Session session) {
+        this.session = session;
     }
+
+    @Override
+    public Session getSession() {
+        return session;
+    }
+
+    @Override
+    public boolean configurationChanged() {
+        return changed;
+    }
+
+    @Override
+    public void setConfigurationChanged(final boolean configurationChanged) {
+        changed = configurationChanged;
+    }
+
 }
+
+

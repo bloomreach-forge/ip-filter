@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.common;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang.StringUtils;

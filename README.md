@@ -19,19 +19,16 @@ Multiple subnodes containing following properties:
 * **ignored-header-values** : values of **ignored-header** which must be matched to be ignored (multivalue string, optional)
                                 
 
-
-
-
 Module can be configured here:
 
-http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipfilter-module/hippo:moduleconfig
+http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig
 ```
  <sv:node sv:name="ipfilter-module" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
    <sv:property sv:name="jcr:primaryType" sv:type="Name">
      <sv:value>hipposys:module</sv:value>
    </sv:property>
    <sv:property sv:name="hipposys:className" sv:type="String">
-     <sv:value>org.onehippo.forge.ipfilter.IpFilterModule</sv:value>
+     <sv:value>org.onehippo.forge.ipfilter.repository.IpFilterModule</sv:value>
    </sv:property>
    <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
      <sv:value>false</sv:value>
@@ -48,7 +45,7 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
          <sv:value>true</sv:value>
        </sv:property>
        <sv:property sv:name="match-all" sv:type="Boolean">
-         <sv:value>true</sv:value>
+         <sv:value>false</sv:value>
        </sv:property>
        <sv:property sv:name="allow-cms-users" sv:type="Boolean">
          <sv:value>true</sv:value>
@@ -74,18 +71,6 @@ http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:modules/ipf
          <sv:value>127.0.0.1</sv:value>
          <sv:value>0:0:0:0:0:0:0:1</sv:value>
        </sv:property>
-       <sv:node sv:name="fastly">
-         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-           <sv:value>hipposys:moduleconfig</sv:value>
-         </sv:property>
-         <sv:property sv:name="ignore-header" sv:type="String">
-           <sv:value>X-fastly</sv:value>
-         </sv:property>
-         <sv:property sv:name="ignore-header-values" sv:type="String" sv:multiple="true">
-           <sv:value>some string</sv:value>
-           <sv:value>another string</sv:value>
-         </sv:property>
-       </sv:node>
      </sv:node>
    </sv:node>
  
@@ -98,7 +83,7 @@ Filter configuration **SITE** (**web.xml**)
 ```
   <filter>
     <filter-name>IpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.IpFilter</filter-class>
+    <filter-class>org.onehippo.forge.ipfilter.hst.IpFilter</filter-class>
     <init-param>
       <param-name>repository-address</param-name>
       <param-value>vm://</param-value>
