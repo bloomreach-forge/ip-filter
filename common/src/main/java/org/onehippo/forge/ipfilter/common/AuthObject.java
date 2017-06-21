@@ -138,13 +138,12 @@ public class AuthObject {
             final Set<String> ignoredPaths = getIgnoredPaths();
             for (String ignored : ignoredPaths) {
                 try {
-                    ignoredPathPatterns.add(Pattern.compile(ignored));
+                    final Pattern compile = Pattern.compile(ignored);
+                    ignoredPathPatterns.add(compile);
                 } catch (Exception e) {
-                    log.error("Invalid path value {}", ignored);
-                    log.error("Error compiling path pattern: ", e);
+                    log.error("Error compiling path pattern " + ignored, e);
                 }
             }
-
         }
 
         return ignoredPathPatterns;

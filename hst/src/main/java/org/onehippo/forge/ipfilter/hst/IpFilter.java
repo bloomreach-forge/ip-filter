@@ -38,6 +38,8 @@ public class IpFilter extends BaseIpFilter {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
 
+    private static final String SYSTEM_PROPERTY_DISABLED = "hippo.ipfilter.disabled";
+
     @Override
     protected Status authenticate(final HttpServletRequest request) {
         final UserCredentials credentials = new UserCredentials(request.getHeader(IpFilterConstants.HEADER_AUTHORIZATION));
@@ -87,6 +89,11 @@ public class IpFilter extends BaseIpFilter {
             log.info("HstService not available yet...waiting..");
         }
 
+    }
+
+    @Override
+    protected String getDisabledPropertyName() {
+        return SYSTEM_PROPERTY_DISABLED;
     }
 
     private Session getSession(final UserCredentials credentials) {

@@ -79,6 +79,7 @@ public abstract class BaseIpFilter implements Filter {
             });
 
     private String realm;
+    private String disabledPropertyName;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -108,9 +109,15 @@ public abstract class BaseIpFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 
+        if ("true".equals(System.getProperty(getDisabledPropertyName()))) {
+            log.debug("{} disabled by system property {}", this.getClass().getSimpleName(), getDisabledPropertyName());
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (!initialized) {
             requestData();
-            log.debug("Filter not initialized yet");
+            log.debug("{}: not initialized yet", this.getClass().getSimpleName());
             handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, Status.FORBIDDEN);
             return;
         }
@@ -147,7 +154,7 @@ public abstract class BaseIpFilter implements Filter {
         final String ip = IpFilterUtils.getIp(request, authObject.getForwardedForHeader());
         if (Strings.isNullOrEmpty(ip)) {
             // shouldn't happen
-            log.warn("IP was null or empty. Host is {}", host);
+            log.warn("{}: IP was null or empty. Host is {}", this.getClass().getSimpleName(), host);
             return Status.UNAUTHORIZED;
         }
 
@@ -187,8 +194,8 @@ public abstract class BaseIpFilter implements Filter {
         }
 
         if (mustMatchAll) {
-            log.error("Ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
-                    "Still authenticating against the repository now.");
+            log.error("}{: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
+                    "Still authenticating against the repository now.", this.getClass().getSimpleName());
             return authenticate(request);
         }
 
@@ -261,20 +268,20 @@ public abstract class BaseIpFilter implements Filter {
         try {
             switch (status) {
                 case FORBIDDEN:
-                    log.info("Request forbidden from: {}", req.getRemoteHost());
+                    log.info("{}: request forbidden from: {}", this.getClass().getSimpleName(), req.getRemoteHost());
                     IpFilterUtils.handleForbidden(res, realm);
                     break;
                 case UNAUTHORIZED:
-                    log.info("Request unauthorized from: {}", req.getRemoteHost());
+                    log.info("{}: request unauthorized from: {}", this.getClass().getSimpleName(), req.getRemoteHost());
                     IpFilterUtils.handleUnauthorized(res, realm);
                     break;
                 default:
-                    log.warn("Unknown status found. Request unauthorized from: {}", req.getRemoteHost());
+                    log.warn("{}: unknown status found. Request unauthorized from: {}", this.getClass().getSimpleName(), req.getRemoteHost());
                     IpFilterUtils.handleUnauthorized(res, realm);
                     break;
             }
         } catch (IOException e) {
-            log.error("IOException raised in AuthenticationFilter", e);
+            log.error("IOException raised in " + this.getClass().getSimpleName(), e);
         }
     }
 
@@ -305,10 +312,12 @@ public abstract class BaseIpFilter implements Filter {
         if (initialized && configLoader.needReloading()) {
             configLoader.load();
             invalidateCaches();
-            log.info("Ip filter data reloaded");
+            log.info("{}: data reloaded", this.getClass().getSimpleName());
         }
     }
 
 
     protected abstract void initializeConfigManager();
+
+    protected abstract String getDisabledPropertyName();
 }

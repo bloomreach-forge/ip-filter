@@ -28,6 +28,8 @@ public class CmsIpFilter extends BaseIpFilter {
 
     private static final Logger log = LoggerFactory.getLogger(CmsIpFilter.class);
 
+    private static final String SYSTEM_PROPERTY_DISABLED = "hippo.cms-ipfilter.disabled";
+
     @Override
     protected Status authenticate(final HttpServletRequest request) {
         log.debug("Authenticating for repository user, however we are within CMS application so *skipping* authentication");
@@ -52,5 +54,10 @@ public class CmsIpFilter extends BaseIpFilter {
             // info because always so on startup
             log.info("IpFilterService not yet available in registry");
         }
+    }
+
+    @Override
+    protected String getDisabledPropertyName() {
+        return SYSTEM_PROPERTY_DISABLED;
     }
 }
