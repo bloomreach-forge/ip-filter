@@ -194,13 +194,15 @@ public abstract class BaseIpFilter implements Filter {
         }
 
         if (mustMatchAll) {
-            log.error("}{: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
+            log.error("{}: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
                     "Still authenticating against the repository now.", this.getClass().getSimpleName());
             return authenticate(request);
         }
 
         // no access
-        log.debug("Falling back to forbidden access for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
+        if (log.isDebugEnabled()) {
+            log.debug("Falling back to forbidden access for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
+        }
         return Status.FORBIDDEN;
     }
 
