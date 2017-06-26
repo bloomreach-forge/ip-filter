@@ -117,10 +117,14 @@ public abstract class BaseIpFilter implements Filter {
 
         if (!initialized) {
             requestData();
+        }
+
+        if (!initialized) {
             log.debug("{}: not initialized yet", this.getClass().getSimpleName());
             handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, Status.FORBIDDEN);
             return;
         }
+
         if (configLoader.needReloading()) {
             invalidateCaches();
         }
@@ -194,13 +198,14 @@ public abstract class BaseIpFilter implements Filter {
         }
 
         if (mustMatchAll) {
-            log.error("}{: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
+            log.error("{}: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
                     "Still authenticating against the repository now.", this.getClass().getSimpleName());
             return authenticate(request);
         }
 
         // no access
-        log.debug("Falling back to forbidden access for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
+        log.debug("{}: falling back to forbidden access for host: {}, ip: {}, path: {}",
+                this.getClass().getSimpleName(), host, ip, IpFilterUtils.getPath(request));
         return Status.FORBIDDEN;
     }
 
@@ -226,7 +231,7 @@ public abstract class BaseIpFilter implements Filter {
             final Matcher matcher = ignoredPath.matcher(path);
             if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Path is ignored: {}", path);
+                    log.debug("Path is ignored because of patten {}: {}", ignoredPath.pattern(), path);
                 }
                 return true;
             }
