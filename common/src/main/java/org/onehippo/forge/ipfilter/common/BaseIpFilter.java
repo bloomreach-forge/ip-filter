@@ -117,10 +117,14 @@ public abstract class BaseIpFilter implements Filter {
 
         if (!initialized) {
             requestData();
+        }
+
+        if (!initialized) {
             log.debug("{}: not initialized yet", this.getClass().getSimpleName());
             handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, Status.FORBIDDEN);
             return;
         }
+
         if (configLoader.needReloading()) {
             invalidateCaches();
         }
@@ -228,7 +232,7 @@ public abstract class BaseIpFilter implements Filter {
             final Matcher matcher = ignoredPath.matcher(path);
             if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Path is ignored: {}", path);
+                    log.debug("Path is ignored because of patten {}: {}", ignoredPath.pattern(), path);
                 }
                 return true;
             }
