@@ -45,7 +45,17 @@
         <sv:value>X-Forwarded-For</sv:value>
       </sv:property>
       <sv:property sv:name="ignored-paths" sv:type="String" sv:multiple="true">
+        <sv:value>/autoreload</sv:value>
         <sv:value>/ping/.*</sv:value>
+        <sv:value>^/_rp/.*</sv:value>
+        <sv:value>^/_cmsinternal/.*</sv:value>
+        <sv:value>^/_targeting/.*</sv:value>
+        <sv:value>^/webfiles/.*</sv:value>
+        <sv:value>^/binaries/.*</sv:value>
+        <sv:value>^/images/.*</sv:value>
+        <sv:value>.*\.css</sv:value>
+        <sv:value>.*\.js</sv:value>
+        <sv:value>.*\.ico</sv:value>
         <sv:value>.*\.css</sv:value>
         <sv:value>.*\.js</sv:value>
         <sv:value>.*\.ico</sv:value>
