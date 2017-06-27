@@ -204,8 +204,9 @@ public abstract class BaseIpFilter implements Filter {
         }
 
         // no access
-        log.debug("{}: falling back to forbidden access for host: {}, ip: {}, path: {}",
-                this.getClass().getSimpleName(), host, ip, IpFilterUtils.getPath(request));
+        if (log.isDebugEnabled()) {
+            log.debug("Falling back to forbidden access for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
+        }
         return Status.FORBIDDEN;
     }
 
