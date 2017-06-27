@@ -14,18 +14,22 @@
   limitations under the License.
   -->
 
-## Release notes
+## Version Compatibility
 
-This page contains the release notes.
+| Hippo CMS | IP Filter |
+| --------- |-----------| 
+| 11.x      | 1.1.x     |
 
-### 1.1.0 (unreleased) 
+## Release Notes
 
-<p class="smallinfo">Release date: TBD</p>
+### 1.1.0  
+
+<p class="smallinfo">Release date: 27 June 2017</p>
 
 + Apply Hippo Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
 + Fix reloading issues in the site's IpFilter.   
-+ Add a filter for the CMS webapp too, CmsIpFilter.
++ Add a filter for the CMS webapp: CmsIpFilter.
 + Available on Hippo 11.
 
-### 1.0.0-1.0.4 
+### 1.0.0 - 1.0.4 
 + Older releases from sandbox, non-open source.
