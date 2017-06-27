@@ -28,7 +28,7 @@
   <description>My Hippo Project</description>
   <groupId>org.onehippo.forge.ipfilter</groupId>
   <artifactId>myhippoproject</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <!-- 
@@ -76,7 +76,7 @@
 
   <properties>
 
-    <hippo.forge.ipfilter.version>1.1.0-SNAPSHOT</hippo.forge.ipfilter.version>
+    <hippo.forge.ipfilter.version>${project.version}</hippo.forge.ipfilter.version>
     <hippo.cms-ipfilter.disabled>false</hippo.cms-ipfilter.disabled>
     <hippo.ipfilter.disabled>false</hippo.ipfilter.disabled>
 
