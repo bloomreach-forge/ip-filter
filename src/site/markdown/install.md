@@ -39,7 +39,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ### Dependency management 
 Add this property to the properties section of the root pom.xml:
 
-    <hippo.forge.ipfilter.version>1.1.0</hippo.forge.ipfilter.version>
+    <hippo.forge.ipfilter.version>version.number</hippo.forge.ipfilter.version>
 
 Select the correct version for your project. See the [release notes](release-notes.html) for more information on which 
 version is applicable.
