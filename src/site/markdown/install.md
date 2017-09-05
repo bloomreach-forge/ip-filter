@@ -18,6 +18,24 @@
 These instructions assume a Hippo CMS project based on the Hippo website archetype, i.e. a Maven multi-module project 
 with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least three sub-modules: cms, site and bootstrap.
 
+### Forge Repository
+In the main pom.xml of the project, in the repositories section, add this repository if it is not configured there yet. 
+
+```
+<repository>
+  <id>hippo-forge</id>
+  <name>Hippo Forge maven 2 repository.</name>
+  <url>https://maven.onehippo.com/maven2-forge/</url>
+  <snapshots>
+    <enabled>false</enabled>
+  </snapshots>
+  <releases>
+    <updatePolicy>never</updatePolicy>
+  </releases>
+  <layout>default</layout>
+</repository>
+```
+
 ### Dependency management 
 Add this property to the properties section of the root pom.xml:
 
