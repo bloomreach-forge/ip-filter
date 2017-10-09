@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright 2017 Hippo B.V. (http://www.onehippo.com)
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~  http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>myhippoproject</artifactId>
+    <groupId>org.onehippo.cms7</groupId>
+    <artifactId>ipfilterdemo</artifactId>
     <version>1.1.1-SNAPSHOT</version>
   </parent>
-
-  <artifactId>myhippoproject-cms</artifactId>
+  <artifactId>ipfilterdemo-cms</artifactId>
   <packaging>war</packaging>
-  <name>My Hippo Project CMS</name>
-  <description>My Hippo Project CMS</description>
-
+  <name>IP filter demo CMS</name>
+  <description>IP filter demo CMS</description>
   <dependencies>
 
     <!-- include the plugin's configuration and web filter -->
@@ -61,13 +43,13 @@
       <artifactId>hippo-addon-channel-manager-repository</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.forge.ipfilter</groupId>
-      <artifactId>myhippoproject-bootstrap-configuration</artifactId>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>ipfilterdemo-repository-data-application</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.forge.ipfilter</groupId>
-      <artifactId>myhippoproject-bootstrap-webfiles</artifactId>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>ipfilterdemo-repository-data-webfiles</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

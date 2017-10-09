@@ -1,0 +1,4 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/ipfilterdemo/hst:abstractpages:
+      jcr:primaryType: hst:pages
