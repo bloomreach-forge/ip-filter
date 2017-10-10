@@ -132,28 +132,25 @@ public abstract class IpFilterConfigLoader {
             log.error("Host names property ({}) is missing for configuration: {}", IpFilterConstants.CONFIG_HOSTNAME, name);
             return null;
         }
+        final Set<String> hostSet = new HashSet<>();
+        Collections.addAll(hostSet, hosts);
         final String[] ranges = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_ALLOWED_IP_RANGES, ArrayUtils.EMPTY_STRING_ARRAY);
         final boolean allowCmsUsers = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_ALLOW_CMS_USERS, false);
-
         if (!allowCmsUsers && ranges.length == 0) {
             log.warn("Invalid configuration ({}), no IP addresses nor CMS users are enabled", name);
             return null;
         }
-        final AuthObject object = new AuthObject();
-        object.setActive(true);
+        final Set<String> ignoredPathSet = new HashSet<>();
+        final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
+        Collections.addAll(ignoredPathSet, ignoredPaths);
+        final Set<String> rangesSet = new HashSet<>();
+        Collections.addAll(rangesSet, ranges);
+        final AuthObject object = new AuthObject(true,ignoredPathSet, hostSet, rangesSet);
         object.setAllowCmsUsers(allowCmsUsers);
         object.setForwardedForHeader(JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, null));
         object.setMustMatchAll(JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false));
-        object.setHosts(hosts);
-        final Set<String> rangesSet = new HashSet<>();
-        Collections.addAll(rangesSet, ranges);
-        final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
-        final Set<String> ignored = new HashSet<>();
-        Collections.addAll(ignored, ignoredPaths);
         // headers
         parseHeaders(object, node);
-        object.setRanges(rangesSet);
-        object.setIgnoredPaths(ignored);
         return object;
     }
 
