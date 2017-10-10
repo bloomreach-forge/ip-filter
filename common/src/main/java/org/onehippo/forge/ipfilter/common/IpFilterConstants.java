@@ -15,6 +15,8 @@
  */
 package org.onehippo.forge.ipfilter.common;
 
+import java.util.Collections;
+
 public final class IpFilterConstants {
 
     public static final String CONFIG_ALLOWED_IP_RANGES = "allowed-ip-ranges";
@@ -26,7 +28,7 @@ public final class IpFilterConstants {
     public static final String CONFIG_IGNORED_HEADER_VALUES = "ignored-header-values";
     public static final String CONFIG_MATCH_ALL = "match-all";
     public static final String CONFIG_FORWARDED_FOR_HEADER = "forwarded-for-header";
-    public static final AuthObject INVALID_AUTH_OBJECT = new AuthObject(false);
+    public static final AuthObject INVALID_AUTH_OBJECT = new AuthObject(false, Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
 
     public static final int BASIC_AUTH_PREFIX_LENGTH = "Basic ".length();
     public static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
