@@ -30,15 +30,15 @@
   <inceptionYear>2016</inceptionYear>
 
   <properties>
-    <!-- from 11.2.1 release -->
-    <hippo.cms.version>4.2.2</hippo.cms.version>
-    <hippo.hst.version>4.2.1</hippo.hst.version>
-    <hippo.repository.version>4.2.1</hippo.repository.version>
-    <hippo.services.version>3.2.0</hippo.services.version>
+    <!-- from 12.0.2 release -->
+    <hippo.cms.version>5.0.2</hippo.cms.version>
+    <hippo.hst.version>5.0.2</hippo.hst.version>
+    <hippo.repository.version>5.0.2</hippo.repository.version>
+    <hippo.services.version>4.0.2</hippo.services.version>
+    
+    <spring-security-web.version>4.2.3.RELEASE</spring-security-web.version>
 
-    <spring-security-web.version>4.0.3.RELEASE</spring-security-web.version>
-
-    <commons-io.version>2.2</commons-io.version>
+    <commons-io.version>2.5</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
 
     <junit.version>4.12</junit.version>
