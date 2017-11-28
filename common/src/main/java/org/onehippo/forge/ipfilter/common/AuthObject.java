@@ -16,16 +16,24 @@
 package org.onehippo.forge.ipfilter.common;
 
 import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class AuthObject {
 
     private static final Logger log = LoggerFactory.getLogger(AuthObject.class);
-    private final boolean active;
+
+    private final boolean valid;
     private boolean mustMatchAll;
     private boolean allowCmsUsers;
     private String forwardedForHeader;
@@ -37,25 +45,34 @@ public class AuthObject {
     private final List<Pattern> hostPatterns;
     private final List<Pattern> ignoredPathPatterns;
 
+    public static final AuthObject INVALID = new AuthObject();
 
-    public AuthObject(final boolean active, final Set<String> ignoredPaths, final Set<String> hosts, final Set<String> ranges) {
-        this.active = active;
+    private AuthObject() {
+        this.valid = false;
+        this.ignoredPaths = Collections.emptySet();
+        this.hosts = Collections.emptySet();
+        this.ranges = Collections.emptySet();
+        this.ignoredHeaders = Collections.emptyMap();
+        this.ignoredPathPatterns = Collections.emptyList();
+        this.hostPatterns = Collections.emptyList();
+        this.ipMatchers = Collections.emptySet();
+    }
+
+    public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts, final Set<String> ranges) {
+        this.valid = true;
         this.ignoredPaths = ignoredPaths;
         this.hosts = hosts;
         this.ranges = ranges;
+
         this.ignoredHeaders = new HashMap<>();
-        // parse:
         this.ignoredPathPatterns = parsePatterns();
         this.hostPatterns = parseHostPatterns();
         this.ipMatchers = parseIpMatchers();
-
     }
 
-    
-    public boolean isActive() {
-        return active;
+    public boolean isValid() {
+        return valid;
     }
-
 
     public boolean isAllowCmsUsers() {
         return allowCmsUsers;
@@ -78,7 +95,6 @@ public class AuthObject {
     public List<Pattern> getHostPatterns() {
         return hostPatterns;
     }
-
 
     public List<Pattern> getIgnoredPathPatterns() {
         return ignoredPathPatterns;
