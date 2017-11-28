@@ -231,7 +231,7 @@ public abstract class BaseIpFilter implements Filter {
             final Matcher matcher = ignoredPath.matcher(path);
             if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Path is ignored because of patten {}: {}", ignoredPath.pattern(), path);
+                    log.debug("Path is ignored because of pattern {}: {}", ignoredPath.pattern(), path);
                 }
                 return true;
             }
