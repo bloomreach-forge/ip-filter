@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/ipfilterdemo/hst:workspace/hst:channel:
+      .meta:residual-child-node-category: content
+      jcr:primaryType: hst:channel
+      hst:name: IP filter demo
+      hst:type: website

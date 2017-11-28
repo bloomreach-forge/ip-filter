@@ -18,9 +18,17 @@
 
 | Hippo CMS | IP Filter |
 | --------- |-----------| 
-| 11.x      | 1.1.x     |
+| 12.x      | 2.x       |
+| 11.x      | 1.x       |
 
 ## Release Notes
+
+### 2.0.0  
+
+<p class="smallinfo">Release date: 28 November 2017</p>
+
++ Upgrade to Hippo 12: rewrite the bootstrapping as yaml instead of XML. Also some minor, internal, non-functional refactoring.
+
 
 ### 1.1.0  
 

@@ -22,8 +22,8 @@
          id="cms">
 
   <!-- General configuration -->
-  <display-name>My Hippo Project CMS</display-name>
-  <description>My Hippo Project CMS</description>
+  <display-name>IP filter demo CMS</display-name>
+  <description>IP filter demo CMS</description>
 
   <context-param>
     <description>The address of the repository</description>
@@ -132,7 +132,7 @@
 
   <servlet>
     <servlet-name>AngularResourceServlet</servlet-name>
-    <servlet-class>org.onehippo.cms7.utilities.servlet.ResourceServlet</servlet-class>
+    <servlet-class>org.onehippo.cms7.utilities.servlet.SecureCmsResourceServlet</servlet-class>
     <init-param>
       <param-name>jarPathPrefix</param-name>
       <param-value>/angular</param-value>
@@ -147,7 +147,7 @@
 
   <servlet>
     <servlet-name>CKEditorResourceServlet</servlet-name>
-    <servlet-class>org.onehippo.cms7.utilities.servlet.ResourceServlet</servlet-class>
+    <servlet-class>org.onehippo.cms7.utilities.servlet.SecureCmsResourceServlet</servlet-class>
     <init-param>
       <param-name>jarPathPrefix</param-name>
       <param-value>/ckeditor</param-value>

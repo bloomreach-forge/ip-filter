@@ -1,0 +1,5 @@
+group: 
+  name: ipfilterdemo
+  after: hippo-cms
+project: ipfilterdemo
+module: ipfilterdemo-repository-data-webfiles

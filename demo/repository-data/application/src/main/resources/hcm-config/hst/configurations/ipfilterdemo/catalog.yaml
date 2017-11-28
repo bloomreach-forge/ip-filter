@@ -1,0 +1,6 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/ipfilterdemo/hst:catalog:
+      jcr:primaryType: hst:catalog
+      /ipfilterdemo-catalog:
+        jcr:primaryType: hst:containeritempackage
