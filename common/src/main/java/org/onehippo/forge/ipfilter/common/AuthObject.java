@@ -15,70 +15,64 @@
  */
 package org.onehippo.forge.ipfilter.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class AuthObject {
 
-    @JsonIgnore
     private static final Logger log = LoggerFactory.getLogger(AuthObject.class);
-    private boolean active = true;
+
+    private final boolean valid;
     private boolean mustMatchAll;
     private boolean allowCmsUsers;
     private String forwardedForHeader;
-    private String[] hosts;
-    private Set<String> ranges;
-    private Set<String> ignoredPaths;
-    @JsonIgnore
-    private Set<IpMatcher> ipMatchers;
+    private final Set<String> hosts;
+    private final Set<String> ranges;
+    private final Set<String> ignoredPaths;
+    private final Set<IpMatcher> ipMatchers;
+    private final Map<String, Set<String>> ignoredHeaders;
+    private final List<Pattern> hostPatterns;
+    private final List<Pattern> ignoredPathPatterns;
 
-    private Map<String, Set<String>> ignoredHeaders;
+    public static final AuthObject INVALID = new AuthObject();
 
-    @JsonIgnore
-    private List<Pattern> hostPatterns;
-    @JsonIgnore
-    private List<Pattern> ignoredPathPatterns;
-
-    public AuthObject() {
+    private AuthObject() {
+        this.valid = false;
+        this.ignoredPaths = Collections.emptySet();
+        this.hosts = Collections.emptySet();
+        this.ranges = Collections.emptySet();
+        this.ignoredHeaders = Collections.emptyMap();
+        this.ignoredPathPatterns = Collections.emptyList();
+        this.hostPatterns = Collections.emptyList();
+        this.ipMatchers = Collections.emptySet();
     }
 
-    public Set<String> getIgnoredPaths() {
-        if (ignoredPaths == null) {
-            ignoredPaths = new HashSet<>();
-        }
-        return ignoredPaths;
-    }
-
-    public void setIgnoredPaths(final Set<String> ignoredPaths) {
+    public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts, final Set<String> ranges) {
+        this.valid = true;
         this.ignoredPaths = ignoredPaths;
-    }
-
-    public AuthObject(final String[] hosts) {
         this.hosts = hosts;
+        this.ranges = ranges;
+
+        this.ignoredHeaders = new HashMap<>();
+        this.ignoredPathPatterns = parsePatterns();
+        this.hostPatterns = parseHostPatterns();
+        this.ipMatchers = parseIpMatchers();
     }
 
-    public AuthObject(final boolean active) {
-        this.active = active;
+    public boolean isValid() {
+        return valid;
     }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
 
     public boolean isAllowCmsUsers() {
         return allowCmsUsers;
@@ -86,14 +80,6 @@ public class AuthObject {
 
     public void setAllowCmsUsers(final boolean allowCmsUsers) {
         this.allowCmsUsers = allowCmsUsers;
-    }
-
-    public Set<String> getRanges() {
-        return ranges;
-    }
-
-    public void setRanges(final Set<String> ranges) {
-        this.ranges = ranges;
     }
 
 
@@ -106,66 +92,16 @@ public class AuthObject {
     }
 
 
-    public String[] getHosts() {
-        return hosts;
-    }
-
-    public void setHosts(final String[] hosts) {
-        this.hosts = hosts;
-    }
-
     public List<Pattern> getHostPatterns() {
-        if (hostPatterns == null) {
-            if (hosts == null) {
-                throw new IllegalStateException("No host names provided");
-            }
-            hostPatterns = new ArrayList<>();
-            for (String host : hosts) {
-                try {
-                    hostPatterns.add(Pattern.compile(host));
-                } catch (Exception e) {
-                    log.error("Invalid host value {}", host);
-                    log.error("Error compiling host pattern: ", e);
-                }
-            }
-        }
         return hostPatterns;
     }
 
     public List<Pattern> getIgnoredPathPatterns() {
-        if (ignoredPathPatterns == null) {
-            ignoredPathPatterns = new ArrayList<>();
-            final Set<String> ignoredPaths = getIgnoredPaths();
-            for (String ignored : ignoredPaths) {
-                try {
-                    final Pattern compile = Pattern.compile(ignored);
-                    ignoredPathPatterns.add(compile);
-                } catch (Exception e) {
-                    log.error("Error compiling path pattern " + ignored, e);
-                }
-            }
-        }
-
         return ignoredPathPatterns;
     }
 
-    public void setHostPatterns(final List<Pattern> hostPatterns) {
-        this.hostPatterns = hostPatterns;
-    }
-
-
     public Set<IpMatcher> getIpMatchers() {
-        if (ipMatchers == null) {
-            ipMatchers = new HashSet<>();
-            if (ranges != null) {
-                for (String range : ranges) {
-                    final IpMatcher matcher = IpMatcher.valueOf(range);
-                    if (matcher != null) {
-                        ipMatchers.add(matcher);
-                    }
-                }
-            }
-        }
+
         return ipMatchers;
     }
 
@@ -177,35 +113,12 @@ public class AuthObject {
         this.forwardedForHeader = forwardedForHeader;
     }
 
-    public void setIpMatchers(final Set<IpMatcher> ipMatchers) {
-        this.ipMatchers = ipMatchers;
-    }
-
-    public void addIgnoredPath(final String path) {
-        if (!Strings.isNullOrEmpty(path)) {
-            // initialize
-            getIgnoredPaths();
-            ignoredPaths.add(path);
-        }
-    }
-
 
     public Map<String, Set<String>> getIgnoredHeaders() {
         return ignoredHeaders;
     }
 
-    public void setIgnoredHeaders(final Map<String, Set<String>> ignoredHeaders) {
-        this.ignoredHeaders = ignoredHeaders;
-    }
-
-    public void setIgnoredPathPatterns(final List<Pattern> ignoredPathPatterns) {
-        this.ignoredPathPatterns = ignoredPathPatterns;
-    }
-
     public void addIgnoreHeader(final String ignoredHeader, final Set<String> ignoredHeaderSet) {
-        if (ignoredHeaders == null) {
-            ignoredHeaders = new HashMap<>();
-        }
         for (String value : ignoredHeaderSet) {
             if (!Strings.isNullOrEmpty(value)) {
                 if (ignoredHeaders.get(ignoredHeader) == null) {
@@ -219,4 +132,61 @@ public class AuthObject {
             }
         }
     }
+
+    //############################################
+    // PARSERS
+    //############################################
+    public List<Pattern> parseHostPatterns() {
+        if (hosts == null) {
+            throw new IllegalStateException("No host names provided");
+        }
+        final List<Pattern> patterns = new ArrayList<>();
+        for (String host : hosts) {
+            if (Strings.isNullOrEmpty(host)) {
+                log.warn("Skipping empty host value");
+                continue;
+            }
+            try {
+                patterns.add(Pattern.compile(host));
+            } catch (Exception e) {
+                log.error("Invalid host value {}", host);
+                log.error("Error compiling host pattern: ", e);
+            }
+        }
+
+        return patterns;
+    }
+
+    private Set<IpMatcher> parseIpMatchers() {
+        final Set<IpMatcher> ipMatchers = new HashSet<>();
+        if (ranges != null) {
+            for (String range : ranges) {
+                final IpMatcher matcher = IpMatcher.valueOf(range);
+                if (matcher != null) {
+                    ipMatchers.add(matcher);
+                }
+            }
+        }
+        return ipMatchers;
+    }
+
+    private List<Pattern> parsePatterns() {
+        final List<Pattern> patterns = new ArrayList<>();
+        for (String ignored : ignoredPaths) {
+            try {
+                if (Strings.isNullOrEmpty(ignored)) {
+                    log.debug("Ignoring empty path");
+                    continue;
+                }
+                final Pattern pattern = Pattern.compile(ignored);
+                patterns.add(pattern);
+            } catch (Exception e) {
+                //noinspection StringConcatenationArgumentToLogCall
+                log.error("Error compiling path pattern " + ignored, e);
+            }
+        }
+        return patterns;
+    }
+
+
 }

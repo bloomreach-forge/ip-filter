@@ -79,7 +79,6 @@ public abstract class BaseIpFilter implements Filter {
             });
 
     private String realm;
-    private String disabledPropertyName;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -144,8 +143,8 @@ public abstract class BaseIpFilter implements Filter {
         final AuthObject authObject = cache.getUnchecked(host);
 
         // check if host is IP/auth protected
-        if (authObject == null || !authObject.isActive()) {
-            log.debug("No configuration match for host: {}", host);
+        if (authObject == null || !authObject.isValid()) {
+            log.debug("{} configuration object match for host: {}", (authObject == null) ? "No" : "Invalid", host);
             return Status.OK;
         }
 
@@ -306,8 +305,9 @@ public abstract class BaseIpFilter implements Filter {
                 }
             }
         }
-        // just return inactive object
-        return IpFilterConstants.INVALID_AUTH_OBJECT;
+
+        // just return invalid object
+        return AuthObject.INVALID;
     }
 
 
