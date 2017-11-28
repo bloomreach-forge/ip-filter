@@ -50,7 +50,6 @@ public abstract class IpFilterConfigLoader {
     protected volatile boolean needRefresh = true;
     private final Map<String, AuthObject> data = new ConcurrentHashMap<>();
 
-
     public boolean needReloading() {
         return needRefresh;
     }
@@ -121,15 +120,15 @@ public abstract class IpFilterConfigLoader {
     }
 
     private AuthObject parse(final Node node) throws RepositoryException {
-        final String name = node.getName();
         final boolean enabled = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_ENABLED, true);
         if (!enabled) {
-            log.info("Configuration not enabled for: configuration: {}", name);
+            log.info("Configuration disabled for configuration at {}", node.getPath());
             return null;
         }
+
         final String[] hosts = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_HOSTNAME, null);
         if (hosts == null) {
-            log.error("Host names property ({}) is missing for configuration: {}", IpFilterConstants.CONFIG_HOSTNAME, name);
+            log.error("Host names property ({}) is missing for configuration at {}", IpFilterConstants.CONFIG_HOSTNAME, node.getPath());
             return null;
         }
         final Set<String> hostSet = new HashSet<>();
@@ -137,20 +136,24 @@ public abstract class IpFilterConfigLoader {
         final String[] ranges = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_ALLOWED_IP_RANGES, ArrayUtils.EMPTY_STRING_ARRAY);
         final boolean allowCmsUsers = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_ALLOW_CMS_USERS, false);
         if (!allowCmsUsers && ranges.length == 0) {
-            log.warn("Invalid configuration ({}), no IP addresses nor CMS users are enabled", name);
+            log.warn("Invalid configuration at {}: no IP addresses nor CMS users are enabled", node.getPath());
             return null;
         }
+
         final Set<String> ignoredPathSet = new HashSet<>();
         final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
         Collections.addAll(ignoredPathSet, ignoredPaths);
+
         final Set<String> rangesSet = new HashSet<>();
         Collections.addAll(rangesSet, ranges);
-        final AuthObject object = new AuthObject(true,ignoredPathSet, hostSet, rangesSet);
+
+        final AuthObject object = new AuthObject(ignoredPathSet, hostSet, rangesSet);
         object.setAllowCmsUsers(allowCmsUsers);
         object.setForwardedForHeader(JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, null));
         object.setMustMatchAll(JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false));
         // headers
         parseHeaders(object, node);
+
         return object;
     }
 
