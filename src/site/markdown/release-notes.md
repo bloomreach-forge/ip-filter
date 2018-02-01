@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@
 
 + Upgrade to Hippo 12: rewrite the bootstrapping as yaml instead of XML. Also some minor, internal, non-functional refactoring.
 
+### 1.1.1  
+
+<p class="smallinfo">Release date: 29 January 2018</p>
+
++ Make AuthObject collections thread safe, avoiding unexpected NPE under load at `BaseIpFilter.isIgnored(BaseIpFilter.java:232)`
 
 ### 1.1.0  
 
