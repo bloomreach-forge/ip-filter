@@ -22,6 +22,12 @@
 
 ## Release Notes
 
+### 1.1.1  
+
+<p class="smallinfo">Release date: 29 January 2018</p>
+
++ Make AuthObject collections thread safe, avoiding unexpected NPE under load at `BaseIpFilter.isIgnored(BaseIpFilter.java:232)`
+
 ### 1.1.0  
 
 <p class="smallinfo">Release date: 27 June 2017</p>
