@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,25 +139,19 @@ public abstract class IpFilterConfigLoader {
             log.warn("Invalid configuration at {}: no IP addresses nor CMS users are enabled", node.getPath());
             return null;
         }
-
         final Set<String> ignoredPathSet = new HashSet<>();
         final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
         Collections.addAll(ignoredPathSet, ignoredPaths);
-
         final Set<String> rangesSet = new HashSet<>();
         Collections.addAll(rangesSet, ranges);
-
-        final AuthObject object = new AuthObject(ignoredPathSet, hostSet, rangesSet);
-        object.setAllowCmsUsers(allowCmsUsers);
-        object.setForwardedForHeader(JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, null));
-        object.setMustMatchAll(JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false));
-        // headers
-        parseHeaders(object, node);
-
-        return object;
+        final Map<String, Set<String>> ignoredHeaders = parseHeaders(node);
+        final String forwardHeader = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, IpFilterConstants.HEADER_X_FORWARDED_FOR);
+        final boolean matchAll = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false);
+        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, matchAll);
     }
 
-    private void parseHeaders(final AuthObject object, final Node root) throws RepositoryException {
+    private Map<String, Set<String>> parseHeaders(final Node root) throws RepositoryException {
+        final Map<String, Set<String>> ignoredHeaders = new HashMap<>();
         final NodeIterator nodes = root.getNodes();
         while (nodes.hasNext()) {
             final Node node = nodes.nextNode();
@@ -166,10 +160,29 @@ public abstract class IpFilterConfigLoader {
             Collections.addAll(ignoredHeaderSet, ignoredHeaderValues);
             String ignoredHeader = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_IGNORED_HEADER, null);
             if (!Strings.isNullOrEmpty(ignoredHeader) && !ignoredHeaderSet.isEmpty()) {
-                object.addIgnoreHeader(ignoredHeader, ignoredHeaderSet);
+                addIgnoreHeader(ignoredHeaders,ignoredHeader, ignoredHeaderSet);
+            }
+        }
+        return ignoredHeaders;
+    }
+
+    
+    public void addIgnoreHeader(final  Map<String, Set<String>> existingMap, final String ignoredHeader, final Set<String> ignoredHeaderSet) {
+        for (String value : ignoredHeaderSet) {
+            if (!Strings.isNullOrEmpty(value)) {
+                if (existingMap.get(ignoredHeader) == null) {
+                    Set<String> values = new HashSet<>();
+                    values.add(value);
+                    existingMap.put(ignoredHeader, values);
+                } else {
+                    // add to existing set:
+                    final Set<String> values = existingMap.get(ignoredHeader);
+                    values.add(value);
+                }
             }
         }
     }
+
 
     public String getConfigurationLocation() {
         return configurationLocation;
