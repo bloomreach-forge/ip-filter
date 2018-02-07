@@ -67,6 +67,7 @@ public abstract class BaseIpFilter implements Filter {
                 }
             });
 
+
     private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
             .maximumSize(IpFilterConstants.CACHE_SITE)
             .expireAfterWrite(IpFilterConstants.CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
