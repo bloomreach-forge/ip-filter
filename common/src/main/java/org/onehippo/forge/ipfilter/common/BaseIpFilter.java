@@ -83,6 +83,8 @@ public abstract class BaseIpFilter implements Filter {
 
 
 
+
+
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         realm = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REALM_PARAM, realm);
