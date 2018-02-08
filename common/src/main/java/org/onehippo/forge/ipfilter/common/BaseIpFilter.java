@@ -48,6 +48,7 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 public abstract class BaseIpFilter implements Filter {
 
 
+
     private static final Logger log = LoggerFactory.getLogger(BaseIpFilter.class);
 
     protected IpFilterConfigLoader configLoader;
