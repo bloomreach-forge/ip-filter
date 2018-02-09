@@ -1,8 +1,7 @@
-
 <!doctype html>
-
 <%@ page isErrorPage="true" %>
-<% response.setStatus(500); %>
+
+    <% response.setStatus(500); %>
 
 <html lang="en">
   <head>
