@@ -4,8 +4,10 @@
 <%@ page isErrorPage="true" %>
 <% response.setStatus(400); %>
 
+
 <html lang="en">
 <head>
+
   <meta charset="utf-8"/>
   <title>400 error</title>
 </head>
