@@ -1,4 +1,5 @@
 <!doctype html>
+
 <%@ include file="/WEB-INF/jspf/htmlTags.jspf" %>
 <%@ page isErrorPage="true" %>
 <% response.setStatus(400); %>
