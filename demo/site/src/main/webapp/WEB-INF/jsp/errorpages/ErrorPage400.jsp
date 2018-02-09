@@ -11,6 +11,7 @@
   <meta charset="utf-8"/>
   <title>400 error</title>
 </head>
+
 <body>
 <h1>Bad request!!!</h1>
 <p>The request cannot be fulfilled due to bad syntax.</p>
