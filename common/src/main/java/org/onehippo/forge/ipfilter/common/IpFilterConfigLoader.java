@@ -126,27 +126,32 @@ public abstract class IpFilterConfigLoader {
             return null;
         }
 
+        final Set<String> ignoredPathSet = new HashSet<>();
+        final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
+        Collections.addAll(ignoredPathSet, ignoredPaths);
+
+        final Set<String> hostSet = new HashSet<>();
         final String[] hosts = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_HOSTNAME, null);
         if (hosts == null) {
             log.error("Host names property ({}) is missing for configuration at {}", IpFilterConstants.CONFIG_HOSTNAME, node.getPath());
             return null;
         }
-        final Set<String> hostSet = new HashSet<>();
         Collections.addAll(hostSet, hosts);
+
+        final Set<String> rangesSet = new HashSet<>();
         final String[] ranges = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_ALLOWED_IP_RANGES, ArrayUtils.EMPTY_STRING_ARRAY);
         final boolean allowCmsUsers = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_ALLOW_CMS_USERS, false);
         if (!allowCmsUsers && ranges.length == 0) {
             log.warn("Invalid configuration at {}: no IP addresses nor CMS users are enabled", node.getPath());
             return null;
         }
-        final Set<String> ignoredPathSet = new HashSet<>();
-        final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
-        Collections.addAll(ignoredPathSet, ignoredPaths);
-        final Set<String> rangesSet = new HashSet<>();
         Collections.addAll(rangesSet, ranges);
+
         final Map<String, Set<String>> ignoredHeaders = parseHeaders(node);
+
         final String forwardHeader = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, IpFilterConstants.HEADER_X_FORWARDED_FOR);
         final boolean matchAll = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false);
+
         return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, matchAll);
     }
 
@@ -167,7 +172,7 @@ public abstract class IpFilterConfigLoader {
     }
 
     
-    public void addIgnoreHeader(final  Map<String, Set<String>> existingMap, final String ignoredHeader, final Set<String> ignoredHeaderSet) {
+    private void addIgnoreHeader(final  Map<String, Set<String>> existingMap, final String ignoredHeader, final Set<String> ignoredHeaderSet) {
         for (String value : ignoredHeaderSet) {
             if (!Strings.isNullOrEmpty(value)) {
                 if (existingMap.get(ignoredHeader) == null) {
