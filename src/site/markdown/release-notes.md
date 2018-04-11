@@ -23,6 +23,13 @@
 
 ## Release Notes
 
+### 2.1.0  
+
+<p class="smallinfo">Release date: 11 April 2018</p>
+
++ [HIPFORGE-134](https://issues.onehippo.com/browse/HIPFORGE-134)<br/> 
+  Make AuthObject immutable for robustness, better thread safety.
+
 ### 2.0.0  
 
 <p class="smallinfo">Release date: 28 November 2017</p>
