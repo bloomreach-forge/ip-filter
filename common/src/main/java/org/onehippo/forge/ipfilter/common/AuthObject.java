@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,29 @@
 package org.onehippo.forge.ipfilter.common;
 
 import com.google.common.base.Strings;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AuthObject {
 
     private static final Logger log = LoggerFactory.getLogger(AuthObject.class);
 
     private final boolean valid;
-    private boolean mustMatchAll;
-    private boolean allowCmsUsers;
-    private String forwardedForHeader;
+    private final boolean mustMatchAll;
+    private final boolean allowCmsUsers;
+    private final String forwardedForHeader;
     private final Set<String> hosts;
     private final Set<String> ranges;
     private final Set<String> ignoredPaths;
@@ -44,7 +46,6 @@ public class AuthObject {
     private final Map<String, Set<String>> ignoredHeaders;
     private final List<Pattern> hostPatterns;
     private final List<Pattern> ignoredPathPatterns;
-
     public static final AuthObject INVALID = new AuthObject();
 
     private AuthObject() {
@@ -56,15 +57,22 @@ public class AuthObject {
         this.ignoredPathPatterns = Collections.emptyList();
         this.hostPatterns = Collections.emptyList();
         this.ipMatchers = Collections.emptySet();
+        this.allowCmsUsers = false;
+        this.mustMatchAll = false;
+        this.forwardedForHeader = IpFilterConstants.HEADER_X_FORWARDED_FOR;
     }
 
-    public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts, final Set<String> ranges) {
+    public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts,
+                      final Set<String> ranges, final Map<String, Set<String>> ignoredHeaders,
+                      final boolean allowCmsUsers, final String forwardHeader, final boolean mustMatchAll) {
         this.valid = true;
         this.ignoredPaths = ignoredPaths;
         this.hosts = hosts;
         this.ranges = ranges;
-
-        this.ignoredHeaders = new HashMap<>();
+        this.allowCmsUsers = allowCmsUsers;
+        this.mustMatchAll = mustMatchAll;
+        this.forwardedForHeader = forwardHeader;
+        this.ignoredHeaders = ImmutableMap.copyOf(ignoredHeaders);
         this.ignoredPathPatterns = parsePatterns();
         this.hostPatterns = parseHostPatterns();
         this.ipMatchers = parseIpMatchers();
@@ -78,17 +86,9 @@ public class AuthObject {
         return allowCmsUsers;
     }
 
-    public void setAllowCmsUsers(final boolean allowCmsUsers) {
-        this.allowCmsUsers = allowCmsUsers;
-    }
-
 
     public boolean isMustMatchAll() {
         return mustMatchAll;
-    }
-
-    public void setMustMatchAll(final boolean mustMatchAll) {
-        this.mustMatchAll = mustMatchAll;
     }
 
 
@@ -101,7 +101,6 @@ public class AuthObject {
     }
 
     public Set<IpMatcher> getIpMatchers() {
-
         return ipMatchers;
     }
 
@@ -109,34 +108,16 @@ public class AuthObject {
         return forwardedForHeader;
     }
 
-    public void setForwardedForHeader(final String forwardedForHeader) {
-        this.forwardedForHeader = forwardedForHeader;
-    }
-
 
     public Map<String, Set<String>> getIgnoredHeaders() {
         return ignoredHeaders;
     }
 
-    public void addIgnoreHeader(final String ignoredHeader, final Set<String> ignoredHeaderSet) {
-        for (String value : ignoredHeaderSet) {
-            if (!Strings.isNullOrEmpty(value)) {
-                if (ignoredHeaders.get(ignoredHeader) == null) {
-                    Set<String> values = new HashSet<>();
-                    values.add(value);
-                    ignoredHeaders.put(ignoredHeader, values);
-                } else {
-                    Set<String> values = ignoredHeaders.get(ignoredHeader);
-                    values.add(value);
-                }
-            }
-        }
-    }
 
     //############################################
     // PARSERS
     //############################################
-    public List<Pattern> parseHostPatterns() {
+    private List<Pattern> parseHostPatterns() {
         if (hosts == null) {
             throw new IllegalStateException("No host names provided");
         }
@@ -153,8 +134,7 @@ public class AuthObject {
                 log.error("Error compiling host pattern: ", e);
             }
         }
-
-        return patterns;
+        return ImmutableList.copyOf(patterns);
     }
 
     private Set<IpMatcher> parseIpMatchers() {
@@ -167,7 +147,7 @@ public class AuthObject {
                 }
             }
         }
-        return ipMatchers;
+        return ImmutableSet.copyOf(ipMatchers);
     }
 
     private List<Pattern> parsePatterns() {
@@ -185,7 +165,7 @@ public class AuthObject {
                 log.error("Error compiling path pattern " + ignored, e);
             }
         }
-        return patterns;
+        return ImmutableList.copyOf(patterns);
     }
 
 

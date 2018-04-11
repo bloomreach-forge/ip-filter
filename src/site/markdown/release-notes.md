@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2018 Hippo B.V. (http://www.onehippo.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,6 +22,13 @@
 | 11.x      | 1.x       |
 
 ## Release Notes
+
+### 2.1.0  
+
+<p class="smallinfo">Release date: 11 April 2018</p>
+
++ [HIPFORGE-134](https://issues.onehippo.com/browse/HIPFORGE-134)<br/> 
+  Make AuthObject immutable for robustness, better thread safety.
 
 ### 2.0.0  
 
