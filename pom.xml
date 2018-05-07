@@ -36,7 +36,7 @@
     <hippo.repository.version>5.0.2</hippo.repository.version>
     <hippo.services.version>4.0.2</hippo.services.version>
     
-    <spring-security-web.version>4.2.3.RELEASE</spring-security-web.version>
+    <spring-security-web.version>4.2.5.RELEASE</spring-security-web.version>
 
     <commons-io.version>2.5</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
