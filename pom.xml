@@ -42,6 +42,8 @@
     <commons-lang.version>2.6</commons-lang.version>
 
     <junit.version>4.12</junit.version>
+    <easymock.version>3.6</easymock.version>
+
     <spring-mock.version>2.0.8</spring-mock.version>
 
     <maven.plugin.site.version>3.6</maven.plugin.site.version>
@@ -212,6 +214,13 @@
         <scope>test</scope>
         <version>${junit.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>${easymock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
 
   </dependencyManagement>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public final class IpFilterConstants {
     public static final int CACHE_SITE = 100;
     public static final int CACHE_EXPIRE_IN_MINUTES = 30;
     public static final int CACHE_EXPIRES_IN_DAYS = 30;
+    public static final String IP_FILTER_PROPERTY_NAME = "ipfilter.properties";
 
     private IpFilterConstants() {
     }
