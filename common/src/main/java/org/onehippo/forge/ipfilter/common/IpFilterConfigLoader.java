@@ -15,33 +15,52 @@
  */
 package org.onehippo.forge.ipfilter.common;
 
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.jcr.Credentials;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.observation.Event;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.hippoecm.repository.util.JcrUtils;
+import org.onehippo.forge.ipfilter.common.file.FileChangeObserver;
+import org.onehippo.forge.ipfilter.common.file.FileWatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import javax.jcr.*;
-import javax.jcr.observation.Event;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-public abstract class IpFilterConfigLoader {
+public abstract class IpFilterConfigLoader implements FileChangeObserver {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilterConfigLoader.class);
     private static final String FILE_PREFIX = "file:";
+    private static final String CATALINA_BASE = "catalina.base";
+    private static final String CATALINA_HOME = "catalina.home";
 
     private String configurationLocation;
     private Repository repository;
@@ -49,6 +68,77 @@ public abstract class IpFilterConfigLoader {
     private Date lastLoadDate = new Date();
     protected volatile boolean needRefresh = true;
     private final Map<String, AuthObject> data = new ConcurrentHashMap<>();
+    private FileWatchService fileWatchService;
+
+    public IpFilterConfigLoader() {
+
+        try {
+            fileWatchService = new FileWatchService(this, getWatchedDirectories(), getWatchedFiles());
+        } catch (IOException e) {
+            log.error("Error initializing file watch service", e);
+        }
+    }
+
+
+    private Set<String> getWatchedFiles() {
+        final String systemProperty = System.getProperty(IpFilterConstants.IP_FILTER_PROPERTY_NAME);
+        if (!Strings.isNullOrEmpty(systemProperty)) {
+            final String path = normalizeResourcePath(systemProperty);
+            final File file = new File(path);
+            if (file.exists()) {
+                final String fileName = file.getName();
+                log.info("Adding:  {} file name to be watched for changes", fileName);
+                return ImmutableSet.of(fileName);
+            } else {
+                log.warn("path does not exist: {}", path);
+                return Collections.emptySet();
+            }
+        }
+        return ImmutableSet.of(IpFilterConstants.IP_FILTER_PROPERTY_NAME);
+    }
+
+    private Set<String> getWatchedDirectories() {
+        final String systemProperty = System.getProperty(IpFilterConstants.IP_FILTER_PROPERTY_NAME);
+        // if file is set, watch only that directory:
+        if (!Strings.isNullOrEmpty(systemProperty)) {
+            final String path = normalizeResourcePath(systemProperty);
+            final File file = new File(path);
+            if (file.exists()) {
+                final File parentFile = file.getParentFile();
+                final String absolutePath = parentFile.getAbsolutePath();
+                log.info("Adding:  {} directory to be watched for changes", absolutePath);
+                return ImmutableSet.of(absolutePath);
+            } else {
+                log.warn("path does not exist: {}", path);
+                return Collections.emptySet();
+            }
+
+        }
+
+        final File catalinaBase = getCatalinaDir(System.getProperty(CATALINA_BASE));
+        final File catalinaHome = getCatalinaDir(System.getProperty(CATALINA_HOME));
+        final Set<String> dirs = new HashSet<>();
+        if (catalinaBase != null) {
+            dirs.add(catalinaBase.getAbsolutePath());
+        }
+        if (catalinaHome != null) {
+            dirs.add(catalinaHome.getAbsolutePath());
+        }
+        return new ImmutableSet.Builder<String>().addAll(dirs).build();
+
+    }
+
+    private File getCatalinaDir(final String root) {
+        if (Strings.isNullOrEmpty(root)) {
+            return null;
+        }
+        final String path = root.endsWith(File.separator) ? root : root + File.separator;
+        final File file = new File(path + "conf");
+        if (file.exists() && file.isDirectory()) {
+            return file;
+        }
+        return null;
+    }
 
     public boolean needReloading() {
         return needRefresh;
@@ -85,6 +175,13 @@ public abstract class IpFilterConfigLoader {
         needRefresh = true;
     }
 
+    @Override
+    public void update(final File file) {
+        log.info("file changed, need refresh: {}", file);
+        needRefresh = true;
+    }
+
+
     public Multimap<String, String> loadGlobalSettings() {
         try {
             // first check if system property is set
@@ -94,7 +191,12 @@ public abstract class IpFilterConfigLoader {
                 return ImmutableListMultimap.of();
             }
             log.debug("Loading properties from: {}", systemProperty);
-            final Resource resource = new FileSystemResource(normalizeResourcePath(systemProperty));
+            final String path = normalizeResourcePath(systemProperty);
+            if (!new File(path).exists()) {
+                log.info("Path doesn't exists {}", path);
+                return ImmutableListMultimap.of();
+            }
+            final Resource resource = new FileSystemResource(path);
             final Properties properties = PropertiesLoaderUtils.loadProperties(resource);
             Multimap<String, String> map = ArrayListMultimap.create();
             for (Map.Entry<Object, Object> entry: properties.entrySet()) {
@@ -111,12 +213,13 @@ public abstract class IpFilterConfigLoader {
         } catch (IOException e) {
             log.error("Error loading properties", e);
         }
+
         return ImmutableListMultimap.of();
     }
 
     private String normalizeResourcePath(final String systemProperty) {
         if (systemProperty.startsWith(FILE_PREFIX)) {
-            return systemProperty.substring(FILE_PREFIX.length(), systemProperty.length());
+            return systemProperty.substring(FILE_PREFIX.length());
         }
         return systemProperty;
     }
@@ -126,28 +229,16 @@ public abstract class IpFilterConfigLoader {
         String systemProperty = System.getProperty(IpFilterConstants.IP_FILTER_PROPERTY_NAME);
         if (Strings.isNullOrEmpty(systemProperty)) {
             log.debug("No ipfilter.properties system property found, check default, will try catalina.base and catalina.home");
-            systemProperty = System.getProperty("catalina.base");
+            systemProperty = System.getProperty(CATALINA_BASE);
             systemProperty = createCatalinaPath(systemProperty);
             if (Strings.isNullOrEmpty(systemProperty)) {
                 log.debug("No file within catalina.base found trying catalina.home");
-                systemProperty = createCatalinaPath(System.getProperty("catalina.home"));
+                systemProperty = createCatalinaPath(System.getProperty(CATALINA_HOME));
             }
         }
         return systemProperty;
     }
 
-    private String createCatalinaPath(final String systemProperty) {
-        if (Strings.isNullOrEmpty(systemProperty)) {
-            return null;
-        }
-        final String path = systemProperty.endsWith(File.separator) ? systemProperty : systemProperty + File.separator;
-        final String fullPath = path + "conf" + File.separator + IpFilterConstants.IP_FILTER_PROPERTY_NAME;
-        final FileSystemResource resource = new FileSystemResource(normalizeResourcePath(systemProperty));
-        if (resource.exists()) {
-            return fullPath;
-        }
-        return null;
-    }
 
     public Date getLastLoadDate() {
         return lastLoadDate;
@@ -168,6 +259,21 @@ public abstract class IpFilterConfigLoader {
             session.logout();
         }
     }
+
+
+    private String createCatalinaPath(final String systemProperty) {
+        if (Strings.isNullOrEmpty(systemProperty)) {
+            return null;
+        }
+        final String path = systemProperty.endsWith(File.separator) ? systemProperty : systemProperty + File.separator;
+        final String fullPath = path + "conf" + File.separator + IpFilterConstants.IP_FILTER_PROPERTY_NAME;
+        final FileSystemResource resource = new FileSystemResource(normalizeResourcePath(systemProperty));
+        if (resource.exists()) {
+            return fullPath;
+        }
+        return null;
+    }
+
 
     private void parseConfig(final Node node) throws RepositoryException {
         final Map<String, AuthObject> objects = new HashMap<>();
