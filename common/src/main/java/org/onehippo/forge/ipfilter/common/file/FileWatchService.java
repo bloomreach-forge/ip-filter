@@ -84,6 +84,7 @@ public class FileWatchService implements AutoCloseable {
     private void start() throws IOException {
         if (!valid) {
             log.warn("Cannot start watch service, no directories found for watching");
+            return;
         }
         log.info("Starting file watcher");
 
