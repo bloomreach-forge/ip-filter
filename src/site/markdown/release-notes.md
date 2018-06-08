@@ -23,6 +23,16 @@
 
 ## Release Notes
 
+### 2.2.0  
+
+<p class="smallinfo">Release date: 8 June 2018</p>
+
++ [HIPFORGE-160](https://issues.onehippo.com/browse/HIPFORGE-160)<br/> 
+  Introduce additional configuration by a external properties file, see section "External properties file for default 
+  set up" at the [Usage page](usage.html).
++ [HIPFORGE-158](https://issues.onehippo.com/browse/HIPFORGE-158)<br/> 
+  Set Spring dependency scopes to provided as CMS includes Spring on Hippo 12.
+
 ### 2.1.0  
 
 <p class="smallinfo">Release date: 11 April 2018</p>

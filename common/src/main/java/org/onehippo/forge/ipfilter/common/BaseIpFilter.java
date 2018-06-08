@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 
 public abstract class BaseIpFilter implements Filter {
 
+
+
     private static final Logger log = LoggerFactory.getLogger(BaseIpFilter.class);
 
     protected IpFilterConfigLoader configLoader;
@@ -67,6 +69,8 @@ public abstract class BaseIpFilter implements Filter {
                 }
             });
 
+
+
     private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
             .maximumSize(IpFilterConstants.CACHE_SITE)
             .expireAfterWrite(IpFilterConstants.CACHE_EXPIRE_IN_MINUTES, TimeUnit.MINUTES)
@@ -79,6 +83,15 @@ public abstract class BaseIpFilter implements Filter {
             });
 
     private String realm;
+
+
+
+
+
+
+
+
+
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -103,6 +116,13 @@ public abstract class BaseIpFilter implements Filter {
                 });
         requestData();
     }
+
+
+
+
+
+
+    
 
 
     @Override

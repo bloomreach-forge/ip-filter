@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,6 +48,30 @@ but descriptively, for example "ignore-fastly". Such node has the following prop
 |`ignored-header`        | string          | Name of header to ignore, for example 'X-fastly'.
 |`ignored-header-values` | multiple string | Values of **ignored-header** that must be matched for the request to be ignored by the filter.
 
+### External properties file for default set up
+
+Since version 2.2.0, an external properties file `hippo-ipfilter.properties` can be fed to the filters by either using a 
+system property (by the same name) or just dropping it in Tomcat's conf directory. It supports values for the 
+`allowed-ip-ranges` and `ignored-paths` properties.
+
+Default `hippo-ipfilter.properties` file:
+
+```properties
+#
+# Configuration file for Hippo IP Filter Plugin.
+#
+# Set up this file for Hippo CMS and/or site application using either:
+# - system property -Dhippo-ipfilter.properties=file://hostname/path (hostname may be omitted if localhost)
+# - placement in ${catalina.base}/conf
+# - placement in ${catalina.home}/conf
+#
+# This file supports these properties:
+#  - allowed-ip-ranges: comma separated whitelist of ip address ranges
+#  - ignored-paths: comma separated paths that are ignored
+#
+allowed-ip-ranges=127.0.0.1,0:0:0:0:0:0:0:1
+ignored-paths=/ping/.*
+```
 
 ### System properties to disable the filters
 
@@ -58,4 +82,3 @@ possibility exists to disable the filters by setting system properties.
 |-------------------------------|------------
 |`hippo.cms-ipfilter.disabled` | Disables the CMS's `org.onehippo.forge.ipfilter.cms.CmsIpFilter` 
 |`hippo.ipfilter.disabled`     | Disables the site's `org.onehippo.forge.ipfilter.hst.IpFilter`
-

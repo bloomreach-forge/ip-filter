@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2018 Hippo B.V. (http://www.onehippo.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
   <name>Hippo Forge IP Filter Plugin</name>
   <groupId>org.onehippo.forge.ipfilter</groupId>
   <artifactId>hippo-ipfilter</artifactId>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
@@ -36,17 +36,20 @@
     <hippo.repository.version>5.0.2</hippo.repository.version>
     <hippo.services.version>4.0.2</hippo.services.version>
     
-    <spring-security-web.version>4.2.3.RELEASE</spring-security-web.version>
+    <spring-security-web.version>4.2.5.RELEASE</spring-security-web.version>
 
     <commons-io.version>2.5</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
 
     <junit.version>4.12</junit.version>
+    <easymock.version>3.6</easymock.version>
+
     <spring-mock.version>2.0.8</spring-mock.version>
 
     <maven.plugin.site.version>3.6</maven.plugin.site.version>
     <maven.doxia-module-markdown.version>1.7</maven.doxia-module-markdown.version>
   </properties>
+
 
   <scm>
     <connection>scm:git:git@github.com:onehippo-forge/ip-filter.git</connection>
@@ -211,6 +214,13 @@
         <scope>test</scope>
         <version>${junit.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>${easymock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
 
   </dependencyManagement>
