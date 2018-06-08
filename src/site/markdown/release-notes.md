@@ -28,7 +28,8 @@
 <p class="smallinfo">Release date: N/A</p>
 
 + [HIPFORGE-160](https://issues.onehippo.com/browse/HIPFORGE-160)<br/> 
-  Introduce additional configuration by a external properties file, see the [Usage page](usage.html).
+  Introduce additional configuration by a external properties file, see section "External properties file for default 
+  set up" at the [Usage page](usage.html).
 + [HIPFORGE-158](https://issues.onehippo.com/browse/HIPFORGE-158)<br/> 
   Set Spring dependency scopes to provided as CMS includes Spring on Hippo 12.
 
