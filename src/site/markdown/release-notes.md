@@ -25,7 +25,7 @@
 
 ### 2.2.0  
 
-<p class="smallinfo">Release date: N/A</p>
+<p class="smallinfo">Release date: 8 June 2018</p>
 
 + [HIPFORGE-160](https://issues.onehippo.com/browse/HIPFORGE-160)<br/> 
   Introduce additional configuration by a external properties file, see section "External properties file for default 
