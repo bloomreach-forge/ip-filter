@@ -40,7 +40,8 @@ public final class IpFilterConstants {
     public static final int CACHE_SITE = 100;
     public static final int CACHE_EXPIRE_IN_MINUTES = 30;
     public static final int CACHE_EXPIRES_IN_DAYS = 30;
-    public static final String IP_FILTER_PROPERTY_NAME = "ipfilter.properties";
+
+    public static final String PROPERTIES_NAME = "hippo-ipfilter.properties";
 
     private IpFilterConstants() {
     }

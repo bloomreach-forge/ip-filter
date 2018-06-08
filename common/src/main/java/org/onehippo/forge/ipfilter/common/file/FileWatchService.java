@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.ipfilter.common.file;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -86,8 +84,8 @@ public class FileWatchService implements AutoCloseable {
             log.warn("Cannot start watch service, no directories found for watching");
             return;
         }
-        log.info("Starting file watcher");
 
+        log.info("Starting file watcher");
         final Consumer<Path> register = path -> {
             try {
                 if (validDirectory(path.toFile())) {
@@ -126,7 +124,7 @@ public class FileWatchService implements AutoCloseable {
                             final Path absPath = dir.resolve((Path) p);
                             if (!absPath.toFile().isDirectory()) {
                                 final File file = absPath.toFile();
-                                log.debug("Detected file change {}", file.getAbsolutePath());
+                                log.debug("Detected file change in {}", file.getAbsolutePath());
                                 if (filenames.contains(file.getName())) {
                                     fireEvent(file);
                                 }
@@ -153,7 +151,7 @@ public class FileWatchService implements AutoCloseable {
 
     private boolean validDirectory(final File file) {
         if (!file.exists()) {
-            log.warn("File does not exists {}", file);
+            log.warn("File does not exists: {}", file);
             return false;
         }
         if (!file.isDirectory()) {
