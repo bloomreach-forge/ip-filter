@@ -54,6 +54,14 @@
 
 + Upgrade to Hippo 12: rewrite the bootstrapping as yaml instead of XML. Also some minor, internal, non-functional refactoring.
 
+### 1.2.0  
+
+<p class="smallinfo">Release date: 19 June 2018</p>
+
++ [HIPFORGE-182](https://issues.onehippo.com/browse/HIPFORGE-182)<br/> 
+  Introduce additional configuration by a external properties file, see section "External properties file for default 
+  set up" at the [Usage page](usage.html).
+
 ### 1.1.1  
 
 <p class="smallinfo">Release date: 29 January 2018</p>
