@@ -19,11 +19,17 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.regex.Pattern;
 
 public class AuthObject {
 
@@ -116,7 +122,7 @@ public class AuthObject {
             throw new IllegalStateException("No host names provided");
         }
         final List<Pattern> patterns = new ArrayList<>();
-        for (String host : hosts) {
+        for (String host: hosts) {
             if (Strings.isNullOrEmpty(host)) {
                 log.warn("Skipping empty host value");
                 continue;
@@ -134,7 +140,7 @@ public class AuthObject {
     private Set<IpMatcher> parseIpMatchers() {
         final Set<IpMatcher> ipMatchers = new HashSet<>();
         if (ranges != null) {
-            for (String range : ranges) {
+            for (String range: ranges) {
                 final IpMatcher matcher = IpMatcher.valueOf(range);
                 if (matcher != null) {
                     ipMatchers.add(matcher);
@@ -146,7 +152,7 @@ public class AuthObject {
 
     private List<Pattern> parsePatterns() {
         final List<Pattern> patterns = new ArrayList<>();
-        for (String ignored : ignoredPaths) {
+        for (String ignored: ignoredPaths) {
             try {
                 if (Strings.isNullOrEmpty(ignored)) {
                     log.debug("Ignoring empty path");

@@ -23,6 +23,14 @@
 
 ## Release Notes
 
+### 1.1.2  
+
+<p class="smallinfo">Release date: 19 June 2018</p>
+
++ [HIPFORGE-160](https://issues.onehippo.com/browse/HIPFORGE-160)<br/> 
+  Introduce additional configuration by a external properties file, see section "External properties file for default 
+  set up" at the [Usage page](usage.html).
+  
 ### 1.1.1  
 
 <p class="smallinfo">Release date: 29 January 2018</p>
