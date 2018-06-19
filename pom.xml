@@ -25,7 +25,7 @@
   <name>Hippo Forge IP Filter Plugin</name>
   <groupId>org.onehippo.forge.ipfilter</groupId>
   <artifactId>hippo-ipfilter</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.1.2</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
@@ -54,7 +54,7 @@
     <connection>scm:git:git@github.com:onehippo-forge/ip-filter.git</connection>
     <developerConnection>scm:git:git@github.com:onehippo-forge/ip-filter.git</developerConnection>
     <url>https://github.com/onehippo-forge/ip-filter.git</url>
-    <tag>HEAD</tag>
+    <tag>hippo-ipfilter-1.1.2</tag>
   </scm>
 
   <distributionManagement>
