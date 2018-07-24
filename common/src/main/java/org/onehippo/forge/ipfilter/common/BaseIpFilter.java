@@ -55,7 +55,8 @@ public abstract class BaseIpFilter implements Filter {
 
     private LoadingCache<String, AuthObject> cache;
 
-    protected String repositoryAddress;
+    protected String primaryRepositoryAddress;
+    protected String secondaryRepositoryAddress;
     protected boolean initialized;
 
     protected final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
@@ -96,7 +97,8 @@ public abstract class BaseIpFilter implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         realm = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REALM_PARAM, realm);
-        repositoryAddress = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REPOSITORY_ADDRESS_PARAM, IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS);
+        primaryRepositoryAddress = IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS;
+        secondaryRepositoryAddress = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REPOSITORY_ADDRESS_PARAM, null);
         cache = CacheBuilder.newBuilder()
                 .maximumSize(1)
                 .expireAfterWrite(IpFilterConstants.CACHE_EXPIRES_IN_DAYS, TimeUnit.DAYS)

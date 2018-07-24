@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,9 +97,13 @@ public class IpFilter extends BaseIpFilter {
     }
 
     private Session getSession(final UserCredentials credentials) {
-        HippoRepository hippoRepository = getHippoRepository(repositoryAddress);
+        HippoRepository hippoRepository = getHippoRepository(primaryRepositoryAddress);
         if (hippoRepository == null) {
-            return null;
+            hippoRepository = getHippoRepository(secondaryRepositoryAddress);
+            if (hippoRepository == null) {
+                log.warn("Both primary:{} and secondary: {} repository addresses failed", primaryRepositoryAddress, secondaryRepositoryAddress);
+                return null;
+            }
         }
         try {
             return hippoRepository.login(credentials.getUsername(), credentials.getPassword().toCharArray());
@@ -114,8 +118,7 @@ public class IpFilter extends BaseIpFilter {
 
     private HippoRepository getHippoRepository(String address) {
         if (address == null || address.length() == 0) {
-            log.error("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.",
-                    IpFilterConstants.REPOSITORY_ADDRESS_PARAM);
+            log.warn("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.", IpFilterConstants.REPOSITORY_ADDRESS_PARAM);
             return null;
         }
         try {
