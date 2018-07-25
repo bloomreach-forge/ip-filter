@@ -47,16 +47,12 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 
 public abstract class BaseIpFilter implements Filter {
 
-
-
     private static final Logger log = LoggerFactory.getLogger(BaseIpFilter.class);
 
     protected IpFilterConfigLoader configLoader;
 
     private LoadingCache<String, AuthObject> cache;
 
-    protected String primaryRepositoryAddress;
-    protected String secondaryRepositoryAddress;
     protected boolean initialized;
 
     protected final LoadingCache<String, Boolean> userCache = CacheBuilder.newBuilder()
@@ -69,8 +65,6 @@ public abstract class BaseIpFilter implements Filter {
                     return false;
                 }
             });
-
-
 
     private final LoadingCache<IpHostPair, Boolean> ipCache = CacheBuilder.newBuilder()
             .maximumSize(IpFilterConstants.CACHE_SITE)
@@ -85,20 +79,10 @@ public abstract class BaseIpFilter implements Filter {
 
     private String realm;
 
-
-
-
-
-
-
-
-
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         realm = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REALM_PARAM, realm);
-        primaryRepositoryAddress = IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS;
-        secondaryRepositoryAddress = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REPOSITORY_ADDRESS_PARAM, null);
+
         cache = CacheBuilder.newBuilder()
                 .maximumSize(1)
                 .expireAfterWrite(IpFilterConstants.CACHE_EXPIRES_IN_DAYS, TimeUnit.DAYS)
@@ -118,14 +102,6 @@ public abstract class BaseIpFilter implements Filter {
                 });
         requestData();
     }
-
-
-
-
-
-
-    
-
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
@@ -332,7 +308,6 @@ public abstract class BaseIpFilter implements Filter {
         return AuthObject.INVALID;
     }
 
-
     private void requestData() {
         if (!initialized) {
             initializeConfigManager();
@@ -343,7 +318,6 @@ public abstract class BaseIpFilter implements Filter {
             log.info("{}: data reloaded", this.getClass().getSimpleName());
         }
     }
-
 
     protected abstract void initializeConfigManager();
 
