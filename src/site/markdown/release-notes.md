@@ -23,6 +23,14 @@
 
 ## Release Notes
 
+### 2.3.0  
+
+<p class="smallinfo">Release date: 25 July 2018</p>
+
++ [HIPFORGE-187](https://issues.onehippo.com/browse/HIPFORGE-187)<br/> 
+  When using `allow-cms-users` setting, enabling site visitor authentication by login, see [usage page](usage.html),
+  always login to the embedded repository first, then try a configured location like RMI as fallback.
+
 ### 2.2.0  
 
 <p class="smallinfo">Release date: 8 June 2018</p>

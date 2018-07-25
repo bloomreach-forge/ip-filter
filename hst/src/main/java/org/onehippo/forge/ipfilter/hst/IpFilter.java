@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.onehippo.forge.ipfilter.hst;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hippoecm.hst.core.container.ComponentManager;
@@ -25,6 +27,7 @@ import org.hippoecm.hst.site.HstServices;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
 import org.onehippo.forge.ipfilter.common.BaseIpFilter;
+import org.onehippo.forge.ipfilter.common.IpFilterUtils;
 import org.onehippo.forge.ipfilter.common.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +35,24 @@ import org.slf4j.LoggerFactory;
 import org.onehippo.forge.ipfilter.common.IpFilterConstants;
 
 /**
- * Filter allowing only access for IP ranges that are configured
+ * Filter allowing only access for IP ranges that are configured.
  */
 public class IpFilter extends BaseIpFilter {
 
     private static final Logger log = LoggerFactory.getLogger(IpFilter.class);
 
     private static final String SYSTEM_PROPERTY_DISABLED = "hippo.ipfilter.disabled";
+
+    private String primaryRepositoryAddress;
+    private String secondaryRepositoryAddress;
+
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
+
+        primaryRepositoryAddress = IpFilterConstants.DEFAULT_REPOSITORY_ADDRESS;
+        secondaryRepositoryAddress = IpFilterUtils.getParameter(filterConfig, IpFilterConstants.REPOSITORY_ADDRESS_PARAM, null);
+    }
 
     @Override
     protected Status authenticate(final HttpServletRequest request) {
@@ -88,7 +102,6 @@ public class IpFilter extends BaseIpFilter {
         } else {
             log.info("HstService not available yet...waiting..");
         }
-
     }
 
     @Override
@@ -97,9 +110,13 @@ public class IpFilter extends BaseIpFilter {
     }
 
     private Session getSession(final UserCredentials credentials) {
-        HippoRepository hippoRepository = getHippoRepository(repositoryAddress);
+        HippoRepository hippoRepository = getHippoRepository(primaryRepositoryAddress);
         if (hippoRepository == null) {
-            return null;
+            hippoRepository = getHippoRepository(secondaryRepositoryAddress);
+            if (hippoRepository == null) {
+                log.warn("Both primary:{} and secondary: {} repository addresses failed", primaryRepositoryAddress, secondaryRepositoryAddress);
+                return null;
+            }
         }
         try {
             return hippoRepository.login(credentials.getUsername(), credentials.getPassword().toCharArray());
@@ -112,10 +129,9 @@ public class IpFilter extends BaseIpFilter {
         }
     }
 
-    private HippoRepository getHippoRepository(String address) {
+    private HippoRepository getHippoRepository(final String address) {
         if (address == null || address.length() == 0) {
-            log.error("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.",
-                    IpFilterConstants.REPOSITORY_ADDRESS_PARAM);
+            log.warn("Repository address parameter {} not set. Unable to perform authorization. Return unauthorized.", IpFilterConstants.REPOSITORY_ADDRESS_PARAM);
             return null;
         }
         try {
