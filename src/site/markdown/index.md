@@ -11,7 +11,7 @@ on webserver (Apache, nginx) level.
 
 ## Code on GitHub
 
-The open source code is on GitHub at [github.com/onehippo-forge/ip-filter](https://github.com/onehippo-forge/ip-filter)  
+The open source code is on GitHub at [github.com/bloomreach-forge/ip-filter](https://github.com/bloomreach-forge/ip-filter)  
 
 ## Contents
 - [Installation instructions](install.html)

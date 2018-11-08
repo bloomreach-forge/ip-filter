@@ -29,7 +29,7 @@
   <custom>
     <hippoSkin>
       <gitHub>
-        <projectId>onehippo-forge/ip-filter</projectId>
+        <projectId>bloomreach-forge/ip-filter</projectId>
       </gitHub>
     </hippoSkin>
   </custom>
