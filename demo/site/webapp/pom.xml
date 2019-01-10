@@ -4,42 +4,52 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.onehippo.cms7</groupId>
-    <artifactId>ipfilterdemo</artifactId>
+    <artifactId>ipfilterdemo-site</artifactId>
     <version>3.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ipfilterdemo-essentials</artifactId>
+  <artifactId>ipfilterdemo-webapp</artifactId>
   <packaging>war</packaging>
-  <name>IP filter demo Essentials</name>
-  <description>IP filter demo Essentials</description>
+  <name>IP filter demo Site Webapp</name>
+  <description>IP filter demo Site Webapp</description>
+
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-essentials-dashboard</artifactId>
-      <version>${essentials.version}</version>
-      <type>war</type>
+      <artifactId>ipfilterdemo-repository-data-site</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-essentials-dashboard-dependencies</artifactId>
-      <version>${essentials.version}</version>
-      <type>pom</type>
+      <artifactId>ipfilterdemo-repository-data-webfiles</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>ipfilterdemo-components</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7.hst.toolkit-resources.addon</groupId>
+      <artifactId>hst-addon-hcm-site</artifactId>
+      <version>${hippo.hst.version}</version>
     </dependency>
   </dependencies>
+
   <build>
     <resources>
       <resource>
-        <directory>src/main/java</directory>
         <filtering>false</filtering>
+        <directory>src/main/java</directory>
         <includes>
           <include>**/*.properties</include>
         </includes>
       </resource>
       <resource>
-        <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <directory>src/main/resources</directory>
       </resource>
     </resources>
-    <finalName>essentials</finalName>
+    <finalName>site</finalName>
     <plugins>
       <plugin>
         <groupId>org.codehaus.cargo</groupId>

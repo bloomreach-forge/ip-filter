@@ -1,5 +1,5 @@
 <!--
-  Copyright 2018 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2019 Hippo B.V. (http://www.onehippo.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,10 +18,16 @@
 
 | Hippo CMS | IP Filter |
 | --------- |-----------| 
+| 13.x      | 3.x       |
 | 12.x      | 2.x       |
 | 11.x      | 1.x       |
 
 ## Release Notes
+### 3.0.0
+<p class="smallinfo">Release date: 11 January 2019</p>
+
++ [HIPFORGE-242](https://issues.onehippo.com/browse/HIPFORGE-242)<br/> 
+Make plugin 13.x versions compatible  
 
 ### 2.3.0  
 

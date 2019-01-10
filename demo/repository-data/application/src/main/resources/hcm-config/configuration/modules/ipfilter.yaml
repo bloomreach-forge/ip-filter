@@ -1,0 +1,4 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig/localhost:
+      match-all: true

@@ -8,9 +8,9 @@
     <version>3.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>IP filter demo Repository Data For Development</name>
-  <description>IP filter demo Repository Data For Development</description>
-  <artifactId>ipfilterdemo-repository-data-development</artifactId>
+  <name>IP filter demo Repository Data For Site</name>
+  <description>IP filter demo Repository Data For Site</description>
+  <artifactId>ipfilterdemo-repository-data-site</artifactId>
 
   <build>
     <defaultGoal>install</defaultGoal>

@@ -6,8 +6,9 @@
   <selectedBeansPackage>org.onehippo.forge.ipfilter.beans</selectedBeansPackage>
   <selectedComponentsPackage>org.onehippo.forge.ipfilter.components</selectedComponentsPackage>
   <selectedRestPackage>org.onehippo.forge.ipfilter.rest</selectedRestPackage>
+  <hstRoot>/hst:ipfilterdemo</hstRoot>
+  <webfileBundleName>site</webfileBundleName>
   <setupDone>false</setupDone>
-  <templateLanguage>freemarker</templateLanguage>
   <useSamples>true</useSamples>
   <extraTemplates>true</extraTemplates>
 </project>
