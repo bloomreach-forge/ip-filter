@@ -2,4 +2,4 @@ group: hippo-cms
 project:
     name: hippo-ipfilter
     after: hippo-cms
-module: hippo-ipfilter-cms
+module: bloomreach-ipfilter-cms

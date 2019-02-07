@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2019 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
     <version>30.0</version>
   </parent>
 
-  <name>Hippo Forge IP Filter Plugin</name>
+  <name>BloomReach Forge IP Filter Plugin</name>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
-  <artifactId>hippo-ipfilter</artifactId>
+  <artifactId>bloomreach-ipfilter</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
@@ -79,7 +79,7 @@
     </repository>
     <repository>
       <id>hippo-forge</id>
-      <name>Hippo Forge maven 2 repository.</name>
+      <name>Hippo Forge Maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
       <snapshots>
         <enabled>false</enabled>

@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/bloomreach-forge/ip-filter.svg?branch=develop)](https://travis-ci.org/bloomreach-forge/ip-filter)
 
-# Hippo IP Filter Plugin
+# BloomReach IP Filter Plugin
 
 Control access to CMS and site based on the IP-address of incoming requests.
 

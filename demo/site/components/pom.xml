@@ -15,7 +15,7 @@
   <dependencies>
     <dependency>
       <groupId>org.bloomreach.forge.ipfilter</groupId>
-      <artifactId>hippo-ipfilter-hst</artifactId>
+      <artifactId>bloomreach-ipfilter-hst</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet.jsp</groupId>

@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2019 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,10 +28,11 @@
 <p class="smallinfo">Release date: 8 February 2019</p>
 
 + [HIPFORGE-242](https://issues.onehippo.com/browse/HIPFORGE-242)<br/> 
-  Make plugin 13.x version compatible
-+ Change all artifacts' groupId to <code>org.bloomreach.forge.ipfilter</code>, and repackage the Java classes from
-<code>org.onehippo...</code> to <code>org.bloomreach...</code>  
-This requires to revisit the [installation page](installation.html) when upgrading 
+  Make plugin 13.x version compatible.
++ Change the artifacts' groupIds to <code>org.bloomreach.forge.ipfilter</code> and have the artifactIds starting with 
+<code>bloomreach-ipfilter-</code> (so renaming hippo to bloomreach).<br/>
+Repackage Java classes from <code>org.onehippo...</code> to <code>org.bloomreach...</code>.<br/>
+This requires to revisit the [installation page](installation.html) when upgrading. 
 
 ### 2.3.0  
 
@@ -82,7 +83,7 @@ This requires to revisit the [installation page](installation.html) when upgradi
 
 <p class="smallinfo">Release date: 27 June 2017</p>
 
-+ Apply Hippo Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
++ Apply BloomReach Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
 + Fix reloading issues in the site's IpFilter.   
 + Add a filter for the CMS webapp: CmsIpFilter.
 + Available on Hippo 11.

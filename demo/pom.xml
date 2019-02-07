@@ -86,12 +86,12 @@
     <dependencies>
       <dependency>
         <groupId>org.bloomreach.forge.ipfilter</groupId>
-        <artifactId>hippo-ipfilter-hst</artifactId>
+        <artifactId>bloomreach-ipfilter-hst</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bloomreach.forge.ipfilter</groupId>
-        <artifactId>hippo-ipfilter-cms</artifactId>
+        <artifactId>bloomreach-ipfilter-cms</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
