@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
   -->
 ## Installation of the IP Filter plugin
 
-These instructions assume a Hippo CMS project based on the Hippo website archetype, i.e. a Maven multi-module project 
-with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least three sub-modules: cms, site and bootstrap.
+These instructions assume a BloomReach Experience project based on the website archetype, i.e. a Maven multi-module project 
+with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least three sub-modules: cms, site and repository-data.
 
 ### Forge Repository
 In the main pom.xml of the project, in the repositories section, add this repository if it is not configured there yet. 
@@ -24,7 +24,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ```
 <repository>
   <id>hippo-forge</id>
-  <name>Hippo Forge maven 2 repository.</name>
+  <name>Hippo Forge Maven 2 repository.</name>
   <url>https://maven.onehippo.com/maven2-forge/</url>
   <snapshots>
     <enabled>false</enabled>
@@ -39,7 +39,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ### Dependency management 
 Add this property to the properties section of the root pom.xml:
 
-    <hippo.forge.ipfilter.version>version.number</hippo.forge.ipfilter.version>
+    <bloomreach.forge.ipfilter.version>version.number</bloomreach.forge.ipfilter.version>
 
 Select the correct version for your project. See the [release notes](release-notes.html) for more information on which 
 version is applicable.
@@ -48,16 +48,21 @@ Add these dependencies to the `<dependencyManagement>` section of the root pom.x
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-ipfilter-hst</artifactId>
-    <version>${hippo.forge.ipfilter.version}</version>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
+    <artifactId>bloomreach-ipfilter-hst</artifactId>
+    <version>${bloomreach.forge.ipfilter.version}</version>
   </dependency>
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-ipfilter-cms</artifactId>
-    <version>${hippo.forge.ipfilter.version}</version>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
+    <artifactId>bloomreach-ipfilter-cms</artifactId>
+    <version>${bloomreach.forge.ipfilter.version}</version>
   </dependency>
 ```
+
+<div class="alert alert-info">
+    Note: before version 3.0, the artifacts' groupId was <code>org.onehippo.forge.ipfilter</code> and
+    the artifactIds started with <code>hippo-ipfilter</code>
+</div>
 
 ### Installation in site application
 
@@ -65,8 +70,8 @@ Add this dependency to the `<dependencies>` section of the site/pom.xml. It cont
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-ipfilter-hst</artifactId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
+    <artifactId>bloomreach-ipfilter-hst</artifactId>
   </dependency>
 ```
 
@@ -76,7 +81,7 @@ CharacterEncodingFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.hst.IpFilter</filter-class>
+    <filter-class>org.bloomreach.forge.ipfilter.hst.IpFilter</filter-class>
   </filter>
 
   <!-- second mapping! -->
@@ -93,8 +98,8 @@ configuration and the CMS filter.
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
-    <artifactId>hippo-ipfilter-cms</artifactId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
+    <artifactId>bloomreach-ipfilter-cms</artifactId>
   </dependency>
 ```
 
@@ -106,7 +111,7 @@ ConcurrentLoginFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoCmsIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.cms.CmsIpFilter</filter-class>
+    <filter-class>org.bloomreach.forge.ipfilter.cms.CmsIpFilter</filter-class>
   </filter>
 
   <!-- first mapping! -->

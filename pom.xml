@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,26 +19,26 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>29.2</version>
+    <version>30.0</version>
   </parent>
 
-  <name>Hippo Forge IP Filter Plugin</name>
-  <groupId>org.onehippo.forge.ipfilter</groupId>
-  <artifactId>hippo-ipfilter</artifactId>
-  <version>2.3.0</version>
+  <name>BloomReach Forge IP Filter Plugin</name>
+  <groupId>org.bloomreach.forge.ipfilter</groupId>
+  <artifactId>bloomreach-ipfilter</artifactId>
+  <version>3.0.0</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
   <properties>
-    <!-- from 12.0.2 release -->
-    <hippo.cms.version>5.0.2</hippo.cms.version>
-    <hippo.hst.version>5.0.2</hippo.hst.version>
-    <hippo.repository.version>5.0.2</hippo.repository.version>
-    <hippo.services.version>4.0.2</hippo.services.version>
+    <!-- from 13.0 release -->
+    <hippo.cms.version>13.0.0</hippo.cms.version>
+    <hippo.hst.version>13.0.0</hippo.hst.version>
+    <hippo.repository.version>13.0.0</hippo.repository.version>
+    <hippo.services.version>13.0.0</hippo.services.version>
     
-    <spring-security-web.version>4.2.5.RELEASE</spring-security-web.version>
+    <spring-security-web.version>5.1.1.RELEASE</spring-security-web.version>
 
-    <commons-io.version>2.5</commons-io.version>
+    <commons-io.version>2.6</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
 
     <junit.version>4.12</junit.version>
@@ -46,8 +46,7 @@
 
     <spring-mock.version>2.0.8</spring-mock.version>
 
-    <maven.plugin.site.version>3.6</maven.plugin.site.version>
-    <maven.doxia-module-markdown.version>1.7</maven.doxia-module-markdown.version>
+    <maven.plugin.site.version>3.7.1</maven.plugin.site.version>
   </properties>
 
 
@@ -79,7 +78,7 @@
     </repository>
     <repository>
       <id>hippo-forge</id>
-      <name>Hippo Forge maven 2 repository.</name>
+      <name>Hippo Forge Maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
       <snapshots>
         <enabled>false</enabled>

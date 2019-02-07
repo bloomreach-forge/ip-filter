@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
     private IpFilterService service;
 
     @Override
-    protected void doConfigure(final Node node) throws RepositoryException {
+    protected void doConfigure(final Node node) {
         log.debug("(Re)configuring {}, with service {}", this.getClass().getSimpleName(),
                 (service == null) ? "null" : service.getClass().getSimpleName());
         if (service != null) {
@@ -45,13 +45,13 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
     }
     
     @Override
-    protected void doInitialize(final Session session) throws RepositoryException {
+    protected void doInitialize(final Session session) {
         service = new IpFilterServiceImpl(session);
-        HippoServiceRegistry.registerService(service, IpFilterService.class);
+        HippoServiceRegistry.register(service, IpFilterService.class);
     }
     
     @Override
     protected void doShutdown() {
-        HippoServiceRegistry.unregisterService(service, IpFilterService.class);
+        HippoServiceRegistry.unregister(service, IpFilterService.class);
     }
 }

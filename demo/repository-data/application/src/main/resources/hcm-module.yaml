@@ -1,4 +1,4 @@
-group: 
+group:
   name: ipfilterdemo
   after: hippo-cms
 project: ipfilterdemo

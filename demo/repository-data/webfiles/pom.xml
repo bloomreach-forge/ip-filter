@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>ipfilterdemo-repository-data</artifactId>
-    <version>2.3.0</version>
+    <version>3.0.0</version>
   </parent>
 
   <name>IP filter demo Repository Data Web Files</name>
@@ -13,18 +13,17 @@
   <artifactId>ipfilterdemo-repository-data-webfiles</artifactId>
 
   <dependencies>
-    <!-- ARCHE-555 Add dependency on the site war for IntelliJ bean-definition code completion in ftl files -->
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
-      <artifactId>ipfilterdemo-site</artifactId>
+      <artifactId>ipfilterdemo-components</artifactId>
       <version>${project.version}</version>
-      <type>war</type>
+      <type>jar</type>
       <scope>provided</scope>
     </dependency>
+    <!-- support ftl auto completion -->
     <dependency>
-      <groupId>org.onehippo.cms7.hst.dependencies</groupId>
-      <artifactId>hst-client-dependencies</artifactId>
-      <type>pom</type>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

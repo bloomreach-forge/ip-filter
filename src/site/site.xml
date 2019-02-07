@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
+    Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project name="Hippo IP Filter" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+<project name="BloomReach IP Filter" xmlns="http://maven.apache.org/DECORATION/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
 

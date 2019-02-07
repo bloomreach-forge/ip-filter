@@ -1,5 +1,5 @@
-group: hippo-cms
-project:
-    name: hippo-ipfilter
-    after: hippo-cms
-module: hippo-ipfilter-cms
+group:
+  name: bloomreach-forge
+  after: hippo-cms
+project: bloomreach-ipfilter
+module: bloomreach-ipfilter-cms

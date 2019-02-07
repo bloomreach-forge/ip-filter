@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ package org.onehippo.forge.ipfilter.cms;
 
 import javax.jcr.Session;
 
-import org.onehippo.cms7.services.SingletonService;
-
-@SingletonService
 public interface IpFilterService {
 
     Session getSession();
