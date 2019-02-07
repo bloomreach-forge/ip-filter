@@ -11,7 +11,7 @@
   <name>IP filter demo</name>
   <description>IP filter demo</description>
   <artifactId>ipfilterdemo</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- 
