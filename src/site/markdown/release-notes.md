@@ -25,14 +25,13 @@
 ## Release Notes
 
 ### 3.0.0
-<p class="smallinfo">Release date: 8 February 2019</p>
+<p class="smallinfo">Release date: 7 February 2019</p>
 
 + [HIPFORGE-242](https://issues.onehippo.com/browse/HIPFORGE-242)<br/> 
   Make plugin 13.x version compatible.
 + Change the artifacts' groupIds to <code>org.bloomreach.forge.ipfilter</code> and have the artifactIds starting with 
 <code>bloomreach-ipfilter-</code> (so renaming hippo to bloomreach).<br/>
-Repackage Java classes from <code>org.onehippo...</code> to <code>org.bloomreach...</code>.<br/>
-This requires to revisit the [installation page](installation.html) when upgrading. 
+This requires to revisit the [installation page](install.html) when upgrading. 
 
 ### 2.3.0  
 

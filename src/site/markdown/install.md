@@ -59,6 +59,11 @@ Add these dependencies to the `<dependencyManagement>` section of the root pom.x
   </dependency>
 ```
 
+<div class="alert alert-info">
+    Note: before version 3.0, the artifacts' groupId was <code>org.onehippo.forge.ipfilter</code> and
+    the artifactIds started with <code>hippo-ipfilter</code>
+</div>
+
 ### Installation in site application
 
 Add this dependency to the `<dependencies>` section of the site/pom.xml. It contains the site IP filter.
