@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2018-2019 Hippo B.V. (http://www.onehippo.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@
     <hippo.repository.version>13.0.0</hippo.repository.version>
     <hippo.services.version>13.0.0</hippo.services.version>
     
-    <spring-security-web.version>4.2.5.RELEASE</spring-security-web.version>
+    <spring-security-web.version>5.1.1.RELEASE</spring-security-web.version>
 
-    <commons-io.version>2.5</commons-io.version>
+    <commons-io.version>2.6</commons-io.version>
     <commons-lang.version>2.6</commons-lang.version>
 
     <junit.version>4.12</junit.version>
