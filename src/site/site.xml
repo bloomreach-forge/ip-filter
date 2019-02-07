@@ -27,11 +27,11 @@
   <publishDate format="d MMMM yyyy"/>
 
   <custom>
-    <hippoSkin>
+    <bloomreach>
       <gitHub>
         <projectId>bloomreach-forge/ip-filter</projectId>
       </gitHub>
-    </hippoSkin>
+    </bloomreach>
   </custom>
 
   <body>
