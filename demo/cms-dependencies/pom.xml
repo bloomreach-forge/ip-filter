@@ -14,7 +14,7 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.onehippo.forge.ipfilter</groupId>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
       <artifactId>hippo-ipfilter-cms</artifactId>
     </dependency>
     <dependency>

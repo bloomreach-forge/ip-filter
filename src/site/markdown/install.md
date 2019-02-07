@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+  Copyright 2017-2019 Hippo B.V. (http://www.onehippo.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ```
 <repository>
   <id>hippo-forge</id>
-  <name>Hippo Forge maven 2 repository.</name>
+  <name>Hippo Forge Maven 2 repository.</name>
   <url>https://maven.onehippo.com/maven2-forge/</url>
   <snapshots>
     <enabled>false</enabled>
@@ -48,12 +48,12 @@ Add these dependencies to the `<dependencyManagement>` section of the root pom.x
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>hippo-ipfilter-hst</artifactId>
     <version>${hippo.forge.ipfilter.version}</version>
   </dependency>
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>hippo-ipfilter-cms</artifactId>
     <version>${hippo.forge.ipfilter.version}</version>
   </dependency>
@@ -65,7 +65,7 @@ Add this dependency to the `<dependencies>` section of the site/pom.xml. It cont
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>hippo-ipfilter-hst</artifactId>
   </dependency>
 ```
@@ -76,7 +76,7 @@ CharacterEncodingFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.hst.IpFilter</filter-class>
+    <filter-class>org.bloomreach.forge.ipfilter.hst.IpFilter</filter-class>
   </filter>
 
   <!-- second mapping! -->
@@ -93,7 +93,7 @@ configuration and the CMS filter.
 
 ```
   <dependency>
-    <groupId>org.onehippo.forge.ipfilter</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>hippo-ipfilter-cms</artifactId>
   </dependency>
 ```
@@ -106,7 +106,7 @@ ConcurrentLoginFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoCmsIpFilter</filter-name>
-    <filter-class>org.onehippo.forge.ipfilter.cms.CmsIpFilter</filter-class>
+    <filter-class>org.bloomreach.forge.ipfilter.cms.CmsIpFilter</filter-class>
   </filter>
 
   <!-- first mapping! -->

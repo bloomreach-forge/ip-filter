@@ -16,18 +16,22 @@
 
 ## Version Compatibility
 
-| Hippo CMS | IP Filter |
-| --------- |-----------| 
-| 13.x      | 3.x       |
-| 12.x      | 2.x       |
-| 11.x      | 1.x       |
+| BloomReach Experience | IP Filter |
+| --------------------- |-----------| 
+| 13.x                  | 3.x       |
+| 12.x                  | 2.x       |
+| 11.x                  | 1.x       |
 
 ## Release Notes
+
 ### 3.0.0
-<p class="smallinfo">Release date: 11 January 2019</p>
+<p class="smallinfo">Release date: 8 February 2019</p>
 
 + [HIPFORGE-242](https://issues.onehippo.com/browse/HIPFORGE-242)<br/> 
-Make plugin 13.x versions compatible  
+  Make plugin 13.x version compatible
++ Change all artifacts' groupId to <code>org.bloomreach.forge.ipfilter</code>, and repackage the Java classes from
+<code>org.onehippo...</code> to <code>org.bloomreach...</code>  
+This requires to revisit the [installation page](installation.html) when upgrading 
 
 ### 2.3.0  
 

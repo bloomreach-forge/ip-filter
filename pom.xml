@@ -23,7 +23,7 @@
   </parent>
 
   <name>Hippo Forge IP Filter Plugin</name>
-  <groupId>org.onehippo.forge.ipfilter</groupId>
+  <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>hippo-ipfilter</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
