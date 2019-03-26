@@ -81,7 +81,7 @@ CharacterEncodingFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoIpFilter</filter-name>
-    <filter-class>org.bloomreach.forge.ipfilter.hst.IpFilter</filter-class>
+    <filter-class>org.onehippo.forge.ipfilter.hst.IpFilter</filter-class>
   </filter>
 
   <!-- second mapping! -->
@@ -111,7 +111,7 @@ ConcurrentLoginFilter (in a standard Hippo project).
 ```  
   <filter>
     <filter-name>HippoCmsIpFilter</filter-name>
-    <filter-class>org.bloomreach.forge.ipfilter.cms.CmsIpFilter</filter-class>
+    <filter-class>org.onehippo.forge.ipfilter.cms.CmsIpFilter</filter-class>
   </filter>
 
   <!-- first mapping! -->
