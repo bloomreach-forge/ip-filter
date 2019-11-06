@@ -121,6 +121,15 @@ ConcurrentLoginFilter (in a standard Hippo project).
   </filter-mapping>
 ```
 
+### Bootstrapping
+When running a version 12 or later, make sure your project bootstraps after `bloomreach-forge` group. 
+Typically, add it in file `repository-data/application/src/main/resources/hcm-module.yaml`:
+```  
+  group:
+    name: <your-group-name>
+    after: [hippo-cms, bloomreach-forge]
+```  
+
 Rebuild your project and distribute. In case you start with an existing repository don't forget to add *-Drepo.bootstrap=true*
 to your startup options.
 
