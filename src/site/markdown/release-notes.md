@@ -25,6 +25,12 @@
 
 ## Release Notes
 
+### 3.0.1
+<p class="smallinfo">Release date: 30 January 2020</p>
+
++ [HIPFORGE-334](https://issues.onehippo.com/browse/HIPFORGE-334)<br/> 
+  IP-Filter: cache key should use password too.
+
 ### 3.0.0
 <p class="smallinfo">Release date: 7 February 2019</p>
 
