@@ -25,7 +25,7 @@
   <name>BloomReach Forge IP Filter Plugin</name>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>bloomreach-ipfilter</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.1</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
