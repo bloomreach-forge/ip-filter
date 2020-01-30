@@ -61,7 +61,7 @@ public class IpFilter extends BaseIpFilter {
             log.debug("Invalid credentials, null or empty");
             return Status.UNAUTHORIZED;
         }
-        final Boolean cached = userCache.getUnchecked(credentials.getUsername());
+        final Boolean cached = userCache.getUnchecked(credentials.getUsername() + credentials.getPassword());
         if (cached != null && cached) {
             log.debug("Cached user: {}", credentials);
             return Status.OK;
@@ -75,7 +75,7 @@ public class IpFilter extends BaseIpFilter {
                 return Status.UNAUTHORIZED;
             }
             log.debug("Successfully validated user: {}", credentials.getUsername());
-            userCache.put(credentials.getUsername(), Boolean.TRUE);
+            userCache.put(credentials.getUsername() + credentials.getPassword(), Boolean.TRUE);
             return Status.OK;
         } finally {
             closeSession(session);
