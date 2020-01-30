@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>ipfilterdemo</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>ipfilterdemo-essentials</artifactId>
   <packaging>war</packaging>
