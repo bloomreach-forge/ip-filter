@@ -54,13 +54,30 @@ public class IpFilterUtilsTest {
         expect(request.getRemoteHost()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn(null).anyTimes();
         replay(request);
-        String host = IpFilterUtils.getHost(request);
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return null;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+        String host = baseIpFilter.getHost(request);
         assertEquals("127.0.0.1", host);
         // recreate
         request = createMock(HttpServletRequest.class);
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("localhost").anyTimes();
         replay(request);
-        host = IpFilterUtils.getHost(request);
+        host = baseIpFilter.getHost(request);
         assertEquals("localhost", host);
 
     }

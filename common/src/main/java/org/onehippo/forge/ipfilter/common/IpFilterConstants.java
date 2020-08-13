@@ -25,7 +25,11 @@ public final class IpFilterConstants {
     public static final String CONFIG_IGNORED_HEADER = "ignored-header";
     public static final String CONFIG_IGNORED_HEADER_VALUES = "ignored-header-values";
     public static final String CONFIG_MATCH_ALL = "match-all";
+
+    public static final String CONFIG_CACHE_ENABLED = "cache-enabled";
     public static final String CONFIG_FORWARDED_FOR_HEADER = "forwarded-for-header";
+
+    public static final String CONFIG_FORWARDED_HOST_HEADER = "forwarded-host-header";
 
     public static final int BASIC_AUTH_PREFIX_LENGTH = "Basic ".length();
 

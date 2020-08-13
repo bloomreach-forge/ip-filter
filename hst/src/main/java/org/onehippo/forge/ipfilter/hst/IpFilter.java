@@ -15,24 +15,20 @@
  */
 package org.onehippo.forge.ipfilter.hst;
 
+import org.hippoecm.hst.core.container.ComponentManager;
+import org.hippoecm.hst.site.HstServices;
+import org.hippoecm.repository.HippoRepository;
+import org.hippoecm.repository.HippoRepositoryFactory;
+import org.onehippo.forge.ipfilter.common.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
-import org.hippoecm.hst.core.container.ComponentManager;
-import org.hippoecm.hst.site.HstServices;
-import org.hippoecm.repository.HippoRepository;
-import org.hippoecm.repository.HippoRepositoryFactory;
-import org.onehippo.forge.ipfilter.common.BaseIpFilter;
-import org.onehippo.forge.ipfilter.common.IpFilterUtils;
-import org.onehippo.forge.ipfilter.common.Status;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.onehippo.forge.ipfilter.common.IpFilterConstants;
 
 /**
  * Filter allowing only access for IP ranges that are configured.
@@ -55,16 +51,20 @@ public class IpFilter extends BaseIpFilter {
     }
 
     @Override
-    protected Status authenticate(final HttpServletRequest request) {
+    protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
         final UserCredentials credentials = new UserCredentials(request.getHeader(IpFilterConstants.HEADER_AUTHORIZATION));
         if (!credentials.valid()) {
             log.debug("Invalid credentials, null or empty");
             return Status.UNAUTHORIZED;
         }
-        final Boolean cached = userCache.getUnchecked(credentials.getUsername() + credentials.getPassword());
-        if (cached != null && cached) {
-            log.debug("Cached user: {}", credentials);
-            return Status.OK;
+        if (authObject.isCacheEnabled()) {
+            final Boolean cached = userCache.getUnchecked(credentials.getUsername() + credentials.getPassword());
+            if (cached != null && cached) {
+                log.debug("Cached user: {}", credentials);
+                return Status.OK;
+            }
+        } else {
+            log.debug("User cache is not used");
         }
         Session session = null;
         try {
@@ -75,7 +75,10 @@ public class IpFilter extends BaseIpFilter {
                 return Status.UNAUTHORIZED;
             }
             log.debug("Successfully validated user: {}", credentials.getUsername());
-            userCache.put(credentials.getUsername() + credentials.getPassword(), Boolean.TRUE);
+            if(authObject.isCacheEnabled()){
+                log.debug("Adding user to cache {}", credentials.getUsername());
+                userCache.put(credentials.getUsername() + credentials.getPassword(), Boolean.TRUE);
+            }
             return Status.OK;
         } finally {
             closeSession(session);

@@ -25,6 +25,15 @@
 
 ## Release Notes
 
+### 3.0.2
+<p class="smallinfo">Release date: 30 January 2020</p>
+
++ [HIPFORGE-363](https://issues.onehippo.com/browse/HIPFORGE-363)<br/> 
+  IP-Filter: add few improvements, more logging
+  + added cache-enabled  setting
+  + added forwarded-for-header setting 
+  
+
 ### 3.0.1
 <p class="smallinfo">Release date: 30 January 2020</p>
 

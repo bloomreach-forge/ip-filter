@@ -51,6 +51,15 @@ public class TestConfigLoader extends IpFilterConfigLoader {
     }
 
 
+    @Override
+    public Set<String> getForwardedForHostHeaders() {
+
+        final Set<String> forwardedForHostHeaders = super.getForwardedForHostHeaders();
+        if (forwardedForHostHeaders.isEmpty()) {
+            forwardedForHostHeaders.add(IpFilterConstants.HEADER_X_FORWARDED_HOST);
+        }
+        return forwardedForHostHeaders;
+    }
 
     public boolean isNeedReloading() {
         return needReloading;
