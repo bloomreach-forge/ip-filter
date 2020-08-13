@@ -31,7 +31,7 @@ public class IpFilterUtilsTest {
     @Test
     public void testGetIp() {
         final Set<String> E = Collections.emptySet();
-        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null, true);
+        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null,true, true);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         expect(request.getRemoteAddr()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn(null).anyTimes();
