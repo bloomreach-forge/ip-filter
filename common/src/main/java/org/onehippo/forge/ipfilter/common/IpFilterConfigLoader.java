@@ -289,7 +289,7 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
             final Value[] property = node.getProperty(IpFilterConstants.CONFIG_FORWARDED_HOST_HEADER).getValues();
             for (Value value : property) {
                 final String v = value.getString();
-                if (Strings.isNullOrEmpty(v)) {
+                if (!Strings.isNullOrEmpty(v)) {
                     log.debug("Adding  CONFIG_FORWARDED_FOR_HEADERS: {}", v);
                     forwardedForHostHeaders.add(v);
                 }

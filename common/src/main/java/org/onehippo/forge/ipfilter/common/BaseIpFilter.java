@@ -265,13 +265,13 @@ public abstract class BaseIpFilter implements Filter {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 final String c = "Name: " + cookie.getName()
-                        + " Domain: " + cookie.getDomain()
-                        + "Path: " + cookie.getPath()
-                        + "Secure: " + cookie.getSecure()
-                        + "HttpOnly: " + cookie.isHttpOnly()
-                        + "Version: " + cookie.getVersion()
-                        + "MaxAge: " + cookie.getMaxAge();
-                log.debug("cookie: {}", c);
+                        + ", Domain: " + cookie.getDomain()
+                        + ", Path: " + cookie.getPath()
+                        + ", Secure: " + cookie.getSecure()
+                        + ", HttpOnly: " + cookie.isHttpOnly()
+                        + ", Version: " + cookie.getVersion()
+                        + ", MaxAge: " + cookie.getMaxAge();
+                log.debug("Cookie: {}", c);
             }
         }
 
