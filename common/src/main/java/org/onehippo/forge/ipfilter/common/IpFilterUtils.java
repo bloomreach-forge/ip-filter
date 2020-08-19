@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,16 +62,7 @@ public final class IpFilterUtils {
         return request.getRemoteAddr();
     }
 
-    public static String getHost(final HttpServletRequest request) {
-        final String hostHeader = request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST);
-        if (Strings.isNullOrEmpty(hostHeader)) {
-            final String remoteHost = request.getRemoteHost();
-            log.debug("Missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
-            return remoteHost;
-        }
-        return hostHeader;
 
-    }
 
     public static String getPath(final HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());

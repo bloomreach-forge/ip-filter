@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ public class AuthObject {
     private static final Logger log = LoggerFactory.getLogger(AuthObject.class);
 
     private final boolean valid;
+    private final boolean cacheEnabled;
     private final boolean mustMatchAll;
     private final boolean allowCmsUsers;
     private final String forwardedForHeader;
@@ -50,6 +51,7 @@ public class AuthObject {
 
     private AuthObject() {
         this.valid = false;
+        this.cacheEnabled = true;
         this.ignoredPaths = Collections.emptySet();
         this.hosts = Collections.emptySet();
         this.ranges = Collections.emptySet();
@@ -64,8 +66,9 @@ public class AuthObject {
 
     public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts,
                       final Set<String> ranges, final Map<String, Set<String>> ignoredHeaders,
-                      final boolean allowCmsUsers, final String forwardHeader, final boolean mustMatchAll) {
+                      final boolean allowCmsUsers, final String forwardHeader, final boolean cacheEnabled, final boolean mustMatchAll) {
         this.valid = true;
+        this.cacheEnabled = cacheEnabled;
         this.ignoredPaths = ignoredPaths;
         this.hosts = hosts;
         this.ranges = ranges;
@@ -113,6 +116,9 @@ public class AuthObject {
         return ignoredHeaders;
     }
 
+    public boolean isCacheEnabled() {
+        return cacheEnabled;
+    }
 
     //############################################
     // PARSERS
@@ -169,4 +175,21 @@ public class AuthObject {
     }
 
 
+    @Override
+    public String toString() {
+        return "AuthObject{" +
+                "valid=" + valid +
+                ", cacheEnabled=" + cacheEnabled +
+                ", mustMatchAll=" + mustMatchAll +
+                ", allowCmsUsers=" + allowCmsUsers +
+                ", forwardedForHeader='" + forwardedForHeader + '\'' +
+                ", hosts=" + hosts +
+                ", ranges=" + ranges +
+                ", ignoredPaths=" + ignoredPaths +
+                ", ipMatchers=" + ipMatchers +
+                ", ignoredHeaders=" + ignoredHeaders +
+                ", hostPatterns=" + hostPatterns +
+                ", ignoredPathPatterns=" + ignoredPathPatterns +
+                '}';
+    }
 }
