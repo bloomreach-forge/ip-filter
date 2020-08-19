@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2018-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,11 @@
 package org.onehippo.forge.ipfilter.common;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -135,7 +139,7 @@ public abstract class BaseIpFilter implements Filter {
     @SuppressWarnings("unchecked")
     private Status allowed(final HttpServletRequest request) {
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()){
             printRequestHeaders(request);
             printRequestCookies(request);
         }
@@ -246,7 +250,6 @@ public abstract class BaseIpFilter implements Filter {
         return remoteHost;
     }
 
-
     private void printRequestHeaders(final HttpServletRequest request) {
         log.debug("====== REQUEST HEADERS  ======");
         final Enumeration<String> headerNames = request.getHeaderNames();
@@ -259,6 +262,7 @@ public abstract class BaseIpFilter implements Filter {
         }
         log.debug("====== //  ======");
     }
+
     private void printRequestCookies(final HttpServletRequest request) {
         log.debug("====== COOKIES  ======");
         final Cookie[] cookies = request.getCookies();

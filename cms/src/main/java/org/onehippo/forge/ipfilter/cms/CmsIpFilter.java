@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

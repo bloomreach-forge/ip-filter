@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,12 @@ import org.hippoecm.hst.core.container.ComponentManager;
 import org.hippoecm.hst.site.HstServices;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
-import org.onehippo.forge.ipfilter.common.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.onehippo.forge.ipfilter.common.AuthObject;
+import org.onehippo.forge.ipfilter.common.BaseIpFilter;
+import org.onehippo.forge.ipfilter.common.IpFilterConstants;
+import org.onehippo.forge.ipfilter.common.IpFilterUtils;
+import org.onehippo.forge.ipfilter.common.Status;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -29,6 +32,9 @@ import javax.jcr.Session;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Filter allowing only access for IP ranges that are configured.
@@ -75,7 +81,7 @@ public class IpFilter extends BaseIpFilter {
                 return Status.UNAUTHORIZED;
             }
             log.debug("Successfully validated user: {}", credentials.getUsername());
-            if(authObject.isCacheEnabled()){
+            if (authObject.isCacheEnabled()){
                 log.debug("Adding user to cache {}", credentials.getUsername());
                 userCache.put(credentials.getUsername() + credentials.getPassword(), Boolean.TRUE);
             }

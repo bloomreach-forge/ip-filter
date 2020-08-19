@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
-import javax.jcr.*;
+import javax.jcr.Credentials;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.observation.Event;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -284,19 +289,21 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
     private void parseConfig(final Node node) throws RepositoryException {
         final Map<String, AuthObject> objects = new HashMap<>();
         final Multimap<String, String> globalSettings = loadGlobalSettings();
+
         forwardedForHostHeaders.clear();
-        if(node.hasProperty(IpFilterConstants.CONFIG_FORWARDED_HOST_HEADER)){
+        if (node.hasProperty(IpFilterConstants.CONFIG_FORWARDED_HOST_HEADER)){
             final Value[] property = node.getProperty(IpFilterConstants.CONFIG_FORWARDED_HOST_HEADER).getValues();
             for (Value value : property) {
                 final String v = value.getString();
                 if (!Strings.isNullOrEmpty(v)) {
-                    log.debug("Adding  CONFIG_FORWARDED_FOR_HEADERS: {}", v);
+                    log.debug("Adding CONFIG_FORWARDED_FOR_HEADERS: {}", v);
                     forwardedForHostHeaders.add(v);
                 }
             }
         }
-        // always add default:
+        // always add default
         forwardedForHostHeaders.add(IpFilterConstants.HEADER_X_FORWARDED_HOST);
+
         final NodeIterator nodes = node.getNodes();
         while (nodes.hasNext()) {
             final Node configNode = nodes.nextNode();
@@ -307,7 +314,6 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
         }
         data.clear();
         data.putAll(objects);
-        // populate
     }
 
     private AuthObject parse(final Node node, final Multimap<String, String> globalSettings) throws RepositoryException {
@@ -352,7 +358,7 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
         final boolean matchAll = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false);
         final boolean cacheEnabled = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_CACHE_ENABLED, true);
 
-        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader,cacheEnabled, matchAll);
+        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, cacheEnabled, matchAll);
     }
 
     private Map<String, Set<String>> parseHeaders(final Node root) throws RepositoryException {
