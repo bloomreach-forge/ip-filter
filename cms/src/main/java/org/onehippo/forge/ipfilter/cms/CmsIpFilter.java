@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
+import org.onehippo.forge.ipfilter.common.AuthObject;
 import org.onehippo.forge.ipfilter.common.BaseIpFilter;
 import org.onehippo.forge.ipfilter.common.Status;
 import org.slf4j.Logger;
@@ -31,8 +32,8 @@ public class CmsIpFilter extends BaseIpFilter {
     private static final String SYSTEM_PROPERTY_DISABLED = "hippo.cms-ipfilter.disabled";
 
     @Override
-    protected Status authenticate(final HttpServletRequest request) {
-        log.debug("Authenticating for repository user, however we are within CMS application so *skipping* authentication");
+    protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+        log.info("Authenticating for repository user, however we are within CMS application so *skipping* authentication");
         return Status.OK;
     }
 

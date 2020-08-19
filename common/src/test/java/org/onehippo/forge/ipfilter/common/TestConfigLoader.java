@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2018-2020 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,15 @@ public class TestConfigLoader extends IpFilterConfigLoader {
     }
 
 
+    @Override
+    public Set<String> getForwardedForHostHeaders() {
+
+        final Set<String> forwardedForHostHeaders = super.getForwardedForHostHeaders();
+        if (forwardedForHostHeaders.isEmpty()) {
+            forwardedForHostHeaders.add(IpFilterConstants.HEADER_X_FORWARDED_HOST);
+        }
+        return forwardedForHostHeaders;
+    }
 
     public boolean isNeedReloading() {
         return needReloading;

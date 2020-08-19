@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+  Copyright 2017-2020 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,10 +22,16 @@ During installation of IP Filter plugin, configuration for `localhost` is bootst
 environments, please make a copy of this node with a descriptive name like 'staging' or 'production'. Alternatively, 
 if you want one configuration set, rename it to 'all-envs'.
 
+#### Configuration set matching 
+By default, we match a host configuration set based on **X-Forwarded-Host** header. To override this, you can add an 
+optional multi-valued string property named **forwarded-host-header**, containing additional header names. This property 
+must be set on **hippo:moduleconfig** node and this setting is applied to all configurations. Please note that we always 
+add **X-Forwarded-Host** by default. 
+
 #### Properties of a configuration set 
 
 |Property               | Type            | Default         | Description 
-|------------------------|-----------------|-----------------|------------- 
+|-----------------------|-----------------|-----------------|------------- 
 |`enabled`              | boolean         | true            | Enable this configuration or not.
 |`hostnames`            | multiple string |                 | **Mandatory** list of hostnames, matching a browser request to this configuration set.   
 |`allowed-ip-ranges`    | multiple string |                 | Whitelist of ip address **ranges** e.g. **2001:4cb8:29d:1::/64**. Controls access the both CMS as the site.  
@@ -33,10 +39,11 @@ if you want one configuration set, rename it to 'all-envs'.
 |`match-all`            | boolean         | false           | To access the site, both IP address must be whitelisted and login with CMS credentials must be successful. 
 |`ignored-paths`        | multiple string |                 | List of paths that are ignored by the filters, e.g. **/ping/.*** 
 |`forwarded-for-header` | string          | X-Forwarded-For | Name of the request header that is used for forwarding.
+|`cache-enabled`        | boolean         | true            | Enabled by default, cache is used to store authenticated users. 
 
 **NOTES** 
 - Both `hostnames` and `ignored-paths` must be regular expression escaped like  **\*.onehippo\\.org** or **127\\.0\\.0\\.1**
-- Either `allow-cms-users` or `allowed-ip-ranges` must be enabled for valid configuration.
+- Either `allow-cms-users` or `allowed-ip-ranges` must be enabled for a valid configuration.
  
 ### Multiple optional subconfigurations for special headers  
 

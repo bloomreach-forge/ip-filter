@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2018-2020 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.onehippo.forge.ipfilter.common;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -134,10 +136,14 @@ public abstract class BaseIpFilter implements Filter {
         handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, status);
     }
 
-    @SuppressWarnings("unchecked")
     private Status allowed(final HttpServletRequest request) {
 
-        final String host = IpFilterUtils.getHost(request);
+        if (log.isDebugEnabled()){
+            printRequestHeaders(request);
+            printRequestCookies(request);
+        }
+
+        final String host = getHost(request);
         final AuthObject authObject = cache.getUnchecked(host);
 
         // check if host is IP/auth protected
@@ -161,6 +167,7 @@ public abstract class BaseIpFilter implements Filter {
 
         // check if on whitelist
         final IpHostPair pair = new IpHostPair(host, ip);
+        final boolean cacheEnabled = authObject.isCacheEnabled();
         boolean matched = ipCache.getUnchecked(pair);
         final Set<IpMatcher> ipMatchers = authObject.getIpMatchers();
         if (!matched) {
@@ -168,7 +175,12 @@ public abstract class BaseIpFilter implements Filter {
                 if (matcher.matches(ip)) {
                     log.debug("Found match for host: {}, ip: {}, path: {}", host, ip, IpFilterUtils.getPath(request));
                     matched = true;
-                    ipCache.put(pair, Boolean.TRUE);
+                    if (cacheEnabled) {
+                        log.debug("Adding to ip cache: {}", ip);
+                        ipCache.put(pair, Boolean.TRUE);
+                    }else{
+                        log.debug("Skipping ip address cache, caching is disabled");
+                    }
                     break;
                 }
             }
@@ -191,13 +203,13 @@ public abstract class BaseIpFilter implements Filter {
         final boolean allowCmsUsers = authObject.isAllowCmsUsers();
         if (allowCmsUsers) {
             // must match basic authorization
-            return authenticate(request);
+            return authenticate(authObject, request);
         }
 
         if (mustMatchAll) {
             log.error("{}: ambiguous configuration: match-all property is enabled but allow-cms-users is set to false. " +
                     "Still authenticating against the repository now.", this.getClass().getSimpleName());
-            return authenticate(request);
+            return authenticate(authObject, request);
         }
 
         // no access
@@ -218,6 +230,57 @@ public abstract class BaseIpFilter implements Filter {
         userCache.invalidateAll();
         ipCache.invalidateAll();
     }
+
+    protected  String getHost(final HttpServletRequest request) {
+
+        final Set<String> forwardedForHostHeaders = configLoader.getForwardedForHostHeaders();
+        for (String h : forwardedForHostHeaders) {
+            log.debug("fetching host for following header: {}", h);
+            final String hostHeader = request.getHeader(h);
+            if (!Strings.isNullOrEmpty(hostHeader)) {
+                log.debug("Will try to match  configuration for host: {}", hostHeader);
+                return hostHeader;
+            }
+        }
+
+
+        final String remoteHost = request.getRemoteHost();
+        log.debug("Missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
+        return remoteHost;
+    }
+
+    private void printRequestHeaders(final HttpServletRequest request) {
+        log.trace("====== REQUEST HEADERS  ======");
+        final Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                final String name = headerNames.nextElement();
+                final String value = request.getHeader(name);
+                log.trace("{} = {}", name, value);
+            }
+        }
+        log.trace("====== REQUEST HEADERS END ======");
+    }
+
+    private void printRequestCookies(final HttpServletRequest request) {
+        log.trace("====== COOKIES ======");
+        final Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                final String c = "Name: " + cookie.getName()
+                        + ", Domain: " + cookie.getDomain()
+                        + ", Path: " + cookie.getPath()
+                        + ", Secure: " + cookie.getSecure()
+                        + ", HttpOnly: " + cookie.isHttpOnly()
+                        + ", Version: " + cookie.getVersion()
+                        + ", MaxAge: " + cookie.getMaxAge();
+                log.trace("Cookie: {}", c);
+            }
+        }
+
+        log.trace("====== COOKIES END ======");
+    }
+
 
     /**
      * Check if path is ignored
@@ -265,7 +328,7 @@ public abstract class BaseIpFilter implements Filter {
     /**
      * Authenticate against the repository for Hippo users.
      */
-    protected abstract Status authenticate(final HttpServletRequest request);
+    protected abstract Status authenticate(final AuthObject authObject, final HttpServletRequest request);
 
     private void handleAuthorizationIssue(final HttpServletRequest req, final HttpServletResponse res, Status status) {
         try {
@@ -292,6 +355,7 @@ public abstract class BaseIpFilter implements Filter {
      * Load auth object for matched host name:
      */
     private AuthObject loadIpRules(final String host) {
+        log.debug("Loading rules for host {}", host);
         final Map<String, AuthObject> rawData = configLoader.load();
         for (Map.Entry<String, AuthObject> entry : rawData.entrySet()) {
             final AuthObject value = entry.getValue();
@@ -299,6 +363,7 @@ public abstract class BaseIpFilter implements Filter {
             for (Pattern pattern : hostPatterns) {
                 final Matcher matcher = pattern.matcher(host);
                 if (matcher.matches()) {
+                    log.debug("Loaded: {}", value);
                     return value;
                 }
             }

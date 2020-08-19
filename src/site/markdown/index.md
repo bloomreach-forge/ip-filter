@@ -1,7 +1,7 @@
 
 ## Introduction 
 
-The BloomReach IP Filter plugin provides request filters to be installed in your site and/or CMS application. 
+The Bloomreach IP Filter plugin provides request filters to be installed in your site and/or CMS application. 
 With these filters, you can control access to site and CMS based on the IP address of incoming requests, using 
 IP whitelisting. 
 

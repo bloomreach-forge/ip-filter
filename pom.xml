@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
+  ~ Copyright 2018-2020 Bloomreach
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@
     <version>30.0</version>
   </parent>
 
-  <name>BloomReach Forge IP Filter Plugin</name>
+  <name>Bloomreach Forge IP Filter Plugin</name>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>bloomreach-ipfilter</artifactId>
-  <version>3.0.1</version>
+  <version>3.1.0</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 

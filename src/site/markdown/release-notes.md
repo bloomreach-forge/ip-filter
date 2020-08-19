@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
+  Copyright 2017-2020 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 ## Version Compatibility
 
-| BloomReach Experience | IP Filter |
+| Bloomreach Experience | IP Filter |
 | --------------------- |-----------| 
 | 14.x                  | 3.x       |
 | 13.x                  | 3.x       |
@@ -25,11 +25,21 @@
 
 ## Release Notes
 
+### 3.1.0
+<p class="smallinfo">Release date: 19 August 2020</p>
+
++ [HIPFORGE-363](https://issues.onehippo.com/browse/HIPFORGE-363)<br/> 
+  + added 'forwarded-for-header' setting on module level, see [usage page](usage.html).
+  + added 'cache-enabled' setting per configuration set, see [usage page](usage.html).
+  + more DEBUG logging in various locations, also `org.onehippo.forge.ipfilter.common.BaseIpFilter` will print out all 
+    request headers and cookies on TRACE level.  
+ 
+
 ### 3.0.1
 <p class="smallinfo">Release date: 30 January 2020</p>
 
 + [HIPFORGE-334](https://issues.onehippo.com/browse/HIPFORGE-334)<br/> 
-  IP-Filter: cache key should use password too.
+  the cache key should include password too.
 
 ### 3.0.0
 <p class="smallinfo">Release date: 7 February 2019</p>
@@ -89,7 +99,7 @@ This requires to revisit the [installation page](install.html) when upgrading.
 
 <p class="smallinfo">Release date: 27 June 2017</p>
 
-+ Apply BloomReach Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
++ Apply Bloomreach Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
 + Fix reloading issues in the site's IpFilter.   
 + Add a filter for the CMS webapp: CmsIpFilter.
 + Available on Hippo 11.

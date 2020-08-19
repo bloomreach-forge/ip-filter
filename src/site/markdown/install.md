@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+  Copyright 2017-2020 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   -->
 ## Installation of the IP Filter plugin
 
-These instructions assume a BloomReach Experience project based on the website archetype, i.e. a Maven multi-module project 
+These instructions assume a Bloomreach Experience project based on the website archetype, i.e. a Maven multi-module project 
 with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least three sub-modules: cms, site and repository-data.
 
 ### Forge Repository

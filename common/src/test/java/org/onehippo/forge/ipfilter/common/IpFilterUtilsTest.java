@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2018-2020 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class IpFilterUtilsTest {
     @Test
     public void testGetIp() {
         final Set<String> E = Collections.emptySet();
-        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null, true);
+        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null,true, true);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         expect(request.getRemoteAddr()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn(null).anyTimes();
@@ -54,13 +54,30 @@ public class IpFilterUtilsTest {
         expect(request.getRemoteHost()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn(null).anyTimes();
         replay(request);
-        String host = IpFilterUtils.getHost(request);
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return null;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+        String host = baseIpFilter.getHost(request);
         assertEquals("127.0.0.1", host);
         // recreate
         request = createMock(HttpServletRequest.class);
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("localhost").anyTimes();
         replay(request);
-        host = IpFilterUtils.getHost(request);
+        host = baseIpFilter.getHost(request);
         assertEquals("localhost", host);
 
     }
