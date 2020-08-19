@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2016-2019 BloomReach Inc. (http://www.bloomreach.com)
+  ~ Copyright 2016-2020 Bloomreach
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
     <version>3.0.2-SNAPSHOT</version>
   </parent>
 
-  <name>BloomReach Forge IP Filter Plugin HST</name>
+  <name>Bloomreach Forge IP Filter Plugin HST</name>
   <artifactId>bloomreach-ipfilter-hst</artifactId>
   <packaging>jar</packaging>
 

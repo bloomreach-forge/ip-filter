@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
+  Copyright 2017-2020 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 ## Version Compatibility
 
-| BloomReach Experience | IP Filter |
+| Bloomreach Experience | IP Filter |
 | --------------------- |-----------| 
 | 14.x                  | 3.x       |
 | 13.x                  | 3.x       |
@@ -99,7 +99,7 @@ This requires to revisit the [installation page](install.html) when upgrading.
 
 <p class="smallinfo">Release date: 27 June 2017</p>
 
-+ Apply BloomReach Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
++ Apply Bloomreach Forge best practices and publish it on the Forge, under different Maven coordinates of the artifacts.
 + Fix reloading issues in the site's IpFilter.   
 + Add a filter for the CMS webapp: CmsIpFilter.
 + Available on Hippo 11.
