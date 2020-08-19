@@ -29,9 +29,10 @@
 <p class="smallinfo">Release date: 19 August 2020</p>
 
 + [HIPFORGE-363](https://issues.onehippo.com/browse/HIPFORGE-363)<br/> 
-  + added 'forwarded-for-header' setting on module level, see [usage page](usage.html)
-  + added 'cache-enabled' setting per configuration set, see [usage page](usage.html)
-  + more debug logging, e.g. org.onehippo.forge.ipfilter.common.BaseIpFilter</code>
+  + added 'forwarded-for-header' setting on module level, see [usage page](usage.html).
+  + added 'cache-enabled' setting per configuration set, see [usage page](usage.html).
+  + more DEBUG logging in various locations, also `org.onehippo.forge.ipfilter.common.BaseIpFilter` will print out all 
+    request headers and cookies on TRACE level.  
  
 
 ### 3.0.1

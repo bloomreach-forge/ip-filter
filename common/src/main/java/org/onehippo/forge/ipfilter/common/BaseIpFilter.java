@@ -250,20 +250,20 @@ public abstract class BaseIpFilter implements Filter {
     }
 
     private void printRequestHeaders(final HttpServletRequest request) {
-        log.debug("====== REQUEST HEADERS  ======");
+        log.trace("====== REQUEST HEADERS  ======");
         final Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
             while (headerNames.hasMoreElements()) {
                 final String name = headerNames.nextElement();
                 final String value = request.getHeader(name);
-                log.debug("{} = {}", name, value);
+                log.trace("{} = {}", name, value);
             }
         }
-        log.debug("====== REQUEST HEADERS END ======");
+        log.trace("====== REQUEST HEADERS END ======");
     }
 
     private void printRequestCookies(final HttpServletRequest request) {
-        log.debug("====== COOKIES ======");
+        log.trace("====== COOKIES ======");
         final Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -274,11 +274,11 @@ public abstract class BaseIpFilter implements Filter {
                         + ", HttpOnly: " + cookie.isHttpOnly()
                         + ", Version: " + cookie.getVersion()
                         + ", MaxAge: " + cookie.getMaxAge();
-                log.debug("Cookie: {}", c);
+                log.trace("Cookie: {}", c);
             }
         }
 
-        log.debug("====== COOKIES END ======");
+        log.trace("====== COOKIES END ======");
     }
 
 
