@@ -16,7 +16,6 @@
 package org.onehippo.forge.ipfilter.repository;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
@@ -47,7 +46,7 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
     @Override
     protected void doInitialize(final Session session) {
         log.debug("Initializing {}, registering service {} into registry",
-                this.getClass().getSimpleName(), IpFilterServiceImpl.class.getName());
+                this.getClass().getName(), IpFilterServiceImpl.class.getName());
         service = new IpFilterServiceImpl(session);
         HippoServiceRegistry.register(service, IpFilterService.class);
     }
