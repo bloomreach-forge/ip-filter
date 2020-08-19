@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 BloomReach Inc. (http://www.bloomreach.com)
+ * Copyright 2017-2020 BloomReach Inc. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doConfigure(final Node node) {
-        log.debug("(Re)configuring {}, with service {}", this.getClass().getSimpleName(),
-                (service == null) ? "null" : service.getClass().getSimpleName());
+        log.debug("(Re)configuring {}, with service {}", this.getClass().getName(),
+                (service == null) ? "null" : service.getClass().getName());
         if (service != null) {
             service.setConfigurationChanged(true);
         }
@@ -46,6 +46,8 @@ public class IpFilterModule extends AbstractReconfigurableDaemonModule {
     
     @Override
     protected void doInitialize(final Session session) {
+        log.debug("Initializing {}, registering service {} into registry",
+                this.getClass().getSimpleName(), IpFilterServiceImpl.class.getName());
         service = new IpFilterServiceImpl(session);
         HippoServiceRegistry.register(service, IpFilterService.class);
     }
