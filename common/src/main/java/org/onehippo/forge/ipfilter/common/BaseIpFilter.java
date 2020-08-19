@@ -136,7 +136,6 @@ public abstract class BaseIpFilter implements Filter {
         handleAuthorizationIssue((HttpServletRequest) request, (HttpServletResponse) response, status);
     }
 
-    @SuppressWarnings("unchecked")
     private Status allowed(final HttpServletRequest request) {
 
         if (log.isDebugEnabled()){
@@ -260,11 +259,11 @@ public abstract class BaseIpFilter implements Filter {
                 log.debug("{} = {}", name, value);
             }
         }
-        log.debug("====== //  ======");
+        log.debug("====== REQUEST HEADERS END ======");
     }
 
     private void printRequestCookies(final HttpServletRequest request) {
-        log.debug("====== COOKIES  ======");
+        log.debug("====== COOKIES ======");
         final Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -279,7 +278,7 @@ public abstract class BaseIpFilter implements Filter {
             }
         }
 
-        log.debug("====== //  ======");
+        log.debug("====== COOKIES END ======");
     }
 
 
