@@ -1,0 +1,5 @@
+group: 
+  name: ipfilterdemo
+project: ipfilterdemo
+module:
+  name: ipfilterdemo-repository-data-webfiles

@@ -1,0 +1,6 @@
+site: ipfilterdemo
+group: ipfilterdemo
+project: ipfilterdemo
+module:
+  name: ipfilterdemo-repository-data-site-development
+  after: ipfilterdemo-repository-data-site
