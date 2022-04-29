@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.forge</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo-site</artifactId>
     <version>4.0.0-SNAPSHOT</version>
   </parent>

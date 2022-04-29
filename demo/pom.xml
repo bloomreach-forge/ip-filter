@@ -10,7 +10,7 @@
 
   <name>IP Filter Demo</name>
   <description>Demo</description>
-  <groupId>org.onehippo.forge</groupId>
+  <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>ipfilterdemo</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
