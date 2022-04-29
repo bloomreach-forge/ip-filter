@@ -26,6 +26,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
+      <artifactId>bloomreach-ipfilter-cms</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-gallerypicker</artifactId>
     </dependency>
