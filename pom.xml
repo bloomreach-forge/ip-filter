@@ -35,11 +35,6 @@
     <hippo.repository.version>${hippo.release.version}</hippo.repository.version>
     <hippo.services.version>${hippo.release.version}</hippo.services.version>
     
-    <spring-security-web.version>5.2.10.RELEASE</spring-security-web.version>
-
-    <commons-io.version>2.7</commons-io.version>
-    <commons-lang.version>2.6</commons-lang.version>
-
     <junit.version>4.13.1</junit.version>
     <easymock.version>3.6</easymock.version>
 
@@ -163,7 +158,6 @@
         <scope>provided</scope>
       </dependency>
 
-  
       <dependency>
         <artifactId>spring-core</artifactId>
         <groupId>org.springframework</groupId>
@@ -173,7 +167,7 @@
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-web</artifactId>
-        <version>${spring-security-web.version}</version>
+        <version>${spring-security.version}</version>
         <exclusions>
           <exclusion>
             <artifactId>aopalliance</artifactId>
