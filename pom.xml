@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2020 Bloomreach
+  ~ Copyright 2018-2022 Bloomreach
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,22 +19,22 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>30.0</version>
+    <version>15.0.0</version>
   </parent>
 
   <name>Bloomreach Forge IP Filter Plugin</name>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>bloomreach-ipfilter</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
   <properties>
     <!-- from 13.0 release -->
-    <hippo.cms.version>13.0.0</hippo.cms.version>
-    <hippo.hst.version>13.0.0</hippo.hst.version>
-    <hippo.repository.version>13.0.0</hippo.repository.version>
-    <hippo.services.version>13.0.0</hippo.services.version>
+    <hippo.cms.version>${hippo.release.version}</hippo.cms.version>
+    <hippo.hst.version>${hippo.release.version}</hippo.hst.version>
+    <hippo.repository.version>${hippo.release.version}</hippo.repository.version>
+    <hippo.services.version>${hippo.release.version}</hippo.services.version>
     
     <spring-security-web.version>5.2.10.RELEASE</spring-security-web.version>
 
