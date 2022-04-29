@@ -1,5 +1,0 @@
-definitions:
-  namespace:
-    ipfilterdemo:
-      uri: http://www.ipfilterdemo.com/ipfilterdemo/nt/1.0
-      cnd: namespaces/ipfilterdemo.cnd

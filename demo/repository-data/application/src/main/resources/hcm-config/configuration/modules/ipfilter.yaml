@@ -1,7 +1,0 @@
-definitions:
-  config:
-    /hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig:
-      forwarded-host-header: [X-Forwarded-Host-2]
-    /hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig/localhost:
-      match-all: true
-      cache-enabled: false
