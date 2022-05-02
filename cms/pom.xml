@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>bloomreach-ipfilter</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.0</version>
   </parent>
 
   <name>Bloomreach Forge IP Filter Plugin CMS</name>
