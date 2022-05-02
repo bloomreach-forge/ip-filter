@@ -3,35 +3,34 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.cms7</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo-site</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>ipfilterdemo-webapp</artifactId>
   <packaging>war</packaging>
-  <name>IP filter demo Site Webapp</name>
-  <description>IP filter demo Site Webapp</description>
+  <name>Demo Site Webapp</name>
+  <description>Demo Site Webapp</description>
 
   <dependencies>
     <dependency>
-      <groupId>org.onehippo.cms7</groupId>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
       <artifactId>ipfilterdemo-repository-data-site</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.cms7</groupId>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
       <artifactId>ipfilterdemo-repository-data-webfiles</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.cms7</groupId>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
       <artifactId>ipfilterdemo-components</artifactId>
-      <version>3.1.0</version>
+      <version>4.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7.hst.toolkit-resources.addon</groupId>
       <artifactId>hst-addon-hcm-site</artifactId>
-      <version>${hippo.hst.version}</version>
     </dependency>
   </dependencies>
 

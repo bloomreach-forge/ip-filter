@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.cms7</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>ipfilterdemo-site</artifactId>
   <packaging>pom</packaging>
-  <name>IP filter demo Site</name>
-  <description>IP filter demo Site</description>
+  <name>Demo Site</name>
+  <description>Demo Site</description>
 
   <modules>
     <module>components</module>

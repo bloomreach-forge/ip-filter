@@ -6,8 +6,8 @@
          id="cms">
 
   <!-- General configuration -->
-  <display-name>IP filter demo CMS</display-name>
-  <description>IP filter demo CMS</description>
+  <display-name>Demo CMS</display-name>
+  <description>Demo CMS</description>
 
   <listener>
     <listener-class>org.hippoecm.hst.platform.container.HstCmsContextLoaderListener</listener-class>

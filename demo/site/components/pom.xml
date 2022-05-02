@@ -3,23 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.cms7</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo-site</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>ipfilterdemo-components</artifactId>
   <packaging>jar</packaging>
-  <name>IP filter demo Site Components</name>
-  <description>IP filter demo Site Components</description>
+  <name>Demo Site Components</name>
+  <description>Demo Site Components</description>
 
   <dependencies>
     <dependency>
-      <groupId>org.bloomreach.forge.ipfilter</groupId>
-      <artifactId>bloomreach-ipfilter-hst</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bloomreach.forge.ipfilter</groupId>
+      <artifactId>bloomreach-ipfilter-hst</artifactId>
     </dependency>
 
     <dependency>

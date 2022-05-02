@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/bloomreach-forge/ip-filter.svg?branch=develop)](https://travis-ci.org/bloomreach-forge/ip-filter)
-
 # Bloomreach IP Filter Plugin
 
 Control access to CMS and site based on the IP-address of incoming requests.

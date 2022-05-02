@@ -1,11 +1,11 @@
 <!--
-  Copyright 2017-2020 Bloomreach
+  Copyright 2017-2022 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+   https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,24 +16,30 @@
 
 ## Version Compatibility
 
-| Bloomreach Experience | IP Filter |
-| --------------------- |-----------| 
-| 14.x                  | 3.x       |
-| 13.x                  | 3.x       |
-| 12.x                  | 2.x       |
-| 11.x                  | 1.x       |
+| Bloomreach Experience Manager | IP Filter |
+|-------------------------------|-----------| 
+| 15.x                          | 4.x       |
+| 14.x                          | 3.x       |
+| 13.x                          | 3.x       |
+| 12.x                          | 2.x       |
+| 11.x                          | 1.x       |
 
 ## Release Notes
+
+### 4.0.0
+<p class="smallinfo">Release date: 2 May 2022</p>
+
++ [HIPFORGE-421](https://issues.onehippo.com/browse/HIPFORGE-421)<br/>
+  - Upgrade to Bloomreach Experience Manager 15, i.e. build the plugin with Java 11, redo the demo project.
 
 ### 3.1.0
 <p class="smallinfo">Release date: 19 August 2020</p>
 
-+ [HIPFORGE-363](https://issues.onehippo.com/browse/HIPFORGE-363)<br/> 
++ [HIPFORGE-363](https://issues.onehippo.com/browse/HIPFORGE-363)<br/>
   - added 'forwarded-host-header' setting on module level, see [usage page](usage.html).
   - added 'cache-enabled' setting per configuration set, see [usage page](usage.html).
-  - more DEBUG logging in various locations, also `org.onehippo.forge.ipfilter.common.BaseIpFilter` will print out all 
-    request headers and cookies on TRACE level.  
- 
+  - more DEBUG logging in various locations, also `org.onehippo.forge.ipfilter.common.BaseIpFilter` will print out all
+    request headers and cookies on TRACE level.
 
 ### 3.0.1
 <p class="smallinfo">Release date: 30 January 2020</p>

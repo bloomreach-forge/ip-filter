@@ -2,10 +2,10 @@
 <project>
   <projectNamespace>ipfilterdemo</projectNamespace>
   <confirmParams>false</confirmParams>
-  <selectedProjectPackage>org.onehippo.forge.ipfilter</selectedProjectPackage>
-  <selectedBeansPackage>org.onehippo.forge.ipfilter.beans</selectedBeansPackage>
-  <selectedComponentsPackage>org.onehippo.forge.ipfilter.components</selectedComponentsPackage>
-  <selectedRestPackage>org.onehippo.forge.ipfilter.rest</selectedRestPackage>
+  <selectedProjectPackage>org.onehippo.forge</selectedProjectPackage>
+  <selectedBeansPackage>org.onehippo.forge.beans</selectedBeansPackage>
+  <selectedComponentsPackage>org.onehippo.forge.components</selectedComponentsPackage>
+  <selectedRestPackage>org.onehippo.forge.rest</selectedRestPackage>
   <hstRoot>/hst:ipfilterdemo</hstRoot>
   <webfileBundleName>site</webfileBundleName>
   <setupDone>false</setupDone>

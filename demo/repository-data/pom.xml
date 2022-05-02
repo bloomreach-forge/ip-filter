@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.onehippo.cms7</groupId>
+    <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.0</version>
   </parent>
 
-  <name>IP filter demo Repository Data</name>
-  <description>IP filter demo Repository Data</description>
+  <name>Demo Repository Data</name>
+  <description>Demo Repository Data</description>
   <artifactId>ipfilterdemo-repository-data</artifactId>
   <packaging>pom</packaging>
 
@@ -17,6 +17,7 @@
     <module>application</module>
     <module>development</module>
     <module>site</module>
+    <module>site-development</module>
     <module>webfiles</module>
   </modules>
 
