@@ -41,7 +41,6 @@
   - more DEBUG logging in various locations, also `org.onehippo.forge.ipfilter.common.BaseIpFilter` will print out all
     request headers and cookies on TRACE level.
 
-
 ### 3.0.1
 <p class="smallinfo">Release date: 30 January 2020</p>
 
