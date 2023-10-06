@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2022 Bloomreach
+  ~ Copyright 2018-2023 Bloomreach
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@
 
   <distributionManagement>
     <repository>
-      <name>Hippo Maven 2 Forge Repository</name>
-      <id>hippo-maven2-forge</id>
-      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
+      <name>Bloomreach Maven 2 Forge Repository</name>
+      <id>bloomreach-maven2-forge</id>
+      <url>https://maven.bloomreach.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
     </repository>
   </distributionManagement>
@@ -66,14 +66,14 @@
 
   <repositories>
     <repository>
-      <id>hippo-maven2</id>
-      <name>Hippo Maven 2 Repository</name>
-      <url>https://maven.onehippo.com/maven2/</url>
+      <id>bloomreach-maven2</id>
+      <name>Bloomreach Maven 2 Repository</name>
+      <url>https://maven.bloomreach.com/repository/maven2/</url>
     </repository>
     <repository>
-      <id>hippo-forge</id>
-      <name>Hippo Forge Maven 2 repository.</name>
-      <url>https://maven.onehippo.com/maven2-forge/</url>
+      <id>bloomreach-maven2-forge</id>
+      <name>Bloomreach Forge Maven 2 repository.</name>
+      <url>https://maven.bloomreach.com/repository/maven2-forge/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
