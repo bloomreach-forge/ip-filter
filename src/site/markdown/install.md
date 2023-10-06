@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2020 Bloomreach
+  Copyright 2017-2023 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 
 ```
 <repository>
-  <id>hippo-forge</id>
-  <name>Hippo Forge Maven 2 repository.</name>
-  <url>https://maven.onehippo.com/maven2-forge/</url>
+  <id>bloomreach-forge</id>
+  <name>Bloomreach Forge Maven 2 repository.</name>
+  <url>https://maven.bloomreach.com/repository/maven2-forge/</url>
   <snapshots>
     <enabled>false</enabled>
   </snapshots>
