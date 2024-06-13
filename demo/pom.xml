@@ -12,7 +12,7 @@
   <description>Demo</description>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>ipfilterdemo</artifactId>
-  <version>4.0.1-SNAPSHOT</version>
+  <version>5.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- 
@@ -61,7 +61,7 @@
   <properties>
 
     <!--***START temporary override of versions*** -->
-    <bloomreach.forge.ipfilter.version>4.0.0-SNAPSHOT</bloomreach.forge.ipfilter.version>
+    <bloomreach.forge.ipfilter.version>5.0.0-SNAPSHOT</bloomreach.forge.ipfilter.version>
     <!-- ***END temporary override of versions*** -->
 
     <essentials.version>15.0.0</essentials.version>
