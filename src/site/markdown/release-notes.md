@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2022 Bloomreach
+  Copyright 2017-2024 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 | Bloomreach Experience Manager | IP Filter |
 |-------------------------------|-----------| 
+| 16.x                          | 5.x       |
 | 15.x                          | 4.x       |
 | 14.x                          | 3.x       |
 | 13.x                          | 3.x       |
@@ -25,6 +26,13 @@
 | 11.x                          | 1.x       |
 
 ## Release Notes
+
+### 5.0.0
+<p class="smallinfo">Release date: 8 August 2024</p>
+
++ [HIPFORGE-517](https://issues.onehippo.com/browse/HIPFORGE-517)<br/>
+  - Upgrade to Bloomreach Experience Manager 16, i.e. build the plugin with Java 17, redo the demo project.
+
 
 ### 4.0.0
 <p class="smallinfo">Release date: 2 May 2022</p>
