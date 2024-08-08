@@ -105,8 +105,7 @@ configuration and the CMS filter.
 
 **Optionally, install the CMS filter.**
 The CMS is password protected already but if the IP filtering functionality is also required for the CMS, add the 
-following filter to the CMS's web.xml. It should be defined as **first** filter in chain, so just before 
-ConcurrentLoginFilter (in a standard Hippo project).
+following filter to the CMS's web.xml. It should be defined as **first** filter in chain.
 
 ```  
   <filter>
