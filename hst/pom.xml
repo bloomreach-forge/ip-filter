@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>bloomreach-ipfilter</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1-SNAPSHOT</version>
   </parent>
 
   <name>Bloomreach Forge IP Filter Plugin HST</name>
