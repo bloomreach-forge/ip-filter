@@ -16,7 +16,7 @@
 package org.onehippo.forge.ipfilter.cms;
 
 import javax.jcr.Session;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.ipfilter.common.AuthObject;
