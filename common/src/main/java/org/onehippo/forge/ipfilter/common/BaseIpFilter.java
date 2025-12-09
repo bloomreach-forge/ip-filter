@@ -238,15 +238,17 @@ public abstract class BaseIpFilter implements Filter {
             log.debug("fetching host for following header: {}", h);
             final String hostHeader = request.getHeader(h);
             if (!Strings.isNullOrEmpty(hostHeader)) {
-                log.debug("Will try to match  configuration for host: {}", hostHeader);
-                return hostHeader;
+                final String normalizedHost = IpFilterUtils.normalizeHostname(hostHeader);
+                log.debug("Will try to match  configuration for host: {}", normalizedHost);
+                return normalizedHost;
             }
         }
 
 
         final String remoteHost = request.getRemoteHost();
-        log.debug("Missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, remoteHost);
-        return remoteHost;
+        final String normalizedRemoteHost = IpFilterUtils.normalizeHostname(remoteHost);
+        log.debug("Missing header {}, using: {}", IpFilterConstants.HEADER_X_FORWARDED_HOST, normalizedRemoteHost);
+        return normalizedRemoteHost;
     }
 
     private void printRequestHeaders(final HttpServletRequest request) {

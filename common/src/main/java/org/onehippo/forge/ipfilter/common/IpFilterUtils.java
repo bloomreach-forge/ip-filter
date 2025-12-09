@@ -69,6 +69,26 @@ public final class IpFilterUtils {
     }
 
     /**
+     * Normalize hostname by removing trailing periods.
+     * This prevents security bypass where adding a trailing period to a URL
+     * (e.g., "https://example.com.") would bypass hostname matching.
+     *
+     * @param hostname the hostname to normalize
+     * @return normalized hostname without trailing periods, or null if input is null
+     */
+    public static String normalizeHostname(final String hostname) {
+        if (Strings.isNullOrEmpty(hostname)) {
+            return hostname;
+        }
+        // Remove all trailing periods
+        String normalized = hostname;
+        while (normalized.endsWith(".")) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+        return normalized;
+    }
+
+    /**
      * Handle the case of an authenticated user trying to view a page without the appropriate privileges.
      *
      * @param response the HttpServletResponse

@@ -82,5 +82,80 @@ public class IpFilterUtilsTest {
 
     }
 
+    @Test
+    public void testGetHostWithTrailingPeriod() {
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return null;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+
+        // Test with single trailing period
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("test-www.fcib.bloomreach.cloud.").anyTimes();
+        replay(request);
+        String host = baseIpFilter.getHost(request);
+        assertEquals("Hostname with trailing period should be normalized", "test-www.fcib.bloomreach.cloud", host);
+
+        // Test with multiple trailing periods
+        request = createMock(HttpServletRequest.class);
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("example.com...").anyTimes();
+        replay(request);
+        host = baseIpFilter.getHost(request);
+        assertEquals("Hostname with multiple trailing periods should be normalized", "example.com", host);
+
+        // Test with no trailing period (normal case)
+        request = createMock(HttpServletRequest.class);
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("example.com").anyTimes();
+        replay(request);
+        host = baseIpFilter.getHost(request);
+        assertEquals("Normal hostname should remain unchanged", "example.com", host);
+    }
+
+    @Test
+    public void testNormalizeHostname() {
+        // Test normal hostname without trailing period
+        assertEquals("example.com", IpFilterUtils.normalizeHostname("example.com"));
+
+        // Test hostname with single trailing period
+        assertEquals("example.com", IpFilterUtils.normalizeHostname("example.com."));
+
+        // Test hostname with multiple trailing periods
+        assertEquals("example.com", IpFilterUtils.normalizeHostname("example.com..."));
+
+        // Test fully qualified domain name with trailing period
+        assertEquals("test-www.fcib.bloomreach.cloud", IpFilterUtils.normalizeHostname("test-www.fcib.bloomreach.cloud."));
+
+        // Test subdomain with trailing period
+        assertEquals("sub.domain.example.com", IpFilterUtils.normalizeHostname("sub.domain.example.com."));
+
+        // Test null hostname
+        assertNull(IpFilterUtils.normalizeHostname(null));
+
+        // Test empty hostname
+        assertTrue(IpFilterUtils.normalizeHostname("").isEmpty());
+
+        // Test hostname that is only periods
+        assertEquals("", IpFilterUtils.normalizeHostname("..."));
+
+        // Test IP address with trailing period
+        assertEquals("192.168.1.1", IpFilterUtils.normalizeHostname("192.168.1.1."));
+
+        // Test IPv6 with trailing period
+        assertEquals("2001:0db8:85a3::8a2e:0370:7334", IpFilterUtils.normalizeHostname("2001:0db8:85a3::8a2e:0370:7334."));
+    }
+
 
 }
