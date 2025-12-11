@@ -357,8 +357,9 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
         final String forwardHeader = JcrUtils.getStringProperty(node, IpFilterConstants.CONFIG_FORWARDED_FOR_HEADER, IpFilterConstants.HEADER_X_FORWARDED_FOR);
         final boolean matchAll = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false);
         final boolean cacheEnabled = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_CACHE_ENABLED, true);
+        final boolean previewTokenEnabled = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_PREVIEW_TOKEN_ENABLED, false);
 
-        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, cacheEnabled, matchAll);
+        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, cacheEnabled, matchAll, previewTokenEnabled);
     }
 
     private Map<String, Set<String>> parseHeaders(final Node root) throws RepositoryException {

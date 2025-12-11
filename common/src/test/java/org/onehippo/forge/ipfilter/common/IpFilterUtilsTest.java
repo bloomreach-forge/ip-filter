@@ -31,7 +31,7 @@ public class IpFilterUtilsTest {
     @Test
     public void testGetIp() {
         final Set<String> E = Collections.emptySet();
-        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null,true, true);
+        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null,true, true, false);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         expect(request.getRemoteAddr()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn(null).anyTimes();
@@ -82,5 +82,140 @@ public class IpFilterUtilsTest {
 
     }
 
+    @Test
+    public void testPreviewTokenBypassesFilter() {
+        final Set<String> E = Collections.emptySet();
+        final AuthObject authObject = new AuthObject(E, E, E, Collections.emptyMap(), false, null, true, false, true);
+        assertTrue("Preview token should be enabled", authObject.isPreviewTokenEnabled());
+
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return Status.FORBIDDEN;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRequestURI()).andReturn("/site/").anyTimes();
+        expect(request.getContextPath()).andReturn("").anyTimes();
+        expect(request.getParameter(IpFilterConstants.PREVIEW_TOKEN_PARAM_NAME))
+            .andReturn("e071af76-68f4-4d79-9e3c-4bbca02d655f").anyTimes();
+        replay(request);
+
+        final boolean ignored = baseIpFilter.isIgnored(request, authObject);
+        assertTrue("Request with preview token should be ignored", ignored);
+    }
+
+    @Test
+    public void testPreviewTokenDisabledDoesNotBypass() {
+        final Set<String> E = Collections.emptySet();
+        final AuthObject authObject = new AuthObject(E, E, E, Collections.emptyMap(), false, null, true, false, false);
+        assertFalse("Preview token should be disabled", authObject.isPreviewTokenEnabled());
+
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return Status.FORBIDDEN;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRequestURI()).andReturn("/site/").anyTimes();
+        expect(request.getContextPath()).andReturn("").anyTimes();
+        expect(request.getParameter(IpFilterConstants.PREVIEW_TOKEN_PARAM_NAME))
+            .andReturn("e071af76-68f4-4d79-9e3c-4bbca02d655f").anyTimes();
+        replay(request);
+
+        final boolean ignored = baseIpFilter.isIgnored(request, authObject);
+        assertFalse("Request with preview token should not be ignored when preview token is disabled", ignored);
+    }
+
+    @Test
+    public void testMissingPreviewTokenDoesNotBypass() {
+        final Set<String> E = Collections.emptySet();
+        final AuthObject authObject = new AuthObject(E, E, E, Collections.emptyMap(), false, null, true, false, true);
+        assertTrue("Preview token should be enabled", authObject.isPreviewTokenEnabled());
+
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return Status.FORBIDDEN;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRequestURI()).andReturn("/site/").anyTimes();
+        expect(request.getContextPath()).andReturn("").anyTimes();
+        expect(request.getParameter(IpFilterConstants.PREVIEW_TOKEN_PARAM_NAME))
+            .andReturn(null).anyTimes();
+        replay(request);
+
+        final boolean ignored = baseIpFilter.isIgnored(request, authObject);
+        assertFalse("Request without preview token should not be ignored", ignored);
+    }
+
+    @Test
+    public void testEmptyPreviewTokenDoesNotBypass() {
+        final Set<String> E = Collections.emptySet();
+        final AuthObject authObject = new AuthObject(E, E, E, Collections.emptyMap(), false, null, true, false, true);
+        assertTrue("Preview token should be enabled", authObject.isPreviewTokenEnabled());
+
+        final BaseIpFilter baseIpFilter = new BaseIpFilter() {
+            @Override
+            protected Status authenticate(final AuthObject authObject, final HttpServletRequest request) {
+                return Status.FORBIDDEN;
+            }
+
+            @Override
+            protected void initializeConfigManager() {
+            }
+
+            @Override
+            protected String getDisabledPropertyName() {
+                return null;
+            }
+        };
+        baseIpFilter.configLoader = new TestConfigLoader();
+
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRequestURI()).andReturn("/site/").anyTimes();
+        expect(request.getContextPath()).andReturn("").anyTimes();
+        expect(request.getParameter(IpFilterConstants.PREVIEW_TOKEN_PARAM_NAME))
+            .andReturn("").anyTimes();
+        replay(request);
+
+        final boolean ignored = baseIpFilter.isIgnored(request, authObject);
+        assertFalse("Request with empty preview token should not be ignored", ignored);
+    }
 
 }
