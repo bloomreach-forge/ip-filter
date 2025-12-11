@@ -28,6 +28,8 @@ public final class IpFilterConstants {
     public static final String CONFIG_CACHE_ENABLED = "cache-enabled";
     public static final String CONFIG_FORWARDED_FOR_HEADER = "forwarded-for-header";
     public static final String CONFIG_FORWARDED_HOST_HEADER = "forwarded-host-header";
+    public static final String CONFIG_PREVIEW_TOKEN_ENABLED = "preview-token-enabled";
+    public static final String PREVIEW_TOKEN_PARAM_NAME = "preview-token";
 
     public static final int BASIC_AUTH_PREFIX_LENGTH = "Basic ".length();
 

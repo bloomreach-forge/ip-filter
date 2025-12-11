@@ -285,7 +285,7 @@ public abstract class BaseIpFilter implements Filter {
     /**
      * Check if path is ignored
      */
-    private boolean isIgnored(final HttpServletRequest request, final AuthObject authObject) {
+    protected boolean isIgnored(final HttpServletRequest request, final AuthObject authObject) {
         final String path = IpFilterUtils.getPath(request);
         final List<Pattern> ignoredPaths = authObject.getIgnoredPathPatterns();
         for (final Pattern ignoredPath : ignoredPaths) {
@@ -293,6 +293,17 @@ public abstract class BaseIpFilter implements Filter {
             if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Path is ignored because of pattern {}: {}", ignoredPath.pattern(), path);
+                }
+                return true;
+            }
+        }
+
+        // check if preview token is present and enabled
+        if (authObject.isPreviewTokenEnabled()) {
+            final String previewToken = request.getParameter(IpFilterConstants.PREVIEW_TOKEN_PARAM_NAME);
+            if (!Strings.isNullOrEmpty(previewToken)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Preview token detected in request, bypassing IP filter");
                 }
                 return true;
             }

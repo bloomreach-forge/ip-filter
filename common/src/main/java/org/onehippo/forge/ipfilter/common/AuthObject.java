@@ -39,6 +39,7 @@ public class AuthObject {
     private final boolean cacheEnabled;
     private final boolean mustMatchAll;
     private final boolean allowCmsUsers;
+    private final boolean previewTokenEnabled;
     private final String forwardedForHeader;
     private final Set<String> hosts;
     private final Set<String> ranges;
@@ -61,12 +62,14 @@ public class AuthObject {
         this.ipMatchers = Collections.emptySet();
         this.allowCmsUsers = false;
         this.mustMatchAll = false;
+        this.previewTokenEnabled = false;
         this.forwardedForHeader = IpFilterConstants.HEADER_X_FORWARDED_FOR;
     }
 
     public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts,
                       final Set<String> ranges, final Map<String, Set<String>> ignoredHeaders,
-                      final boolean allowCmsUsers, final String forwardHeader, final boolean cacheEnabled, final boolean mustMatchAll) {
+                      final boolean allowCmsUsers, final String forwardHeader, final boolean cacheEnabled, final boolean mustMatchAll,
+                      final boolean previewTokenEnabled) {
         this.valid = true;
         this.cacheEnabled = cacheEnabled;
         this.ignoredPaths = ignoredPaths;
@@ -74,6 +77,7 @@ public class AuthObject {
         this.ranges = ranges;
         this.allowCmsUsers = allowCmsUsers;
         this.mustMatchAll = mustMatchAll;
+        this.previewTokenEnabled = previewTokenEnabled;
         this.forwardedForHeader = forwardHeader;
         this.ignoredHeaders = ImmutableMap.copyOf(ignoredHeaders);
         this.ignoredPathPatterns = parsePatterns();
@@ -94,6 +98,9 @@ public class AuthObject {
         return mustMatchAll;
     }
 
+    public boolean isPreviewTokenEnabled() {
+        return previewTokenEnabled;
+    }
 
     public List<Pattern> getHostPatterns() {
         return hostPatterns;
@@ -182,6 +189,7 @@ public class AuthObject {
                 ", cacheEnabled=" + cacheEnabled +
                 ", mustMatchAll=" + mustMatchAll +
                 ", allowCmsUsers=" + allowCmsUsers +
+                ", previewTokenEnabled=" + previewTokenEnabled +
                 ", forwardedForHeader='" + forwardedForHeader + '\'' +
                 ", hosts=" + hosts +
                 ", ranges=" + ranges +
