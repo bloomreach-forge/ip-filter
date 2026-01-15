@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.ipfilter</groupId>
     <artifactId>ipfilterdemo</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1</version>
   </parent>
 
   <name>Demo Repository Data</name>

@@ -25,7 +25,7 @@
   <name>Bloomreach Forge IP Filter Plugin</name>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>bloomreach-ipfilter</artifactId>
-  <version>5.0.0</version>
+  <version>5.0.1</version>
   <packaging>pom</packaging>
   <inceptionYear>2016</inceptionYear>
 
@@ -34,7 +34,7 @@
     <hippo.hst.version>${hippo.release.version}</hippo.hst.version>
     <hippo.repository.version>${hippo.release.version}</hippo.repository.version>
     <hippo.services.version>${hippo.release.version}</hippo.services.version>
-    
+
     <junit.version>4.13.1</junit.version>
     <easymock.version>3.6</easymock.version>
 
@@ -61,7 +61,7 @@
   </distributionManagement>
 
   <issueManagement>
-    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
+      <url>https://bloomreach.atlassian.net/jira/software/c/projects/FORGE/issues</url>
   </issueManagement>
 
   <repositories>
