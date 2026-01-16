@@ -18,6 +18,7 @@
 
 | Bloomreach Experience Manager | IP Filter |
 |-------------------------------|-----------| 
+| 16.x                          | 5.x       |
 | 15.x                          | 4.x       |
 | 14.x                          | 3.x       |
 | 13.x                          | 3.x       |
@@ -25,6 +26,18 @@
 | 11.x                          | 1.x       |
 
 ## Release Notes
+
+### 5.0.1
+<p class="smallinfo">Release date: 15 January 2026</p>
+
++ [FORGE-572](https://bloomreach.atlassian.net/browse/FORGE-572)<br/>
+    - Fix hostname trailing period bypass vulnerability.
+
+### 5.0.0
+<p class="smallinfo">Release date: 8 August 2024</p>
+
++ [HIPFORGE-517](https://issues.onehippo.com/browse/HIPFORGE-517)<br/>
+  - Upgrade to Bloomreach Experience Manager 16, i.e. build the plugin with Java 17, redo the demo project.
 
 ### 4.0.0
 <p class="smallinfo">Release date: 2 May 2022</p>
