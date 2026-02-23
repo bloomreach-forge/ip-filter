@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Bloomreach
+ * Copyright 2017-2026 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 package org.onehippo.forge.ipfilter.common;
 
 import com.google.common.base.Objects;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
+
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 /**
  * Checks if IP addresses matches with the IP range. Relies on org.springframework.security.web.util.IpAddressMatcher
@@ -31,7 +32,7 @@ public final class IpMatcher {
      * @return IP matcher
      */
     public static IpMatcher valueOf(String ipRange) {
-        String ipRangeTrimmedToNull = StringUtils.trimToNull(ipRange);
+        String ipRangeTrimmedToNull = trimToNull(ipRange);
         if (ipRangeTrimmedToNull == null) {
             return null;
         }
@@ -92,7 +93,7 @@ public final class IpMatcher {
      * @throws IllegalArgumentException If the IP is malformed
      */
     public boolean matches(String ipAddress) {
-        String ipAddressTrimmed = StringUtils.trimToNull(ipAddress);
+        String ipAddressTrimmed = trimToNull(ipAddress);
         return ipAddressTrimmed != null && ipMatcher.matches(ipAddressTrimmed);
     }
 

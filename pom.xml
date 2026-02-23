@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2023 Bloomreach
+  ~ Copyright 2018-2026 Bloomreach
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>16.0.0</version>
+    <version>16.7.0</version>
   </parent>
 
   <name>Bloomreach Forge IP Filter Plugin</name>
@@ -151,13 +151,6 @@
         <version>${commons-io.version}</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons-lang.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
       <dependency>
         <artifactId>spring-core</artifactId>
         <groupId>org.springframework</groupId>

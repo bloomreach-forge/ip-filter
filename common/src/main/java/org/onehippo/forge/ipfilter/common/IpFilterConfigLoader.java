@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Bloomreach
+ * Copyright 2017-2026 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,8 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
 
-import org.apache.commons.lang.ArrayUtils;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.hippoecm.repository.util.JcrUtils;
 import org.onehippo.forge.ipfilter.common.file.FileChangeObserver;
 import org.onehippo.forge.ipfilter.common.file.FileWatchService;
@@ -325,7 +326,7 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
 
         final Set<String> ignoredPathSet = new HashSet<>();
         final Collection<String> globalPaths = globalSettings.get(IpFilterConstants.CONFIG_IGNORED_PATHS);
-        final String[] globalIgnoredPaths = globalPaths == null ? ArrayUtils.EMPTY_STRING_ARRAY : globalPaths.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+        final String[] globalIgnoredPaths = globalPaths.isEmpty() ? ArrayUtils.EMPTY_STRING_ARRAY : globalPaths.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
         final String[] ignoredPaths = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_IGNORED_PATHS, ArrayUtils.EMPTY_STRING_ARRAY);
         Collections.addAll(ignoredPathSet, ignoredPaths);
         Collections.addAll(ignoredPathSet, globalIgnoredPaths);
@@ -341,7 +342,7 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
 
         final Set<String> rangesSet = new HashSet<>();
         final Collection<String> globalAllowed = globalSettings.get(IpFilterConstants.CONFIG_ALLOWED_IP_RANGES);
-        final String[] globalRange = globalAllowed == null ? ArrayUtils.EMPTY_STRING_ARRAY : globalAllowed.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+        final String[] globalRange = globalPaths.isEmpty() ? ArrayUtils.EMPTY_STRING_ARRAY : globalAllowed.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
         final String[] ranges = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_ALLOWED_IP_RANGES, ArrayUtils.EMPTY_STRING_ARRAY);
         Collections.addAll(rangesSet, ranges);
         Collections.addAll(rangesSet, globalRange);
