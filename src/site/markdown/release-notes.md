@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2022 Bloomreach
+  Copyright 2017-2026 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 | Bloomreach Experience Manager | IP Filter |
 |-------------------------------|-----------| 
+| 16.7+                         | 5.2+      |
 | 16.x                          | 5.x       |
 | 15.x                          | 4.x       |
 | 14.x                          | 3.x       |
@@ -26,6 +27,13 @@
 | 11.x                          | 1.x       |
 
 ## Release Notes
+
+### 5.0.2
+
+<p class="smallinfo">Release date: 23 February 2026</p>
+
++ [FORGE-622](https://bloomreach.atlassian.net/browse/FORGE-622)<br/>
+    - IP-filter not working with version 16.7.0
 
 ### 5.0.1
 <p class="smallinfo">Release date: 15 January 2026</p>

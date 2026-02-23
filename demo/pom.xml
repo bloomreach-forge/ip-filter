@@ -5,14 +5,14 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>16.0.0</version>
+    <version>16.7.0</version>
   </parent>
 
   <name>IP Filter Demo</name>
   <description>Demo</description>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>ipfilterdemo</artifactId>
-  <version>5.0.1</version>
+  <version>5.0.2</version>
   <packaging>pom</packaging>
 
   <!--
@@ -60,12 +60,7 @@
 
   <properties>
 
-    <!--***START temporary override of versions*** -->
-    <bloomreach.forge.ipfilter.version>5.0.1-SNAPSHOT</bloomreach.forge.ipfilter.version>
-    <!-- ***END temporary override of versions*** -->
-
-    <essentials.version>16.0.0</essentials.version>
-
+    <bloomreach.forge.ipfilter.version>5.0.2-SNAPSHOT</bloomreach.forge.ipfilter.version>
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
 
     <docker.postgres.bind.1>${project.basedir}/target/postgres-data:/var/lib/postgresql/data</docker.postgres.bind.1>
@@ -205,7 +200,6 @@
         <module>repository-data</module>
         <module>cms</module>
         <module>site</module>
-        <module>essentials</module>
       </modules>
     </profile>
 
@@ -232,13 +226,6 @@
     <profile>
       <id>docker.run</id>
       <dependencies>
-        <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>${project.artifactId}-essentials</artifactId>
-          <version>${project.version}</version>
-          <type>war</type>
-          <scope>provided</scope>
-        </dependency>
         <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>${project.artifactId}-repository-data-development</artifactId>
@@ -375,13 +362,6 @@
                   <type>war</type>
                   <properties>
                     <context>/site</context>
-                  </properties>
-                </deployable>
-                <deployable>
-                  <location>${project.basedir}/essentials/target/essentials</location>
-                  <type>war</type>
-                  <properties>
-                    <context>/essentials</context>
                   </properties>
                 </deployable>
               </deployables>
