@@ -144,7 +144,6 @@
         <scope>provided</scope>
         <version>${hippo.hst.version}</version>
       </dependency>
-
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
