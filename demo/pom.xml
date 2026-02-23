@@ -61,7 +61,7 @@
   <properties>
 
     <!--***START temporary override of versions*** -->
-    <bloomreach.forge.ipfilter.version>5.0.1-SNAPSHOT</bloomreach.forge.ipfilter.version>
+    <bloomreach.forge.ipfilter.version>5.0.2-SNAPSHOT</bloomreach.forge.ipfilter.version>
     <!-- ***END temporary override of versions*** -->
 
     <essentials.version>16.0.0</essentials.version>
