@@ -3,8 +3,7 @@ definitions:
     /hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig:
       forwarded-host-header: [X-Forwarded-Host-2]
     /hippo:configuration/hippo:modules/ipfilter/hippo:moduleconfig/localhost:
-      jcr:primaryType: nt:unstructured
-      hostnames: ['.*']
+      hostnames: [.*]
       match-all: false
       cache-enabled: false
-      allowed-ip-ranges: ['10.0.0.100']
+      allowed-ip-ranges: [10.0.0.100, 203.0.113.50, 127.0.0.1]
