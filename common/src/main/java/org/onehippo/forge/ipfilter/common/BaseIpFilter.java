@@ -158,7 +158,7 @@ public abstract class BaseIpFilter implements Filter {
             return Status.OK;
         }
 
-        final String ip = IpFilterUtils.getIp(request, authObject.getForwardedForHeader());
+        final String ip = IpFilterUtils.getIp(request, authObject.getForwardedForHeader(), authObject.getTrustedProxyMatchers());
         if (Strings.isNullOrEmpty(ip)) {
             // shouldn't happen
             log.warn("{}: IP was null or empty. Host is {}", this.getClass().getSimpleName(), host);

@@ -60,7 +60,7 @@
 
   <properties>
 
-    <bloomreach.forge.ipfilter.version>5.0.2-SNAPSHOT</bloomreach.forge.ipfilter.version>
+    <bloomreach.forge.ipfilter.version>5.0.3-SNAPSHOT</bloomreach.forge.ipfilter.version>
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
 
     <docker.postgres.bind.1>${project.basedir}/target/postgres-data:/var/lib/postgresql/data</docker.postgres.bind.1>

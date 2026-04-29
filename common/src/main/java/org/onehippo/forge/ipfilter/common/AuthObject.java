@@ -43,7 +43,9 @@ public class AuthObject {
     private final Set<String> hosts;
     private final Set<String> ranges;
     private final Set<String> ignoredPaths;
+    private final Set<String> trustedProxies;
     private final Set<IpMatcher> ipMatchers;
+    private final Set<IpMatcher> trustedProxyMatchers;
     private final Map<String, Set<String>> ignoredHeaders;
     private final List<Pattern> hostPatterns;
     private final List<Pattern> ignoredPathPatterns;
@@ -55,10 +57,12 @@ public class AuthObject {
         this.ignoredPaths = Collections.emptySet();
         this.hosts = Collections.emptySet();
         this.ranges = Collections.emptySet();
+        this.trustedProxies = Collections.emptySet();
         this.ignoredHeaders = Collections.emptyMap();
         this.ignoredPathPatterns = Collections.emptyList();
         this.hostPatterns = Collections.emptyList();
         this.ipMatchers = Collections.emptySet();
+        this.trustedProxyMatchers = Collections.emptySet();
         this.allowCmsUsers = false;
         this.mustMatchAll = false;
         this.forwardedForHeader = IpFilterConstants.HEADER_X_FORWARDED_FOR;
@@ -66,12 +70,15 @@ public class AuthObject {
 
     public AuthObject(final Set<String> ignoredPaths, final Set<String> hosts,
                       final Set<String> ranges, final Map<String, Set<String>> ignoredHeaders,
-                      final boolean allowCmsUsers, final String forwardHeader, final boolean cacheEnabled, final boolean mustMatchAll) {
+                      final boolean allowCmsUsers, final String forwardHeader,
+                      final Set<String> trustedProxies,
+                      final boolean cacheEnabled, final boolean mustMatchAll) {
         this.valid = true;
         this.cacheEnabled = cacheEnabled;
         this.ignoredPaths = ignoredPaths;
         this.hosts = hosts;
         this.ranges = ranges;
+        this.trustedProxies = trustedProxies;
         this.allowCmsUsers = allowCmsUsers;
         this.mustMatchAll = mustMatchAll;
         this.forwardedForHeader = forwardHeader;
@@ -79,6 +86,7 @@ public class AuthObject {
         this.ignoredPathPatterns = parsePatterns();
         this.hostPatterns = parseHostPatterns();
         this.ipMatchers = parseIpMatchers();
+        this.trustedProxyMatchers = parseTrustedProxyMatchers();
     }
 
     public boolean isValid() {
@@ -109,6 +117,10 @@ public class AuthObject {
 
     public String getForwardedForHeader() {
         return forwardedForHeader;
+    }
+
+    public Set<IpMatcher> getTrustedProxyMatchers() {
+        return trustedProxyMatchers;
     }
 
 
@@ -154,6 +166,21 @@ public class AuthObject {
             }
         }
         return ImmutableSet.copyOf(ipMatchers);
+    }
+
+    private Set<IpMatcher> parseTrustedProxyMatchers() {
+        final Set<IpMatcher> matchers = new HashSet<>();
+        if (trustedProxies != null) {
+            for (String proxy : trustedProxies) {
+                final IpMatcher matcher = IpMatcher.valueOf(proxy);
+                if (matcher != null) {
+                    matchers.add(matcher);
+                } else {
+                    log.warn("Skipping invalid trusted proxy value: {}", proxy);
+                }
+            }
+        }
+        return ImmutableSet.copyOf(matchers);
     }
 
     private List<Pattern> parsePatterns() {
