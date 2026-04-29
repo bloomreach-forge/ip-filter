@@ -25,26 +25,100 @@ import java.util.Set;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+
+
 public class IpFilterUtilsTest {
 
 
     @Test
     public void testGetIp() {
         final Set<String> E = Collections.emptySet();
-        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null,true, true);
+        final AuthObject object = new AuthObject(E, E, E, Collections.emptyMap(), true, null, Collections.emptySet(), true, true);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         expect(request.getRemoteAddr()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn(null).anyTimes();
         replay(request);
-        String header = IpFilterUtils.getIp(request, object.getForwardedForHeader());
+        String header = IpFilterUtils.getIp(request, object.getForwardedForHeader(), object.getTrustedProxyMatchers());
         assertEquals("127.0.0.1", header);
-        // recreate
+        // recreate: XFF present but no trusted proxies configured -> remoteAddr is returned (spoofing prevention)
         request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("127.0.0.1").anyTimes();
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("localhost").anyTimes();
         replay(request);
-        header = IpFilterUtils.getIp(request, object.getForwardedForHeader());
-        assertEquals("localhost", header);
+        header = IpFilterUtils.getIp(request, object.getForwardedForHeader(), object.getTrustedProxyMatchers());
+        assertEquals("127.0.0.1", header);
+    }
 
+    @Test
+    public void testGetIpXffIgnoredWithNoTrustedProxies() {
+        // XFF present, no trusted proxies configured -> remoteAddr returned to prevent spoofing
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("192.0.2.100").anyTimes();
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("203.0.113.50").anyTimes();
+        replay(request);
+
+        final String ip = IpFilterUtils.getIp(request, IpFilterConstants.HEADER_X_FORWARDED_FOR, Collections.emptySet());
+        assertEquals("192.0.2.100", ip);
+    }
+
+    @Test
+    public void testGetIpXffTrustedWhenRemoteAddrIsTrustedProxy() {
+        // XFF present, remoteAddr is a configured trusted proxy -> XFF IP returned
+        final IpMatcher proxyMatcher = IpMatcher.valueOf("10.0.0.1");
+        final Set<IpMatcher> trustedProxies = Collections.singleton(proxyMatcher);
+
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("10.0.0.1").anyTimes();
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("203.0.113.50").anyTimes();
+        replay(request);
+
+        final String ip = IpFilterUtils.getIp(request, IpFilterConstants.HEADER_X_FORWARDED_FOR, trustedProxies);
+        assertEquals("203.0.113.50", ip);
+    }
+
+    @Test
+    public void testGetIpXffIgnoredWhenRemoteAddrIsNotTrustedProxy() {
+        // XFF present, remoteAddr is NOT a trusted proxy -> remoteAddr returned (prevent spoofing)
+        final IpMatcher proxyMatcher = IpMatcher.valueOf("10.0.0.1");
+        final Set<IpMatcher> trustedProxies = Collections.singleton(proxyMatcher);
+
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("192.0.2.100").anyTimes();
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("203.0.113.50").anyTimes();
+        replay(request);
+
+        final String ip = IpFilterUtils.getIp(request, IpFilterConstants.HEADER_X_FORWARDED_FOR, trustedProxies);
+        assertEquals("192.0.2.100", ip);
+    }
+
+    @Test
+    public void testGetIpXffTrustedWhenRemoteAddrMatchesTrustedProxyCidrRange() {
+        // XFF present, remoteAddr falls within a trusted proxy CIDR range -> XFF IP returned
+        final IpMatcher cidrMatcher = IpMatcher.valueOf("10.0.0.0/24");
+        final Set<IpMatcher> trustedProxies = Collections.singleton(cidrMatcher);
+
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("10.0.0.5").anyTimes();
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("203.0.113.50").anyTimes();
+        replay(request);
+
+        final String ip = IpFilterUtils.getIp(request, IpFilterConstants.HEADER_X_FORWARDED_FOR, trustedProxies);
+        assertEquals("203.0.113.50", ip);
+    }
+
+    @Test
+    public void testGetIpXffIgnoredWhenRemoteAddrOutsideTrustedProxyCidrRange() {
+        // XFF present, remoteAddr outside the trusted proxy CIDR range -> remoteAddr returned
+        final IpMatcher cidrMatcher = IpMatcher.valueOf("10.0.0.0/24");
+        final Set<IpMatcher> trustedProxies = Collections.singleton(cidrMatcher);
+
+        final HttpServletRequest request = createMock(HttpServletRequest.class);
+        expect(request.getRemoteAddr()).andReturn("10.0.1.1").anyTimes();
+        expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_FOR)).andReturn("203.0.113.50").anyTimes();
+        replay(request);
+
+        final String ip = IpFilterUtils.getIp(request, IpFilterConstants.HEADER_X_FORWARDED_FOR, trustedProxies);
+        assertEquals("10.0.1.1", ip);
     }
 
     @Test

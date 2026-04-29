@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 public final class IpFilterUtils {
 
@@ -47,19 +48,38 @@ public final class IpFilterUtils {
     }
 
 
-    public static String getIp(HttpServletRequest request, final String name) {
+    public static String getIp(final HttpServletRequest request, final String name, final Set<IpMatcher> trustedProxies) {
+        final String remoteAddr = request.getRemoteAddr();
         final String headerName = Strings.isNullOrEmpty(name) ? IpFilterConstants.HEADER_X_FORWARDED_FOR : name;
         final String header = request.getHeader(headerName);
         if (Strings.isNullOrEmpty(header)) {
             log.debug("Header: {} was empty", headerName);
-            return request.getRemoteAddr();
+            return remoteAddr;
+        }
+        if (trustedProxies.isEmpty()) {
+            log.warn("Header '{}' is present but no trusted-proxies configured; using remote address to prevent IP spoofing. " +
+                    "Configure '{}' to enable X-Forwarded-For support.", headerName, IpFilterConstants.CONFIG_TRUSTED_PROXIES);
+            return remoteAddr;
+        }
+        if (!isTrustedProxy(remoteAddr, trustedProxies)) {
+            log.debug("Remote address '{}' is not a trusted proxy; ignoring header '{}'", remoteAddr, headerName);
+            return remoteAddr;
         }
         final Iterable<String> ipAddresses = COMMA_SPLITTER.split(header);
         final Iterator<String> iterator = ipAddresses.iterator();
         if (iterator.hasNext()) {
             return iterator.next();
         }
-        return request.getRemoteAddr();
+        return remoteAddr;
+    }
+
+    private static boolean isTrustedProxy(final String remoteAddr, final Set<IpMatcher> trustedProxies) {
+        for (final IpMatcher matcher : trustedProxies) {
+            if (matcher.matches(remoteAddr)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

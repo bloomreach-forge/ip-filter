@@ -359,7 +359,11 @@ public abstract class IpFilterConfigLoader implements FileChangeObserver {
         final boolean matchAll = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_MATCH_ALL, false);
         final boolean cacheEnabled = JcrUtils.getBooleanProperty(node, IpFilterConstants.CONFIG_CACHE_ENABLED, true);
 
-        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, cacheEnabled, matchAll);
+        final Set<String> trustedProxiesSet = new HashSet<>();
+        final String[] trustedProxies = JcrUtils.getMultipleStringProperty(node, IpFilterConstants.CONFIG_TRUSTED_PROXIES, ArrayUtils.EMPTY_STRING_ARRAY);
+        Collections.addAll(trustedProxiesSet, trustedProxies);
+
+        return new AuthObject(ignoredPathSet, hostSet, rangesSet, ignoredHeaders, allowCmsUsers, forwardHeader, trustedProxiesSet, cacheEnabled, matchAll);
     }
 
     private Map<String, Set<String>> parseHeaders(final Node root) throws RepositoryException {
