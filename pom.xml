@@ -205,6 +205,29 @@
         <scope>test</scope>
       </dependency>
 
+      <!-- junit-jupiter-api, junit-jupiter-engine, mockito-core are version-managed by parent BOM -->
+      <!-- Extras not in parent BOM — explicit versions required -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- Allows existing JUnit 4 tests to run on the JUnit Platform alongside JUnit 5 tests -->
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- mockito-junit-jupiter not in parent BOM; pin to same version as mockito-core -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
 
   </dependencyManagement>
@@ -221,6 +244,44 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>jacoco-report</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- @{argLine} is expanded at runtime by jacoco:prepare-agent to inject the JaCoCo agent -->
+              <argLine>@{argLine} -Xmx1024m
+                --add-opens java.base/java.io=ALL-UNNAMED
+                --add-opens java.base/java.lang=ALL-UNNAMED
+                --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+                --add-opens java.base/java.text=ALL-UNNAMED
+                --add-opens java.base/java.time=ALL-UNNAMED
+                --add-opens java.base/java.util=ALL-UNNAMED
+                --add-opens java.base/java.util.regex=ALL-UNNAMED
+                --add-opens java.base/java.util.stream=ALL-UNNAMED
+                --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED
+              </argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <!-- For generating/publishing GitHub Site Pages into /docs/ folder on master branch only -->
       <id>github.pages</id>
