@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.ipfilter;
+package org.onehippo.forge.ipfilter.hst;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class IpFilterTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class IpFilterHstTest {
 
     @Test
-    public void test() {
+    void getDisabledPropertyName_returnsExpectedSystemProperty() {
+        assertEquals("hippo.ipfilter.disabled", new IpFilter().getDisabledPropertyName());
+    }
+
+    @Test
+    void hstConfigLoader_canBeInstantiated() {
+        assertNotNull(new HstConfigLoader());
     }
 }
