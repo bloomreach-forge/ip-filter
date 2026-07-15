@@ -12,7 +12,7 @@
   <description>Demo</description>
   <groupId>org.bloomreach.forge.ipfilter</groupId>
   <artifactId>ipfilterdemo</artifactId>
-  <version>6.0.0</version>
+  <version>6.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!--
@@ -60,7 +60,7 @@
 
   <properties>
 
-    <bloomreach.forge.ipfilter.version>6.0.0-SNAPSHOT</bloomreach.forge.ipfilter.version>
+    <bloomreach.forge.ipfilter.version>${project.version}</bloomreach.forge.ipfilter.version>
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
 
     <docker.postgres.bind.1>${project.basedir}/target/postgres-data:/var/lib/postgresql/data</docker.postgres.bind.1>
