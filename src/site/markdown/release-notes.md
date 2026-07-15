@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2026 Bloomreach
+  Copyright 2026 Bloomreach
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 ## Version Compatibility
 
 | Bloomreach Experience Manager | IP Filter |
-|-------------------------------|-----------| 
+|-------------------------------|-----------|
+| 17.x                          | 6.x       |
 | 16.7+                         | 5.2+      |
 | 16.x                          | 5.x       |
 | 15.x                          | 4.x       |
@@ -27,6 +28,12 @@
 | 11.x                          | 1.x       |
 
 ## Release Notes
+
+### 6.0.0
+<p class="smallinfo">Release date: 15 July 2026</p>
+
++ [FORGE-585](https://bloomreach.atlassian.net/browse/FORGE-585)<br/>
+  - Upgrade to Bloomreach Experience Manager 17
 
 ### 5.0.2
 

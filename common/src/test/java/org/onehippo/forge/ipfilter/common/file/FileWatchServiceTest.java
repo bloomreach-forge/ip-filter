@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Bloomreach
+ * Copyright 2026 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class FileWatchServiceTest {
     private static final Logger log = LoggerFactory.getLogger(FileWatchServiceTest.class);
@@ -45,7 +45,7 @@ public class FileWatchServiceTest {
     private final ExampleFileObserver observer = new ExampleFileObserver();
     final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         tmpDir = Files.createTempDir();
@@ -86,7 +86,7 @@ public class FileWatchServiceTest {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         service.close();
         executor.shutdown();
