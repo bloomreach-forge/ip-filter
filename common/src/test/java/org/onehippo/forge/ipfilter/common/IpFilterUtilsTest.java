@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Bloomreach
+ * Copyright 2026 Bloomreach
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,18 @@
 
 package org.onehippo.forge.ipfilter.common;
 
-import org.junit.Test;
-
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Set;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import jakarta.servlet.http.HttpServletRequest;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IpFilterUtilsTest {
 
@@ -107,21 +111,21 @@ public class IpFilterUtilsTest {
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("test-www.fcib.bloomreach.cloud.").anyTimes();
         replay(request);
         String host = baseIpFilter.getHost(request);
-        assertEquals("Hostname with trailing period should be normalized", "test-www.fcib.bloomreach.cloud", host);
+        assertEquals("test-www.fcib.bloomreach.cloud", host, "Hostname with trailing period should be normalized");
 
         // Test with multiple trailing periods
         request = createMock(HttpServletRequest.class);
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("example.com...").anyTimes();
         replay(request);
         host = baseIpFilter.getHost(request);
-        assertEquals("Hostname with multiple trailing periods should be normalized", "example.com", host);
+        assertEquals("example.com", host, "Hostname with multiple trailing periods should be normalized");
 
         // Test with no trailing period (normal case)
         request = createMock(HttpServletRequest.class);
         expect(request.getHeader(IpFilterConstants.HEADER_X_FORWARDED_HOST)).andReturn("example.com").anyTimes();
         replay(request);
         host = baseIpFilter.getHost(request);
-        assertEquals("Normal hostname should remain unchanged", "example.com", host);
+        assertEquals("example.com", host, "Normal hostname should remain unchanged");
     }
 
     @Test
